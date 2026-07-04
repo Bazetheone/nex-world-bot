@@ -795,4 +795,9 @@ async def main():
         await bot.start(os.getenv("DISCORD_TOKEN"))
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        import traceback
+        print(f"BOT CRASHED: {e}")
+        traceback.print_exc()
