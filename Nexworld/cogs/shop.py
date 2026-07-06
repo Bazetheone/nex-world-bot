@@ -498,8 +498,8 @@ class Shop(commands.Cog):
         user_id = str(ctx.author.id)
         p = players.search(Player.id == user_id)
         if not p:
-    await ctx.send(embed=discord.Embed(description="❌ You haven't started yet!", color=GOLD))
-    return
+            await ctx.send(embed=discord.Embed(description="❌ You haven't started yet!", color=GOLD))
+            return
 
         p = p[0]
         inv = p.get('inventory', [])
@@ -664,7 +664,7 @@ class Shop(commands.Cog):
                     color=GOLD))
                 return
             inv.remove(item)
-            players.update({'buff_exp_boost_until': now + 300, 'inventory': inv}, Player.id == u�ser_id)
+            players.update({'buff_exp_boost_until': now + 300, 'inventory': inv}, Player.id == user_id)
             embed = discord.Embed(title="⚗️ EXP Boost Active!", color=GOLD)
             embed.add_field(name="Effect", value="EXP gain **doubled** ✨", inline=True)
             embed.add_field(name="Duration", value="`5 minutes`", inline=True)
