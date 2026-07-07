@@ -79,10 +79,14 @@ class InvView(discord.ui.View):
 
 class LbView(discord.ui.View):
     PER_PAGE = 10
+    RANK_ORDER_LB = ["F", "E", "D", "C", "B", "A", "S"]
+    RANK_ICONS_LB = {"F": "🩶", "E": "🤍", "D": "🩵", "C": "💚", "B": "💛", "A": "🧡", "S": "❤️"}
+
     CATEGORIES = {
         "level":      ("⚡ Leaderboard — Level",      lambda p: p.get('level', 1),      lambda p: f"Level {p.get('level', 1):,}"),
         "coins":      ("💰 Leaderboard — Nexcoins",    lambda p: p.get('nexcoins', 0),    lambda p: f"{p.get('nexcoins', 0):,} NC"),
         "starshards": ("✨ Leaderboard — Starshards",  lambda p: p.get('starshards', 0),  lambda p: f"{p.get('starshards', 0):,} SS"),
+        "guildrank":  ("🎖️ Leaderboard — Guild Rank", lambda p: LbView.RANK_ORDER_LB.index(p.get('guild_rank', 'F')) if p.get('guild_rank', 'F') in LbView.RANK_ORDER_LB else 0, lambda p: f"{LbView.RANK_ICONS_LB.get(p.get('guild_rank', 'F'), '🩶')} {p.get('guild_rank', 'F')}-Rank"),
     }
 
     def __init__(self, ctx, category="level"):
@@ -185,7 +189,7 @@ class Profile(commands.Cog, name="Profile"):
             return
 
         p = p[0]
-        from guild import get_rank_icon
+        from cogs.guild import get_rank_icon
         race_data = RACES.get(p['race'], {"rarity": "Unknown", "rarity_icon": "❓"})
         level = p.get('level', 1)
         exp = p.get('exp', 0)
