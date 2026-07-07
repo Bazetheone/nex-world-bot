@@ -1067,10 +1067,11 @@ class Economy(commands.Cog, name="Economy"):
                 rebirths = p.get('rebirths', 0) + 1
                 rebirth_bonus = rebirths * 10
                 mult = 1 + rebirth_bonus / 100
-                new_hp  = int(100 * mult)
-                new_str = int(10  * mult)
-                new_mag = int(10  * mult)
-                new_def = int(10  * mult)
+                race_base = RACES.get(p['race'], RACES['Human'])
+                new_hp  = int(race_base['hp']  * mult)
+                new_str = int(race_base['str'] * mult)
+                new_mag = int(race_base['mag'] * mult)
+                new_def = int(race_base['def'] * mult)
                 for slot_item in p.get('equipped', {}).values():
                     if slot_item:
                         for stat, val in slot_item.get('stats', {}).items():
