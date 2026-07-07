@@ -109,8 +109,6 @@ def generate_item_id(item_type):
         item_counters[prefix] += 1
     return f"{prefix}{str(item_counters[prefix]).zfill(3)}"
 
-def exp_required(level):
-    return int(200 * level * level)
 
 class PvPAcceptView(discord.ui.View):
     def __init__(self, ctx, opponent):
@@ -483,7 +481,7 @@ class Economy(commands.Cog, name="Economy"):
         leveled_up = False
         old_level = current_level
 
-        from main import get_stat_increase
+        from main import get_stat_increase, exp_required
         while current_exp >= exp_required(current_level):
             current_exp -= exp_required(current_level)
             current_level += 1
