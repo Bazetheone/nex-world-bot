@@ -573,7 +573,7 @@ class RaidBattleView(discord.ui.View):
 class Raid(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.bot.loop.create_task(self.auto_spawn_raids())
+        # self.bot.loop.create_task(self.auto_spawn_raids())  # Disabled: suspected cause of Wispbyte false-positive flags
 
     async def auto_spawn_raids(self):
         await self.bot.wait_until_ready()
