@@ -210,14 +210,14 @@ FAIL_LINES = [
 ]
 
 TRAVEL_MONSTERS = [
-    {"name": "Bandits", "atk": 200, "def": 80, "hp": 500},
-    {"name": "Wild Wolf Pack", "atk": 180, "def": 60, "hp": 400},
-    {"name": "Rogue Mercenary", "atk": 250, "def": 100, "hp": 600},
-    {"name": "Goblin Raiders", "atk": 150, "def": 50, "hp": 350},
-    {"name": "Corrupted Guard", "atk": 300, "def": 120, "hp": 700},
-    {"name": "Cave Troll", "atk": 350, "def": 200, "hp": 900},
-    {"name": "Highwayman", "atk": 220, "def": 90, "hp": 550},
-    {"name": "Shadow Wraith", "atk": 280, "def": 70, "hp": 450},
+    {"name": "Bandits", "atk": 40, "def": 15, "hp": 120},
+    {"name": "Wild Wolf Pack", "atk": 35, "def": 12, "hp": 100},
+    {"name": "Rogue Mercenary", "atk": 50, "def": 20, "hp": 150},
+    {"name": "Goblin Raiders", "atk": 30, "def": 10, "hp": 90},
+    {"name": "Corrupted Guard", "atk": 60, "def": 25, "hp": 180},
+    {"name": "Cave Troll", "atk": 70, "def": 40, "hp": 220},
+    {"name": "Highwayman", "atk": 45, "def": 18, "hp": 140},
+    {"name": "Shadow Wraith", "atk": 55, "def": 14, "hp": 110},
 ]
 
 def calculate_damage(atk, defense):
@@ -229,8 +229,6 @@ def get_visible_ranks(rank):
     if idx > 0:
         visible.add(RANK_ORDER[idx - 1])
     visible.add(rank)
-    if idx < len(RANK_ORDER) - 1:
-        visible.add(RANK_ORDER[idx + 1])
     return visible
 
 def generate_board(rank):
@@ -424,11 +422,12 @@ class AdventurersGuild(commands.Cog, name="AdventurersGuild"):
             return
 
         now = time.time()
+        initial_progress = quest_data['req'] if quest_data['obj'] == 'guild_board' else 0
         new_quest = {
             "quest_id": quest_id,
             "title": quest_data['title'],
             "objective_type": quest_data['obj'],
-            "progress": 0,
+            "progress": initial_progress,
             "required": quest_data['req'],
             "accepted_at": now,
             "expires_at": now + quest_data['time_h'] * 3600,
@@ -625,6 +624,33 @@ class AdventurersGuild(commands.Cog, name="AdventurersGuild"):
         self._ensure_guild_fields(user_id)
         p = players.search(Player.id == user_id)[0]
 
+        now = time.time()
+        last_travel = p.get('last_travel', 0)
+        if now - last_travel < 3600:
+            remaining = int(3600 - (now - last_travel))
+            m, s = divmod(remaining, 60)
+            await ctx.send(embed=discord.Embed(description=f"⏳ Travel cooldown! Come back in **{m}m {s}s**.", color=GOLD))
+            return
+        players.update({'last_travel': now}, Player.id == user_id)
+
+        destinations = ["Capital City","Merchant's Road","Northern Pass","Silverport Harbor","The Dusty Crossroads","Eastern Watchtower","Forest Village","Mountain Outpost"]
+        dest = random.choice(destinations)
+        encounter = random.random() < 0.20
+
+        if not encounter:
+            reward_nc = random.randint(300, 800)
+            new_nc = p.get('nexcoins', 0) + reward_nc
+            players.update({'nexcoins': new_nc}, Player.id == user_id)
+            completed = track_quest_progress(user_id, 'travel', 1)
+            embed = discord.Embed(title=f"🗺️ Travel Mission — Delivery to {dest}", color=0x00CC66)
+            embed.add_field(name="🌿 Safe Passage", value="The road was clear. No enemies in sight!", inline=False)
+            embed.add_field(name="✅ Mission Success!", value=f"The package was delivered safely!\n+`{reward_nc:,}` NC", inline=False)
+            if completed:
+                embed.add_field(name="✅ Quest Ready!", value="\n".join(f"`!report {qid}`" for qid in completed), inline=False)
+            embed.set_footer(text="Nexworld RPG • Adventurer's Guild")
+            await ctx.send(embed=embed)
+            return
+
         monster = random.choice(TRAVEL_MONSTERS)
         p_atk = max(p.get('str', 10), p.get('mag', 10))
         p_def = p.get('def', 10)
@@ -650,12 +676,7 @@ class AdventurersGuild(commands.Cog, name="AdventurersGuild"):
                 break
 
         won = m_hp <= 0
-        destinations = ["Capital City","Merchant's Road","Northern Pass","Silverport Harbor","The Dusty Crossroads","Eastern Watchtower","Forest Village","Mountain Outpost"]
-        dest = random.choice(destinations)
-
-        embed = discord.Embed(
-            title=f"🗺️ Travel Mission — Delivery to {dest}",
-            color=0x00CC66 if won else 0xFF4444)
+        embed = discord.Embed(title=f"🗺️ Travel Mission — Delivery to {dest}", color=0x00CC66 if won else 0xFF4444)
         embed.add_field(name="⚔️ Encounter", value=f"**{monster['name']}** blocked the road!", inline=False)
         embed.add_field(name="📋 Battle Log", value="\n".join(log[-4:]), inline=False)
 
