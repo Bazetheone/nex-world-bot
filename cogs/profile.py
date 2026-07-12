@@ -235,6 +235,28 @@ class Profile(commands.Cog, name="Profile"):
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
         await ctx.send(embed=embed)
 
+    @commands.command(name="points")
+    async def points(self, ctx, member: discord.Member = None):
+        member = member or ctx.author
+        user_id = str(member.id)
+        p = players.search(Player.id == user_id)
+        if not p:
+            await ctx.send(embed=discord.Embed(description="❌ Player not found!", color=GOLD))
+            return
+        p = p[0]
+        unspent = p.get('unspent_points', 0)
+        embed = discord.Embed(title=f"✨ {member.name}'s Unspent Points", color=GOLD)
+        embed.add_field(name="Unspent Points", value=f"`{unspent:,}`", inline=False)
+        embed.add_field(
+            name="Current Stats",
+            value=f"❤️ HP: `{p.get('hp', 0):,}` • ⚔️ STR: `{p.get('str', 0):,}` • ✨ MAG: `{p.get('mag', 0):,}` • 🛡️ DEF: `{p.get('def', 0):,}`",
+            inline=False)
+        if unspent > 0:
+            embed.add_field(name="How to Spend", value="Use `!assign <stat> <amount>`\nValid stats: `hp`, `str`, `mag`, `def`", inline=False)
+        embed.set_thumbnail(url=member.display_avatar.url)
+        embed.set_footer(text="Nexworld RPG • Your fate has been decided")
+        await ctx.send(embed=embed)
+
     @commands.command(name="balance", aliases=["bal"])
     async def balance(self, ctx, member: discord.Member = None):
         member = member or ctx.author

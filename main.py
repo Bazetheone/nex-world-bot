@@ -437,6 +437,18 @@ def get_skill_name(race, skill_index, level):
             return skill["evolutions"][i]
     return skill["evolutions"][0]
 
+def get_points_for_level(level):
+    if level <= 100:
+        return 15
+    elif level <= 250:
+        return 25
+    elif level <= 500:
+        return 40
+    elif level <= 750:
+        return 58
+    else:
+        return 88
+
 def get_stat_increase(level):
     if level <= 100:
         return {"hp": 5, "str": 2, "mag": 2, "def": 2}

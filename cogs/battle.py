@@ -44,6 +44,8 @@ def apply_level_up(p, user_id):
     mag = p.get('mag', 10)
     def_ = p.get('def', 10)
 
+    from main import get_points_for_level
+    points_gained = 0
     while current_exp >= exp_required(current_level):
         current_exp -= exp_required(current_level)
         current_level += 1
@@ -52,16 +54,19 @@ def apply_level_up(p, user_id):
         str_ += increase['str']
         mag += increase['mag']
         def_ += increase['def']
+        points_gained += get_points_for_level(current_level)
         leveled_up = True
 
     if leveled_up:
+        current_unspent = p.get('unspent_points', 0) + points_gained
         players.update({
             'exp': current_exp,
             'level': current_level,
             'hp': hp,
             'str': str_,
             'mag': mag,
-            'def': def_
+            'def': def_,
+            'unspent_points': current_unspent
         }, Player.id == user_id)
 
     return leveled_up, old_level, current_level
