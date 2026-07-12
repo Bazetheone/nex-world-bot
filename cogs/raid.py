@@ -19,18 +19,18 @@ BOSSES = [
     {"id": 6,  "name": "The Bloodless Executioner", "tier": 2, "hp": 140000,  "atk": 5500,  "def": 2000,  "passive": "Heavy Cleave",     "passive_desc": "Deals an extra 50% damage hit on activation"},
     {"id": 7,  "name": "Skeletal Titan",            "tier": 2, "hp": 180000,  "atk": 4000,  "def": 3000,  "passive": "Bone Armor",       "passive_desc": "Reduces your damage by 25% for the rest of the fight"},
     {"id": 8,  "name": "The Banshee Queen",         "tier": 2, "hp": 80000,   "atk": 6500,  "def": 1000,  "passive": "Screech",          "passive_desc": "Reduces your damage by 20% for the rest of the fight"},
-    {"id": 9,  "name": "Infernal Wyrm",             "tier": 3, "hp": 300000,  "atk": 8000,  "def": 3000,  "passive": "Blazing Aura",     "passive_desc": "Ignites, dealing bonus fire damage each turn"},
-    {"id": 10, "name": "Dreadlord of the Pit",      "tier": 3, "hp": 350000,  "atk": 10000, "def": 3500,  "passive": "Terror",           "passive_desc": "Reduces your damage by 15% for the rest of the fight"},
-    {"id": 11, "name": "Empress of the Oasis",      "tier": 3, "hp": 250000,  "atk": 11000, "def": 2500,  "passive": "Mirage",           "passive_desc": "50% of your attacks hit a mirage and deal no damage"},
-    {"id": 12, "name": "Colossus of Iron & Rust",   "tier": 3, "hp": 500000,  "atk": 7000,  "def": 6000,  "passive": "Unstoppable",      "passive_desc": "Immune to CC; deals an extra hit on activation"},
-    {"id": 13, "name": "Frost-Giant Overlord",      "tier": 4, "hp": 600000,  "atk": 15000, "def": 7000,  "passive": "Permafrost",       "passive_desc": "Reduces your damage by 25% for the rest of the fight"},
-    {"id": 14, "name": "The Ancient Phoenix",       "tier": 4, "hp": 600000,  "atk": 20000, "def": 5000,  "passive": "Rebirth",          "passive_desc": "Revives once with 30% HP upon first death"},
-    {"id": 15, "name": "Serpent of the Depths",     "tier": 4, "hp": 700000,  "atk": 18000, "def": 9000,  "passive": "Tidal Shield",     "passive_desc": "Gains a shield worth 10% of max HP"},
-    {"id": 16, "name": "The Silent Assassin Prime", "tier": 4, "hp": 600000,  "atk": 28000, "def": 4000,  "passive": "Expose Flaw",      "passive_desc": "Boss ATK increases by 50% for the rest of the fight"},
-    {"id": 17, "name": "Void Emperor Zerath",       "tier": 5, "hp": 1500000, "atk": 45000, "def": 15000, "passive": "Nullification",    "passive_desc": "Clears your active buffs and deals a power strike"},
-    {"id": 18, "name": "Time-Eater Chronos",        "tier": 5, "hp": 2000000, "atk": 55000, "def": 12000, "passive": "Time Loop",        "passive_desc": "Attacks twice for the rest of the fight"},
-    {"id": 19, "name": "Nebula Dragon Bahamut",     "tier": 5, "hp": 3000000, "atk": 65000, "def": 20000, "passive": "Cosmic Collapse",  "passive_desc": "Deals catastrophic bonus damage on activation"},
-    {"id": 20, "name": "The Genesis Architect",     "tier": 5, "hp": 5000000, "atk": 80000, "def": 40000, "passive": "Divine Order",     "passive_desc": "Immune to reduction effects; unleashes divine wrath"},
+    {"id": 9,  "name": "Infernal Wyrm",             "tier": 3, "hp": 300000,  "atk": 3500,  "def": 1300,  "passive": "Blazing Aura",     "passive_desc": "Ignites, dealing bonus fire damage each turn"},
+    {"id": 10, "name": "Dreadlord of the Pit",      "tier": 3, "hp": 350000,  "atk": 4200, "def": 1500,  "passive": "Terror",           "passive_desc": "Reduces your damage by 15% for the rest of the fight"},
+    {"id": 11, "name": "Empress of the Oasis",      "tier": 3, "hp": 250000,  "atk": 4600, "def": 1100,  "passive": "Mirage",           "passive_desc": "50% of your attacks hit a mirage and deal no damage"},
+    {"id": 12, "name": "Colossus of Iron & Rust",   "tier": 3, "hp": 500000,  "atk": 3000,  "def": 2600,  "passive": "Unstoppable",      "passive_desc": "Immune to CC; deals an extra hit on activation"},
+    {"id": 13, "name": "Frost-Giant Overlord",      "tier": 4, "hp": 600000,  "atk": 6500, "def": 3000,  "passive": "Permafrost",       "passive_desc": "Reduces your damage by 25% for the rest of the fight"},
+    {"id": 14, "name": "The Ancient Phoenix",       "tier": 4, "hp": 600000,  "atk": 8500, "def": 2200,  "passive": "Rebirth",          "passive_desc": "Revives once with 30% HP upon first death"},
+    {"id": 15, "name": "Serpent of the Depths",     "tier": 4, "hp": 700000,  "atk": 7800, "def": 3900,  "passive": "Tidal Shield",     "passive_desc": "Gains a shield worth 10% of max HP"},
+    {"id": 16, "name": "The Silent Assassin Prime", "tier": 4, "hp": 600000,  "atk": 12000, "def": 1700,  "passive": "Expose Flaw",      "passive_desc": "Boss ATK increases by 50% for the rest of the fight"},
+    {"id": 17, "name": "Void Emperor Zerath",       "tier": 5, "hp": 1500000, "atk": 12000, "def": 4500, "passive": "Nullification",    "passive_desc": "Clears your active buffs and deals a power strike"},
+    {"id": 18, "name": "Time-Eater Chronos",        "tier": 5, "hp": 2000000, "atk": 14000, "def": 3600, "passive": "Time Loop",        "passive_desc": "Attacks twice for the rest of the fight"},
+    {"id": 19, "name": "Nebula Dragon Bahamut",     "tier": 5, "hp": 3000000, "atk": 17000, "def": 6000, "passive": "Cosmic Collapse",  "passive_desc": "Deals catastrophic bonus damage on activation"},
+    {"id": 20, "name": "The Genesis Architect",     "tier": 5, "hp": 5000000, "atk": 20000, "def": 12000, "passive": "Divine Order",     "passive_desc": "Immune to reduction effects; unleashes divine wrath"},
 ]
 
 TIER_NAMES = {
@@ -573,7 +573,7 @@ class RaidBattleView(discord.ui.View):
 class Raid(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.bot.loop.create_task(self.auto_spawn_raids())
+        # self.bot.loop.create_task(self.auto_spawn_raids())  # Disabled: suspected cause of Wispbyte false-positive flags
 
     async def auto_spawn_raids(self):
         await self.bot.wait_until_ready()

@@ -79,10 +79,14 @@ class InvView(discord.ui.View):
 
 class LbView(discord.ui.View):
     PER_PAGE = 10
+    RANK_ORDER_LB = ["F", "E", "D", "C", "B", "A", "S"]
+    RANK_ICONS_LB = {"F": "🩶", "E": "🤍", "D": "🩵", "C": "💚", "B": "💛", "A": "🧡", "S": "❤️"}
+
     CATEGORIES = {
         "level":      ("⚡ Leaderboard — Level",      lambda p: p.get('level', 1),      lambda p: f"Level {p.get('level', 1):,}"),
         "coins":      ("💰 Leaderboard — Nexcoins",    lambda p: p.get('nexcoins', 0),    lambda p: f"{p.get('nexcoins', 0):,} NC"),
         "starshards": ("✨ Leaderboard — Starshards",  lambda p: p.get('starshards', 0),  lambda p: f"{p.get('starshards', 0):,} SS"),
+        "guildrank":  ("🎖️ Leaderboard — Guild Rank", lambda p: LbView.RANK_ORDER_LB.index(p.get('guild_rank', 'F')) if p.get('guild_rank', 'F') in LbView.RANK_ORDER_LB else 0, lambda p: f"{LbView.RANK_ICONS_LB.get(p.get('guild_rank', 'F'), '🩶')} {p.get('guild_rank', 'F')}-Rank"),
     }
 
     def __init__(self, ctx, category="level"):
@@ -160,6 +164,15 @@ class LbView(discord.ui.View):
         self.page = 1
         await interaction.response.edit_message(embed=self.build_embed(), view=self)
 
+    @discord.ui.button(label="🎖️ Guild Rank", style=discord.ButtonStyle.blurple, row=1)
+    async def cat_guildrank(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if interaction.user.id != self.ctx.author.id:
+            await interaction.response.send_message("This isn't your leaderboard!", ephemeral=True)
+            return
+        self.category = "guildrank"
+        self.page = 1
+        await interaction.response.edit_message(embed=self.build_embed(), view=self)
+
 
 class Profile(commands.Cog, name="Profile"):
     def __init__(self, bot):
@@ -176,6 +189,7 @@ class Profile(commands.Cog, name="Profile"):
             return
 
         p = p[0]
+        from cogs.guild import get_rank_icon
         race_data = RACES.get(p['race'], {"rarity": "Unknown", "rarity_icon": "❓"})
         level = p.get('level', 1)
         exp = p.get('exp', 0)
@@ -190,6 +204,7 @@ class Profile(commands.Cog, name="Profile"):
             value=f"{race_data['rarity_icon']} **Race:** {p['race']} `{race_data['rarity']}`\n"
                   f"{ORIGIN_ICONS.get(p['origin'], '❓')} **Origin:** {p['origin']}\n"
                   f"⚡ **Level:** {level}\n"
+                  f"🎖️ **Guild Rank:** {get_rank_icon(p.get('guild_rank', 'F'))} {p.get('guild_rank', 'F')}-Rank\n"
                   f"🔮 **EXP:** {exp:,} / {exp_needed:,}\n"
                   f"🔁 **Rebirths:** {rebirths}" + (f" `+{rebirth_bonus}% stats`" if rebirths > 0 else ""),
             inline=False)
@@ -338,7 +353,7 @@ class Profile(commands.Cog, name="Profile"):
 
     @commands.command(name="leaderboard", aliases=["lb"])
     async def leaderboard(self, ctx, category: str = "level"):
-        valid = ["level", "coins", "starshards"]
+        valid = ["level", "coins", "starshards", "guildrank"]
         if category not in valid:
             category = "level"
         view = LbView(ctx, category)
