@@ -49,11 +49,6 @@ def apply_level_up(p, user_id):
     while current_exp >= exp_required(current_level):
         current_exp -= exp_required(current_level)
         current_level += 1
-        increase = get_stat_increase(current_level)
-        hp += increase['hp']
-        str_ += increase['str']
-        mag += increase['mag']
-        def_ += increase['def']
         points_gained += get_points_for_level(current_level)
         leveled_up = True
 
@@ -62,10 +57,6 @@ def apply_level_up(p, user_id):
         players.update({
             'exp': current_exp,
             'level': current_level,
-            'hp': hp,
-            'str': str_,
-            'mag': mag,
-            'def': def_,
             'unspent_points': current_unspent
         }, Player.id == user_id)
 
@@ -400,7 +391,7 @@ class BattleView(discord.ui.View):
             if leveled_up:
                 embed.add_field(
                     name="⬆️ LEVEL UP!",
-                    value=f"**{old_level} → {new_level}**\nStats automatically increased!",
+                    value=f"**{old_level} → {new_level}**\nGiven `{points_gained}` points to assign! Use `points` / `assign`.",
                     inline=False)
 
             if arc_unlocked:

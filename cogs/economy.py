@@ -481,16 +481,11 @@ class Economy(commands.Cog, name="Economy"):
         leveled_up = False
         old_level = current_level
 
-        from main import get_stat_increase, exp_required, get_points_for_level
+        from main import exp_required, get_points_for_level
         points_gained = 0
         while current_exp >= exp_required(current_level):
             current_exp -= exp_required(current_level)
             current_level += 1
-            increase = get_stat_increase(current_level)
-            hp += increase['hp']
-            str_ += increase['str']
-            mag += increase['mag']
-            def_ += increase['def']
             points_gained += get_points_for_level(current_level)
             leveled_up = True
 
@@ -502,10 +497,6 @@ class Economy(commands.Cog, name="Economy"):
             'inventory': new_inv,
             'exp': current_exp,
             'level': current_level,
-            'hp': hp,
-            'str': str_,
-            'mag': mag,
-            'def': def_,
             'nexcoins': new_coins,
             'unspent_points': current_unspent
         }, Player.id == user_id)
@@ -525,7 +516,7 @@ class Economy(commands.Cog, name="Economy"):
         embed.add_field(name="💰 Nexcoins", value=f"`+{coins_gain:,}`", inline=True)
         embed.add_field(name="🔮 EXP", value=f"`+{format_num(exp_gain)}`", inline=True)
         if leveled_up:
-            embed.add_field(name="⬆️ LEVEL UP!", value=f"**{old_level} → {current_level}**\nStats automatically increased!", inline=False)
+            embed.add_field(name="⬆️ LEVEL UP!", value=f"**{old_level} → {current_level}**\nGiven `{points_gained}` points to assign! Use `points` / `assign`.", inline=False)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(name="⏰ Cooldown", value="Explore again in **1 hour**!", inline=False)
         embed.set_thumbnail(url=ctx.author.display_avatar.url)
