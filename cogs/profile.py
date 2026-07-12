@@ -41,6 +41,13 @@ class InvView(discord.ui.View):
         self.page = max(1, min(self.page, total_pages))
         start = (self.page - 1) * self.PER_PAGE
         page_items = self.inv[start:start + self.PER_PAGE]
+
+        p = players.search(Player.id == str(self.target.id))
+        equipped_uids = set()
+        if p:
+            eq = p[0].get('equipped', {})
+            equipped_uids = {v['uid'] for v in eq.values() if v and isinstance(v, dict) and 'uid' in v}
+
         embed = discord.Embed(title=f"🎒 {self.target.name}'s Inventory", color=GOLD)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         if not self.inv:
@@ -49,7 +56,8 @@ class InvView(discord.ui.View):
             items_text = ""
             for item in page_items:
                 icon = self.RARITY_ICONS.get(item.get('rarity', ''), '❔')
-                items_text += f"{icon} `{item.get('uid','?')}` **{item['name']}** — `{item.get('rarity','?')}`\n"
+                lock = " 🔒" if item.get('uid') in equipped_uids else ""
+                items_text += f"{icon} `{item.get('uid','?')}` **{item['name']}** — `{item.get('rarity','?')}`{lock}\n"
             embed.add_field(name=f"Items ({start+1}–{min(start+self.PER_PAGE, total)} of {total})", value=items_text or "—", inline=False)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(name="Commands", value="`!ie <id>` Equip • `!iue <slot>` Unequip • `!usebuff <id>` Use Buff • `!sell <id>` Sell • `!ma <id> <price>` Market", inline=False)

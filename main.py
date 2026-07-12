@@ -800,6 +800,7 @@ async def load_cogs():
     await bot.load_extension('cogs.raid')
     await bot.load_extension('cogs.guild')
     await bot.load_extension('cogs.clan')
+    await bot.load_extension('cogs.trade')
 
 async def main():
     async with bot:
