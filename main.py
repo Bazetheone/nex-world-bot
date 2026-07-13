@@ -564,29 +564,14 @@ async def setlevel(ctx, member: discord.Member = None, level: int = None):
         await ctx.send(embed=discord.Embed(description="❌ Player not found!", color=GOLD))
         return
     p = players.search(Player.id == user_id)[0]
-    base_hp, base_str, base_mag, base_def = 100, 10, 10, 10
-    for lv in range(2, level + 1):
-        inc = get_stat_increase(lv)
-        base_hp  += inc['hp']
-        base_str += inc['str']
-        base_mag += inc['mag']
-        base_def += inc['def']
-    rb = p.get('rebirth_bonus', 0)
-    if rb > 0:
-        mult = 1 + rb / 100
-        base_hp  = int(base_hp  * mult)
-        base_str = int(base_str * mult)
-        base_mag = int(base_mag * mult)
-        base_def = int(base_def * mult)
-    for slot_item in p.get('equipped', {}).values():
-        if slot_item:
-            for stat, val in slot_item.get('stats', {}).items():
-                if stat == 'hp':  base_hp  += val
-                if stat == 'str': base_str += val
-                if stat == 'mag': base_mag += val
-                if stat == 'def': base_def += val
-    players.update({'level': level, 'exp': 0, 'hp': base_hp, 'str': base_str, 'mag': base_mag, 'def': base_def}, Player.id == user_id)
-    await ctx.send(embed=discord.Embed(title="✅ Level Updated", description=f"{member.mention} → Level **{level}**!\nHP: `{base_hp}` • STR: `{base_str}` • MAG: `{base_mag}` • DEF: `{base_def}`", color=GOLD))
+    old_level = p.get('level', 1)
+    points_gained = 0
+    if level > old_level:
+        for lv in range(old_level + 1, level + 1):
+            points_gained += get_points_for_level(lv)
+    current_unspent = p.get('unspent_points', 0) + points_gained
+    players.update({'level': level, 'exp': 0, 'unspent_points': current_unspent}, Player.id == user_id)
+    await ctx.send(embed=discord.Embed(title="✅ Level Updated", description=f"{member.mention} → Level **{level}**!\nGiven `{points_gained}` unspent points for the level gain.", color=GOLD))
 
 @bot.command(name="setexp")
 async def setexp(ctx, member: discord.Member = None, amount: int = None):
