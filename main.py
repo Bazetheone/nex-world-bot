@@ -485,7 +485,9 @@ def is_admin(user_id):
     return str(user_id) in ADMIN_IDS
 
 # ─── BOT SETUP ───
-intents = discord.Intents.all()
+intents = discord.Intents.default()
+intents.message_content = True
+intents.members = True
 bot = commands.Bot(command_prefix=get_prefix, intents=intents, help_command=None)
 
 # ─── ADMIN COMMANDS (in main.py to guarantee they load) ───
