@@ -45,17 +45,17 @@ RACES = {
 
 # ─── RACE POOLS ───
 RACE_POOL_NORMAL = (
-    ["Human"] * 30 + ["Halfblood"] * 25 + ["Kobold"] * 25 +
-    ["Elf"] * 10 + ["Beastkin"] * 7 + ["Dragon-kin"] * 2 + ["Seraphim"] * 1
+    ["Human"] * 300 + ["Halfblood"] * 250 + ["Kobold"] * 250 +
+    ["Elf"] * 120 + ["Beastkin"] * 75 + ["Dragon-kin"] * 4 + ["Seraphim"] * 1
 )
 RACE_POOL_REINCARNATION = (
-    ["Elf"] * 40 + ["Beastkin"] * 35 + ["Dragon-kin"] * 15 + ["Seraphim"] * 10
+    ["Elf"] * 450 + ["Beastkin"] * 400 + ["Dragon-kin"] * 120 + ["Seraphim"] * 30
 )
 RACE_POOL_TELEPORTED = (
-    ["Dragon-kin"] * 30 + ["Seraphim"] * 30 + ["Beastkin"] * 25 + ["Elf"] * 15
+    ["Dragon-kin"] * 200 + ["Seraphim"] * 150 + ["Beastkin"] * 350 + ["Elf"] * 300
 )
 RACE_POOL_REROLL = (
-    ["Elf"] * 40 + ["Beastkin"] * 35 + ["Dragon-kin"] * 15 + ["Seraphim"] * 10
+    ["Elf"] * 450 + ["Beastkin"] * 400 + ["Dragon-kin"] * 120 + ["Seraphim"] * 30
 )
 
 # ─── ORIGINS ───
