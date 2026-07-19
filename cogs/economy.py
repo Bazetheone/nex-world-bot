@@ -5,6 +5,7 @@ from db import players, market_table, prefixes_table, Player
 import random
 import time
 import os
+import asyncio
 
 _COGS_DIR = os.path.dirname(os.path.abspath(__file__))
 _STATIC_DIR = os.path.join(os.path.dirname(_COGS_DIR), 'static')
@@ -586,14 +587,27 @@ class Economy(commands.Cog, name="Economy"):
         p = p[0]
         streak = p.get('vote_streak', 0)
         total_votes = p.get('votes', 0)
-        streak_rewards = {1: 1000, 2: 2500, 3: 5000, 4: 8000, 5: 12000, 6: 18000}
-        coin_reward = streak_rewards.get(max(1, streak), 25000)
+        last_vote = p.get('last_vote', 0)
+        now = time.time()
+        streak_rewards = {1: 25000, 2: 30000, 3: 35000, 4: 40000, 5: 45000, 6: 50000}
+        next_streak = streak + 1 if (now - last_vote <= 129600) else 1
+        next_reward = streak_rewards.get(next_streak, 60000)
+
+        remaining = 43200 - (now - last_vote)
+        if remaining > 0:
+            h, rem = divmod(int(remaining), 3600)
+            m = rem // 60
+            can_vote = f"⏳ Available in {h}h {m}m"
+        else:
+            can_vote = "✅ You can vote now!"
 
         embed = discord.Embed(title="🗳️ Vote for Nexworld!", color=GOLD)
         embed.add_field(name="Vote Link", value="[Click here to vote!](https://top.gg/bot/YOUR_BOT_ID)", inline=False)
-        embed.add_field(name="Rewards", value=f"💰 **{coin_reward:,} Nexcoins**\n✨ **10 Starshards** (40% chance)", inline=False)
-        embed.add_field(name="🔥 Streaks", value="x1: 1,000\nx2: 2,500\nx3: 5,000\nx4: 8,000\nx5: 12,000\nx6: 18,000\nx7+: 25,000", inline=False)
-        embed.add_field(name="📊 Your Stats", value=f"Total: `{total_votes}` • Streak: `x{streak}`", inline=False)
+        embed.add_field(name="Status", value=can_vote, inline=False)
+        embed.add_field(name="Next Reward", value=f"💰 **{next_reward:,} Nexcoins**\n✨ **10 Starshards** (40% chance)", inline=False)
+        embed.add_field(name="🔥 Streak Ladder", value="x1: 25,000\nx2: 30,000\nx3: 35,000\nx4: 40,000\nx5: 45,000\nx6: 50,000\nx7+: 60,000", inline=False)
+        embed.add_field(name="📊 Your Stats", value=f"Total Votes: `{total_votes}` • Current Streak: `x{streak}`", inline=False)
+        embed.add_field(name="🔔 Reminders", value=f"Use `!votereminder` to toggle DM reminders when your cooldown resets.", inline=False)
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
         await ctx.send(embed=embed)
 
