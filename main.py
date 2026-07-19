@@ -485,6 +485,28 @@ ARCS = {
 }
 
 # ─── HELPER FUNCTIONS ───
+def format_number(n):
+    try:
+        n = float(n)
+    except (TypeError, ValueError):
+        return str(n)
+    sign = "-" if n < 0 else ""
+    n = abs(n)
+    if n < 1000:
+        return f"{sign}{int(n) if n == int(n) else n:,}"
+    units = [
+        (1e33, "D"), (1e30, "N"), (1e27, "O"), (1e24, "Sp"), (1e21, "Sx"),
+        (1e18, "Qi"), (1e15, "Qa"), (1e12, "T"), (1e9, "B"), (1e6, "M"), (1e3, "K"),
+    ]
+    for value, suffix in units:
+        if n >= value:
+            result = n / value
+            if result >= 1000:
+                continue
+            formatted = f"{result:.2f}".rstrip('0').rstrip('.')
+            return f"{sign}{formatted}{suffix}"
+    return f"{sign}{n:.2e}"
+
 def exp_required(level):
     return int(100 * (1.5 ** (level - 1)))
 

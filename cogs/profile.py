@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from db import players, Player
+from main import format_number
 
 GOLD = 0xFFD700
 
@@ -213,18 +214,18 @@ class Profile(commands.Cog, name="Profile"):
                   f"{ORIGIN_ICONS.get(p['origin'], '❓')} **Origin:** {p['origin']}\n"
                   f"⚡ **Level:** {level}\n"
                   f"🎖️ **Guild Rank:** {get_rank_icon(p.get('guild_rank', 'F'))} {p.get('guild_rank', 'F')}-Rank\n"
-                  f"🔮 **EXP:** {exp:,} / {exp_needed:,}\n"
+                  f"🔮 **EXP:** {format_number(exp)} / {format_number(exp_needed)}\n"
                   f"🔁 **Rebirths:** {rebirths}" + (f" `+{rebirth_bonus}% stats`" if rebirths > 0 else ""),
             inline=False)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
-        embed.add_field(name="❤️ HP", value=f"`{p['hp']:,}`", inline=True)
-        embed.add_field(name="⚔️ STR", value=f"`{p['str']:,}`", inline=True)
-        embed.add_field(name="✨ MAG", value=f"`{p['mag']:,}`", inline=True)
-        embed.add_field(name="🛡️ DEF", value=f"`{p['def']:,}`", inline=True)
+        embed.add_field(name="❤️ HP", value=f"`{format_number(p['hp'])}`", inline=True)
+        embed.add_field(name="⚔️ STR", value=f"`{format_number(p['str'])}`", inline=True)
+        embed.add_field(name="✨ MAG", value=f"`{format_number(p['mag'])}`", inline=True)
+        embed.add_field(name="🛡️ DEF", value=f"`{format_number(p['def'])}`", inline=True)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(
             name="💰 Balance",
-            value=f"Nexcoins: `{p.get('nexcoins', 0):,}`\nStarshards: `{p.get('starshards', 0):,}`",
+            value=f"Nexcoins: `{format_number(p.get('nexcoins', 0))}`\nStarshards: `{format_number(p.get('starshards', 0))}`",
             inline=False)
 
         weapon = equipped.get('weapon')
