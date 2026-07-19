@@ -141,6 +141,38 @@ class PvPAcceptView(discord.ui.View):
 class Economy(commands.Cog, name="Economy"):
     def __init__(self, bot):
         self.bot = bot
+        self.bot.loop.create_task(self._vote_reminder_loop())
+
+    async def _vote_reminder_loop(self):
+        await self.bot.wait_until_ready()
+        while not self.bot.is_closed():
+            await asyncio.sleep(600)
+            try:
+                now = time.time()
+                for p in players.all():
+                    if not p.get('vote_reminder_enabled', False):
+                        continue
+                    last_vote = p.get('last_vote', 0)
+                    if last_vote == 0:
+                        continue
+                    if now - last_vote < 43200:
+                        continue
+                    if p.get('vote_reminder_sent', False):
+                        continue
+                    try:
+                        user = self.bot.get_user(int(p['id']))
+                        if user:
+                            embed = discord.Embed(
+                                title="🗳️ You can vote again!",
+                                description="Your vote cooldown has reset — vote now to keep your streak alive!",
+                                color=GOLD)
+                            embed.add_field(name="Vote Link", value="[Click here to vote!](https://top.gg/bot/YOUR_BOT_ID)", inline=False)
+                            await user.send(embed=embed)
+                            players.update({'vote_reminder_sent': True}, Player.id == p['id'])
+                    except Exception:
+                        pass
+            except Exception:
+                pass
 
     @commands.command(name="start")
     async def start(self, ctx):
@@ -529,6 +561,20 @@ class Economy(commands.Cog, name="Economy"):
         else:
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")
             await ctx.send(embed=embed)
+
+    @commands.command(name="votereminder", aliases=["vr"])
+    async def votereminder(self, ctx):
+        user_id = str(ctx.author.id)
+        p = players.search(Player.id == user_id)
+        if not p:
+            await ctx.send(embed=discord.Embed(description="❌ You haven't started yet!", color=GOLD))
+            return
+        p = p[0]
+        current = p.get('vote_reminder_enabled', False)
+        new_val = not current
+        players.update({'vote_reminder_enabled': new_val}, Player.id == user_id)
+        state = "✅ **ON**" if new_val else "❌ **OFF**"
+        await ctx.send(embed=discord.Embed(description=f"🗳️ Vote reminders are now {state}", color=GOLD))
 
     @commands.command(name="vote")
     async def vote(self, ctx):

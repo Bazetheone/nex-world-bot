@@ -7,7 +7,7 @@ from tinydb import TinyDB, Query
 import random
 import time
 import asyncio
-from flask import Flask
+from flask import Flask, request, jsonify
 from threading import Thread
 
 # ─── KEEP ALIVE ───
@@ -16,6 +16,64 @@ app = Flask('')
 @app.route('/')
 def home():
     return "Nexworld is alive!"
+
+@app.route('/vote-webhook', methods=['POST'])
+def vote_webhook():
+    auth = request.headers.get('Authorization')
+    expected = os.getenv('TOPGG_WEBHOOK_SECRET')
+    if not expected or auth != expected:
+        return jsonify({'error': 'unauthorized'}), 401
+    data = request.json or {}
+    user_id = str(data.get('user', ''))
+    if not user_id:
+        return jsonify({'error': 'no user'}), 400
+    try:
+        asyncio.run_coroutine_threadsafe(handle_vote(user_id), bot.loop)
+    except Exception as e:
+        print(f"Vote webhook error: {e}")
+    return jsonify({'success': True}), 200
+
+async def handle_vote(user_id):
+    p = players.search(Player.id == user_id)
+    if not p:
+        return
+    p = p[0]
+    now = time.time()
+    last_vote = p.get('last_vote', 0)
+    streak = p.get('vote_streak', 0)
+    if now - last_vote > 129600:
+        streak = 0
+    streak += 1
+    votes = p.get('votes', 0) + 1
+
+    streak_rewards = {1: 25000, 2: 30000, 3: 35000, 4: 40000, 5: 45000, 6: 50000}
+    coin_reward = streak_rewards.get(streak, 60000)
+    ss_gained = 10 if random.random() < 0.4 else 0
+
+    new_coins = p.get('nexcoins', 0) + coin_reward
+    new_ss = p.get('starshards', 0) + ss_gained
+
+    players.update({
+        'votes': votes,
+        'vote_streak': streak,
+        'last_vote': now,
+        'nexcoins': new_coins,
+        'starshards': new_ss,
+        'vote_reminder_sent': False
+    }, Player.id == user_id)
+
+    try:
+        user = bot.get_user(int(user_id))
+        if user:
+            embed = discord.Embed(title="🗳️ Vote Reward!", color=GOLD)
+            embed.add_field(name="💰 Nexcoins", value=f"+{coin_reward:,}", inline=True)
+            embed.add_field(name="🔥 Streak", value=f"x{streak}", inline=True)
+            if ss_gained:
+                embed.add_field(name="✨ Starshards", value=f"+{ss_gained}", inline=True)
+            embed.set_footer(text="Nexworld RPG • Thanks for voting!")
+            await user.send(embed=embed)
+    except Exception:
+        pass
 
 def run():
     app.run(host='0.0.0.0', port=8080)
