@@ -188,12 +188,41 @@ RACE_SKILLS = {
     },
     "Seraphim": {
         "skills": [
-            {"name": "Holy Strike", "evolutions": ["Holy Strike", "Sacred Strike", "Divine Strike", "Seraph's Wrath", "Omega Holy Strike"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Divine Healing", "evolutions": ["Divine Healing", "Sacred Healing", "Holy Restoration", "Divine Restoration", "Omega Healing"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Wings of Light", "evolutions": ["Wings of Light", "Sacred Wings", "Divine Wings", "Seraph Wings", "Omega Wings"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Judgment", "evolutions": ["Judgment", "Sacred Judgment", "Divine Judgment", "Seraph's Judgment", "Omega Judgment"], "evo_levels": [1, 100, 250, 500, 750]}
+            {"name": "Holy Strike", "evolutions": ["Holy Strike", "Sacred Strike", "Divine Strike", "Seraph's Wrath", "Omega Holy Strike"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "damage", "dmg_mult": 1.4},
+                 {"type": "damage", "dmg_mult": 1.6},
+                 {"type": "damage", "dmg_mult": 1.8},
+                 {"type": "damage", "dmg_mult": 2.0},
+                 {"type": "damage", "dmg_mult": 2.3}
+             ]},
+            {"name": "Divine Healing", "evolutions": ["Divine Healing", "Sacred Healing", "Holy Restoration", "Divine Restoration", "Omega Healing"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "heal_and_damage", "heal_pct": 0.50, "dmg_mult": 0.50},
+                 {"type": "heal_and_damage", "heal_pct": 0.50, "dmg_mult": 0.65},
+                 {"type": "heal_and_damage", "heal_pct": 0.50, "dmg_mult": 0.80},
+                 {"type": "heal_and_damage", "heal_pct": 0.50, "dmg_mult": 0.95},
+                 {"type": "heal_and_damage", "heal_pct": 0.50, "dmg_mult": 1.15}
+             ]},
+            {"name": "Wings of Light", "evolutions": ["Wings of Light", "Sacred Wings", "Divine Wings", "Seraph Wings", "Omega Wings"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "shield", "shield_pct": 0.15, "duration": 2},
+                 {"type": "shield", "shield_pct": 0.20, "duration": 2},
+                 {"type": "shield", "shield_pct": 0.25, "duration": 3},
+                 {"type": "shield", "shield_pct": 0.32, "duration": 3},
+                 {"type": "shield", "shield_pct": 0.40, "duration": 3}
+             ]},
+            {"name": "Judgment", "evolutions": ["Judgment", "Sacred Judgment", "Divine Judgment", "Seraph's Judgment", "Omega Judgment"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "pierce_damage", "dmg_mult": 1.8, "def_ignore_pct": 0.30},
+                 {"type": "pierce_damage", "dmg_mult": 2.0, "def_ignore_pct": 0.40},
+                 {"type": "pierce_damage", "dmg_mult": 2.3, "def_ignore_pct": 0.50},
+                 {"type": "pierce_damage", "dmg_mult": 2.6, "def_ignore_pct": 0.65},
+                 {"type": "pierce_damage", "dmg_mult": 3.0, "def_ignore_pct": 0.80}
+             ]}
         ],
-        "special": {"name": "Seraphic Purge", "unlock_level": 10}
+        "special": {"name": "Seraphic Purge", "unlock_level": 10,
+                    "effect": {"type": "heal_and_damage", "heal_pct": 0.60, "dmg_mult": 3.0}}
     }
 }
 
@@ -509,6 +538,19 @@ def format_number(n):
 
 def exp_required(level):
     return int(100 * (1.5 ** (level - 1)))
+
+def get_skill_effect(race, skill_index, level):
+    skill = RACE_SKILLS[race]["skills"][skill_index]
+    effects = skill.get("effects")
+    if not effects:
+        return None
+    for i in range(len(skill["evo_levels"]) - 1, -1, -1):
+        if level >= skill["evo_levels"][i]:
+            return effects[i] if i < len(effects) else effects[-1]
+    return effects[0]
+
+def get_special_effect(race):
+    return RACE_SKILLS[race]["special"].get("effect")
 
 def get_skill_name(race, skill_index, level):
     skill = RACE_SKILLS[race]["skills"][skill_index]

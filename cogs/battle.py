@@ -78,6 +78,7 @@ class BattleView(discord.ui.View):
         self.battle_ended = False
         self.turn = 1
         self.message = None
+        self.shield_hp = 0
 
         from main import RACE_SKILLS
         race = player_data['race']
@@ -285,26 +286,54 @@ class BattleView(discord.ui.View):
         self.stop()
 
     async def use_skill(self, interaction, skill_index):
+        from main import get_skill_effect
         now = time.time()
         str_bonus = 100 if now < self.player_data.get('buff_str_boost_until', 0) else 0
         def_bonus = 100 if now < self.player_data.get('buff_def_boost_until', 0) else 0
         best_atk = max(self.player_data['str'] + str_bonus, self.player_data['mag'] + str_bonus)
-        dmg = calculate_damage(int(best_atk * 1.4), self.enemy['def'])
-        self.enemy_hp -= dmg
+
+        race = self.player_data['race']
+        level = self.player_data.get('level', 1)
+        skill_name = get_skill_name(race, skill_index, level)
+        effect = get_skill_effect(race, skill_index, level)
         self.skill_uses += 1
 
-        skill_name = get_skill_name(self.player_data['race'], skill_index, self.player_data.get('level', 1))
+        if not effect or effect.get('type') == 'damage':
+            mult = effect.get('dmg_mult', 1.4) if effect else 1.4
+            dmg = calculate_damage(int(best_atk * mult), self.enemy['def'])
+            self.enemy_hp -= dmg
+            result = f"✨ **{skill_name}** dealt **{dmg:,}** damage!"
+
+        elif effect.get('type') == 'heal_and_damage':
+            max_hp = self.player_data['hp']
+            heal = int(max_hp * effect.get('heal_pct', 0.2))
+            self.player_hp = min(max_hp, self.player_hp + heal)
+            dmg = calculate_damage(int(best_atk * effect.get('dmg_mult', 1.0)), self.enemy['def'])
+            self.enemy_hp -= dmg
+            result = f"✨ **{skill_name}** healed **{heal:,}** HP and dealt **{dmg:,}** damage!"
+
+        elif effect.get('type') == 'shield':
+            shield_amt = int(self.player_data['hp'] * effect.get('shield_pct', 0.2))
+            self.shield_hp = getattr(self, 'shield_hp', 0) + shield_amt
+            result = f"✨ **{skill_name}** granted a **{shield_amt:,}** HP shield!"
+
+        elif effect.get('type') == 'pierce_damage':
+            reduced_def = int(self.enemy['def'] * (1 - effect.get('def_ignore_pct', 0.3)))
+            dmg = calculate_damage(int(best_atk * effect.get('dmg_mult', 1.8)), reduced_def)
+            self.enemy_hp -= dmg
+            result = f"✨ **{skill_name}** pierced defenses and dealt **{dmg:,}** damage!"
+
+        else:
+            dmg = calculate_damage(int(best_atk * 1.4), self.enemy['def'])
+            self.enemy_hp -= dmg
+            result = f"✨ **{skill_name}** dealt **{dmg:,}** damage!"
 
         if not self.special_available and self.skill_uses >= 2:
             self.special_available = True
             from main import RACE_SKILLS
-            race = self.player_data['race']
-            level = self.player_data.get('level', 1)
             special = RACE_SKILLS[race]['special']
             if level >= special['unlock_level']:
                 self.children[4].disabled = False
-
-        result = f"✨ **{skill_name}** dealt **{dmg:,}** damage!"
 
         if self.enemy_hp <= 0:
             self.enemy_hp = 0
@@ -315,8 +344,15 @@ class BattleView(discord.ui.View):
             return
 
         enemy_dmg = calculate_damage(self.enemy['atk'], self.player_data['def'] + def_bonus)
+        if self.shield_hp > 0:
+            absorbed = min(self.shield_hp, enemy_dmg)
+            self.shield_hp -= absorbed
+            enemy_dmg -= absorbed
+            if absorbed > 0:
+                result += f"\n🛡️ Shield absorbed **{absorbed:,}** damage!"
         self.player_hp -= enemy_dmg
-        result += f"\n{self.enemy['name']} hit back for **{enemy_dmg:,}**!"
+        if enemy_dmg > 0:
+            result += f"\n{self.enemy['name']} hit back for **{enemy_dmg:,}**!"
         self.turn += 1
 
         if self.player_hp <= 0:
