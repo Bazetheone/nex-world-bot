@@ -309,23 +309,39 @@ class Profile(commands.Cog, name="Profile"):
         race = p['race']
         level = p.get('level', 1)
 
-        from main import RACE_SKILLS, get_skill_name
+        from main import RACE_SKILLS, get_skill_name, get_skill_effect
         race_skills = RACE_SKILLS[race]
         special = race_skills['special']
+
+        def describe_effect(effect):
+            if not effect:
+                return "Deals damage."
+            t = effect.get('type')
+            if t == 'damage':
+                return f"Deals damage ({effect.get('dmg_mult', 1.0)}x power)."
+            if t == 'heal_and_damage':
+                return f"Heals {int(effect.get('heal_pct', 0)*100)}% of your max HP and deals damage ({effect.get('dmg_mult', 1.0)}x power)."
+            if t == 'shield':
+                return f"Grants a shield absorbing {int(effect.get('shield_pct', 0)*100)}% of your max HP in damage for {effect.get('duration', 1)} turn(s)."
+            if t == 'pierce_damage':
+                return f"Deals piercing damage ({effect.get('dmg_mult', 1.0)}x power), ignoring {int(effect.get('def_ignore_pct', 0)*100)}% of enemy DEF."
+            return "Deals damage."
 
         embed = discord.Embed(title=f"⚔️ {member.name}'s Skills — {race}", color=GOLD)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
 
         for i, skill in enumerate(race_skills['skills']):
             current_name = get_skill_name(race, i, level)
+            current_effect = get_skill_effect(race, i, level)
+            effect_text = describe_effect(current_effect)
             next_evo = None
             for j, evo_level in enumerate(skill['evo_levels']):
                 if level < evo_level:
-                    next_evo = f"Evolves at level `{evo_level}` → **{skill['evolutions'][j]}**"
+                    next_evo = f"\nEvolves at level `{evo_level}` → **{skill['evolutions'][j]}**"
                     break
             embed.add_field(
                 name=f"Skill {i+1} — **{current_name}**",
-                value=next_evo if next_evo else "✅ Max Evolution!",
+                value=f"{effect_text}{next_evo if next_evo else chr(10) + '✅ Max Evolution!'}",
                 inline=False)
 
         if level >= special['unlock_level']:

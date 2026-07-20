@@ -64,7 +64,7 @@ def apply_level_up(p, user_id):
 
 class BattleView(discord.ui.View):
     def __init__(self, ctx, player_data, enemy, arc_num, enemy_num):
-        super().__init__(timeout=120)
+        super().__init__(timeout=50)
         self.ctx = ctx
         self.user_id = str(ctx.author.id)
         self.player_data = player_data
