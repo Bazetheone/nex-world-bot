@@ -186,17 +186,28 @@ class BattleView(discord.ui.View):
             await interaction.response.send_message("Not ready! Use skills 2 more times.", ephemeral=True)
             return
 
+        from main import get_special_effect
         now = time.time()
         str_bonus_sp = 100 if now < self.player_data.get('buff_str_boost_until', 0) else 0
         def_bonus_sp = 100 if now < self.player_data.get('buff_def_boost_until', 0) else 0
         best_atk = max(self.player_data['str'] + str_bonus_sp, self.player_data['mag'] + str_bonus_sp)
-        dmg = calculate_damage(int(best_atk * 2.5), self.enemy['def'] // 2)
-        self.enemy_hp -= dmg
+
+        sp_effect = get_special_effect(race)
         self.special_available = False
         self.skill_uses = 0
-
         self.children[4].disabled = True
-        result = f"💫 **{special['name']}** dealt **{dmg:,}** MASSIVE damage!"
+
+        if sp_effect and sp_effect.get('type') == 'heal_and_damage':
+            max_hp = self.player_data['hp']
+            heal = int(max_hp * sp_effect.get('heal_pct', 0.3))
+            self.player_hp = min(max_hp, self.player_hp + heal)
+            dmg = calculate_damage(int(best_atk * sp_effect.get('dmg_mult', 2.5)), self.enemy['def'] // 2)
+            self.enemy_hp -= dmg
+            result = f"💫 **{special['name']}** healed **{heal:,}** HP and dealt **{dmg:,}** MASSIVE damage!"
+        else:
+            dmg = calculate_damage(int(best_atk * 2.5), self.enemy['def'] // 2)
+            self.enemy_hp -= dmg
+            result = f"💫 **{special['name']}** dealt **{dmg:,}** MASSIVE damage!"
 
         if self.enemy_hp <= 0:
             self.enemy_hp = 0
