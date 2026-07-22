@@ -134,57 +134,135 @@ ORIGIN_TEXT = {
 RACE_SKILLS = {
     "Human": {
         "skills": [
-            {"name": "Iron Strike", "evolutions": ["Iron Strike", "Steel Cleave", "Titan Slash", "World Cutter", "Omega Cleave"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Resilience", "evolutions": ["Resilience", "Second Wind", "Unyielding", "Indomitable", "Immortal Will"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Battle Cry", "evolutions": ["Battle Cry", "War Cry", "Warlord's Roar", "Conqueror's Call", "Legendary Cry"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Counter", "evolutions": ["Counter", "Counter Strike", "Deflect", "Retribution", "Omega Counter"], "evo_levels": [1, 100, 250, 500, 750]}
+            {"name": "Iron Strike", "evolutions": ["Iron Strike", "Steel Cleave", "Titan Slash", "World Cutter", "Omega Cleave"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "damage", "dmg_mult": 1.4}, {"type": "damage", "dmg_mult": 1.6}, {"type": "damage", "dmg_mult": 1.8}, {"type": "damage", "dmg_mult": 2.0}, {"type": "damage", "dmg_mult": 2.3}
+             ]},
+            {"name": "Resilience", "evolutions": ["Resilience", "Second Wind", "Unyielding", "Indomitable", "Immortal Will"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "heal", "heal_pct": 0.20}, {"type": "heal", "heal_pct": 0.25}, {"type": "heal", "heal_pct": 0.30}, {"type": "heal", "heal_pct": 0.38}, {"type": "heal", "heal_pct": 0.48}
+             ]},
+            {"name": "Battle Cry", "evolutions": ["Battle Cry", "War Cry", "Warlord's Roar", "Conqueror's Call", "Legendary Cry"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "buff_self", "stat": "all", "pct": 0.15, "duration": 2}, {"type": "buff_self", "stat": "all", "pct": 0.20, "duration": 2}, {"type": "buff_self", "stat": "all", "pct": 0.25, "duration": 3}, {"type": "buff_self", "stat": "all", "pct": 0.32, "duration": 3}, {"type": "buff_self", "stat": "all", "pct": 0.40, "duration": 3}
+             ]},
+            {"name": "Counter", "evolutions": ["Counter", "Counter Strike", "Deflect", "Retribution", "Omega Counter"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "reflect", "reflect_pct": 0.25}, {"type": "reflect", "reflect_pct": 0.30}, {"type": "reflect", "reflect_pct": 0.38}, {"type": "reflect", "reflect_pct": 0.48}, {"type": "reflect", "reflect_pct": 0.60}
+             ]}
         ],
-        "special": {"name": "Will of Humanity", "unlock_level": 10}
+        "special": {"name": "Will of Humanity", "unlock_level": 10,
+                    "effect": {"type": "buff_self", "stat": "all", "pct": 0.50, "duration": 3}}
     },
     "Halfblood": {
         "skills": [
-            {"name": "Arcane Strike", "evolutions": ["Arcane Strike", "Mystic Slash", "Void Strike", "Chaos Cleave", "Annihilation Strike"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Blood Surge", "evolutions": ["Blood Surge", "Blood Rush", "Blood Frenzy", "Crimson Rage", "Omega Surge"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Spellblade", "evolutions": ["Spellblade", "Enhanced Spellblade", "Runic Blade", "Chaos Blade", "Omega Spellblade"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Hybrid Shield", "evolutions": ["Hybrid Shield", "Arcane Guard", "Arcane Ward", "Chaos Shield", "Omega Ward"], "evo_levels": [1, 100, 250, 500, 750]}
+            {"name": "Arcane Strike", "evolutions": ["Arcane Strike", "Mystic Slash", "Void Strike", "Chaos Cleave", "Annihilation Strike"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "damage", "dmg_mult": 1.4}, {"type": "damage", "dmg_mult": 1.6}, {"type": "damage", "dmg_mult": 1.8}, {"type": "damage", "dmg_mult": 2.0}, {"type": "damage", "dmg_mult": 2.3}
+             ]},
+            {"name": "Blood Surge", "evolutions": ["Blood Surge", "Blood Rush", "Blood Frenzy", "Crimson Rage", "Omega Surge"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "damage_self_cost", "dmg_mult": 1.8, "hp_cost_pct": 0.05}, {"type": "damage_self_cost", "dmg_mult": 2.0, "hp_cost_pct": 0.05}, {"type": "damage_self_cost", "dmg_mult": 2.3, "hp_cost_pct": 0.06}, {"type": "damage_self_cost", "dmg_mult": 2.6, "hp_cost_pct": 0.06}, {"type": "damage_self_cost", "dmg_mult": 3.0, "hp_cost_pct": 0.07}
+             ]},
+            {"name": "Spellblade", "evolutions": ["Spellblade", "Enhanced Spellblade", "Runic Blade", "Chaos Blade", "Omega Spellblade"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "hybrid_damage", "dmg_mult": 1.5}, {"type": "hybrid_damage", "dmg_mult": 1.7}, {"type": "hybrid_damage", "dmg_mult": 1.9}, {"type": "hybrid_damage", "dmg_mult": 2.1}, {"type": "hybrid_damage", "dmg_mult": 2.4}
+             ]},
+            {"name": "Hybrid Shield", "evolutions": ["Hybrid Shield", "Arcane Guard", "Arcane Ward", "Chaos Shield", "Omega Ward"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "shield", "shield_pct": 0.15, "duration": 2}, {"type": "shield", "shield_pct": 0.20, "duration": 2}, {"type": "shield", "shield_pct": 0.25, "duration": 3}, {"type": "shield", "shield_pct": 0.32, "duration": 3}, {"type": "shield", "shield_pct": 0.40, "duration": 3}
+             ]}
         ],
-        "special": {"name": "Blood and Magic", "unlock_level": 10}
+        "special": {"name": "Blood and Magic", "unlock_level": 10,
+                    "effect": {"type": "heal_and_damage", "heal_pct": 0.30, "dmg_mult": 2.5}}
     },
     "Kobold": {
         "skills": [
-            {"name": "Sneak Attack", "evolutions": ["Sneak Attack", "Shadow Strike", "Void Stab", "Death Mark", "Omega Sneak"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Trap", "evolutions": ["Trap", "Reinforced Trap", "Venom Trap", "Death Trap", "Omega Trap"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Dodge", "evolutions": ["Dodge", "Swift Dodge", "Phantom Dodge", "Death Dodge", "Omega Dodge"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Poison Vial", "evolutions": ["Poison Vial", "Toxic Vial", "Venom Vial", "Death Vial", "Omega Poison"], "evo_levels": [1, 100, 250, 500, 750]}
+            {"name": "Sneak Attack", "evolutions": ["Sneak Attack", "Shadow Strike", "Void Stab", "Death Mark", "Omega Sneak"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "first_strike_damage", "dmg_mult": 1.6, "bonus_mult": 0.5}, {"type": "first_strike_damage", "dmg_mult": 1.8, "bonus_mult": 0.5}, {"type": "first_strike_damage", "dmg_mult": 2.1, "bonus_mult": 0.6}, {"type": "first_strike_damage", "dmg_mult": 2.4, "bonus_mult": 0.6}, {"type": "first_strike_damage", "dmg_mult": 2.8, "bonus_mult": 0.7}
+             ]},
+            {"name": "Trap", "evolutions": ["Trap", "Reinforced Trap", "Venom Trap", "Death Trap", "Omega Trap"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "damage_and_debuff", "dmg_mult": 1.2, "stat": "atk", "pct": 0.15, "duration": 2}, {"type": "damage_and_debuff", "dmg_mult": 1.35, "stat": "atk", "pct": 0.20, "duration": 2}, {"type": "damage_and_debuff", "dmg_mult": 1.5, "stat": "atk", "pct": 0.25, "duration": 3}, {"type": "damage_and_debuff", "dmg_mult": 1.65, "stat": "atk", "pct": 0.30, "duration": 3}, {"type": "damage_and_debuff", "dmg_mult": 1.8, "stat": "atk", "pct": 0.35, "duration": 3}
+             ]},
+            {"name": "Dodge", "evolutions": ["Dodge", "Swift Dodge", "Phantom Dodge", "Death Dodge", "Omega Dodge"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "evade", "chance": 0.30}, {"type": "evade", "chance": 0.38}, {"type": "evade", "chance": 0.45}, {"type": "evade", "chance": 0.52}, {"type": "evade", "chance": 0.60}
+             ]},
+            {"name": "Poison Vial", "evolutions": ["Poison Vial", "Toxic Vial", "Venom Vial", "Death Vial", "Omega Poison"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "dot", "pct": 0.05, "ticks": 3}, {"type": "dot", "pct": 0.07, "ticks": 3}, {"type": "dot", "pct": 0.08, "ticks": 3}, {"type": "dot", "pct": 0.10, "ticks": 3}, {"type": "dot", "pct": 0.12, "ticks": 3}
+             ]}
         ],
-        "special": {"name": "Death from Shadows", "unlock_level": 10}
+        "special": {"name": "Death from Shadows", "unlock_level": 10,
+                    "effect": {"type": "pierce_damage", "dmg_mult": 3.0, "def_ignore_pct": 1.0}}
     },
     "Elf": {
         "skills": [
-            {"name": "Magic Arrow", "evolutions": ["Magic Arrow", "Arcane Arrow", "Void Arrow", "Star Arrow", "Omega Arrow"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Nature's Blessing", "evolutions": ["Nature's Blessing", "Forest Blessing", "Ancient Blessing", "Divine Blessing", "Omega Blessing"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Arcane Barrier", "evolutions": ["Arcane Barrier", "Mystic Barrier", "Void Barrier", "Star Barrier", "Omega Barrier"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Ancient Curse", "evolutions": ["Ancient Curse", "Void Curse", "Star Curse", "Ancient Hex", "Omega Curse"], "evo_levels": [1, 100, 250, 500, 750]}
+            {"name": "Magic Arrow", "evolutions": ["Magic Arrow", "Arcane Arrow", "Void Arrow", "Star Arrow", "Omega Arrow"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "damage", "dmg_mult": 1.4}, {"type": "damage", "dmg_mult": 1.6}, {"type": "damage", "dmg_mult": 1.8}, {"type": "damage", "dmg_mult": 2.0}, {"type": "damage", "dmg_mult": 2.3}
+             ]},
+            {"name": "Nature's Blessing", "evolutions": ["Nature's Blessing", "Forest Blessing", "Ancient Blessing", "Divine Blessing", "Omega Blessing"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "heal", "heal_pct": 0.25}, {"type": "heal", "heal_pct": 0.32}, {"type": "heal", "heal_pct": 0.38}, {"type": "heal", "heal_pct": 0.45}, {"type": "heal", "heal_pct": 0.50}
+             ]},
+            {"name": "Arcane Barrier", "evolutions": ["Arcane Barrier", "Mystic Barrier", "Void Barrier", "Star Barrier", "Omega Barrier"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "shield", "shield_pct": 0.15, "duration": 2}, {"type": "shield", "shield_pct": 0.20, "duration": 2}, {"type": "shield", "shield_pct": 0.25, "duration": 3}, {"type": "shield", "shield_pct": 0.32, "duration": 3}, {"type": "shield", "shield_pct": 0.40, "duration": 3}
+             ]},
+            {"name": "Ancient Curse", "evolutions": ["Ancient Curse", "Void Curse", "Star Curse", "Ancient Hex", "Omega Curse"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "debuff_enemy", "stat": "def", "pct": 0.15, "duration": 3}, {"type": "debuff_enemy", "stat": "def", "pct": 0.22, "duration": 3}, {"type": "debuff_enemy", "stat": "def", "pct": 0.28, "duration": 3}, {"type": "debuff_enemy", "stat": "def", "pct": 0.35, "duration": 3}, {"type": "debuff_enemy", "stat": "def", "pct": 0.40, "duration": 3}
+             ]}
         ],
-        "special": {"name": "Arcane Apocalypse", "unlock_level": 10}
+        "special": {"name": "Arcane Apocalypse", "unlock_level": 10,
+                    "effect": {"type": "pierce_damage", "dmg_mult": 3.0, "def_ignore_pct": 0.5}}
     },
     "Beastkin": {
         "skills": [
-            {"name": "Savage Strike", "evolutions": ["Savage Strike", "Feral Slash", "Beast Cleave", "Predator Strike", "Omega Savage"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Primal Roar", "evolutions": ["Primal Roar", "Beast Roar", "Alpha Roar", "Predator Roar", "Omega Roar"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Feral Healing", "evolutions": ["Feral Healing", "Beast Healing", "Beast Regeneration", "Predator Regen", "Omega Regeneration"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Unleash", "evolutions": ["Unleash", "Feral Unleash", "Feral Rage", "Predator Rage", "Omega Unleash"], "evo_levels": [1, 100, 250, 500, 750]}
+            {"name": "Savage Strike", "evolutions": ["Savage Strike", "Feral Slash", "Beast Cleave", "Predator Strike", "Omega Savage"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "damage", "dmg_mult": 1.5}, {"type": "damage", "dmg_mult": 1.7}, {"type": "damage", "dmg_mult": 1.9}, {"type": "damage", "dmg_mult": 2.1}, {"type": "damage", "dmg_mult": 2.4}
+             ]},
+            {"name": "Primal Roar", "evolutions": ["Primal Roar", "Beast Roar", "Alpha Roar", "Predator Roar", "Omega Roar"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "buff_self", "stat": "str", "pct": 0.20, "duration": 2}, {"type": "buff_self", "stat": "str", "pct": 0.26, "duration": 2}, {"type": "buff_self", "stat": "str", "pct": 0.32, "duration": 3}, {"type": "buff_self", "stat": "str", "pct": 0.38, "duration": 3}, {"type": "buff_self", "stat": "str", "pct": 0.45, "duration": 3}
+             ]},
+            {"name": "Feral Healing", "evolutions": ["Feral Healing", "Beast Healing", "Beast Regeneration", "Predator Regen", "Omega Regeneration"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "heal", "heal_pct": 0.20}, {"type": "heal", "heal_pct": 0.27}, {"type": "heal", "heal_pct": 0.33}, {"type": "heal", "heal_pct": 0.40}, {"type": "heal", "heal_pct": 0.45}
+             ]},
+            {"name": "Unleash", "evolutions": ["Unleash", "Feral Unleash", "Feral Rage", "Predator Rage", "Omega Unleash"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "execute_low_hp", "dmg_mult": 1.5, "bonus_per_missing_pct": 1.5}, {"type": "execute_low_hp", "dmg_mult": 1.7, "bonus_per_missing_pct": 1.7}, {"type": "execute_low_hp", "dmg_mult": 1.9, "bonus_per_missing_pct": 1.9}, {"type": "execute_low_hp", "dmg_mult": 2.1, "bonus_per_missing_pct": 2.1}, {"type": "execute_low_hp", "dmg_mult": 2.4, "bonus_per_missing_pct": 2.4}
+             ]}
         ],
-        "special": {"name": "Beast Awakening", "unlock_level": 10}
+        "special": {"name": "Beast Awakening", "unlock_level": 10,
+                    "effect": {"type": "execute_low_hp", "dmg_mult": 3.0, "bonus_per_missing_pct": 3.0}}
     },
     "Dragon-kin": {
         "skills": [
-            {"name": "Dragon Breath", "evolutions": ["Dragon Breath", "Inferno Breath", "Ancient Breath", "Dragon's Fury", "Omega Breath"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Iron Scales", "evolutions": ["Iron Scales", "Steel Scales", "Dragon Scales", "Ancient Scales", "Omega Scales"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Tail Sweep", "evolutions": ["Tail Sweep", "Dragon Sweep", "Ancient Sweep", "Devastating Sweep", "Omega Sweep"], "evo_levels": [1, 100, 250, 500, 750]},
-            {"name": "Dragon's Dominance", "evolutions": ["Dragon's Dominance", "Ancient Dominance", "Dragon God's Will", "Eternal Dominance", "Omega Dominance"], "evo_levels": [1, 100, 250, 500, 750]}
+            {"name": "Dragon Breath", "evolutions": ["Dragon Breath", "Inferno Breath", "Ancient Breath", "Dragon's Fury", "Omega Breath"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "damage", "dmg_mult": 1.6}, {"type": "damage", "dmg_mult": 1.8}, {"type": "damage", "dmg_mult": 2.0}, {"type": "damage", "dmg_mult": 2.3}, {"type": "damage", "dmg_mult": 2.6}
+             ]},
+            {"name": "Iron Scales", "evolutions": ["Iron Scales", "Steel Scales", "Dragon Scales", "Ancient Scales", "Omega Scales"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "buff_self", "stat": "def", "pct": 0.20, "duration": 2}, {"type": "buff_self", "stat": "def", "pct": 0.28, "duration": 2}, {"type": "buff_self", "stat": "def", "pct": 0.35, "duration": 3}, {"type": "buff_self", "stat": "def", "pct": 0.42, "duration": 3}, {"type": "buff_self", "stat": "def", "pct": 0.50, "duration": 3}
+             ]},
+            {"name": "Tail Sweep", "evolutions": ["Tail Sweep", "Dragon Sweep", "Ancient Sweep", "Devastating Sweep", "Omega Sweep"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "damage_and_stun", "dmg_mult": 1.3, "stun_chance": 0.20}, {"type": "damage_and_stun", "dmg_mult": 1.45, "stun_chance": 0.27}, {"type": "damage_and_stun", "dmg_mult": 1.6, "stun_chance": 0.33}, {"type": "damage_and_stun", "dmg_mult": 1.8, "stun_chance": 0.40}, {"type": "damage_and_stun", "dmg_mult": 2.0, "stun_chance": 0.45}
+             ]},
+            {"name": "Dragon's Dominance", "evolutions": ["Dragon's Dominance", "Ancient Dominance", "Dragon God's Will", "Eternal Dominance", "Omega Dominance"], "evo_levels": [1, 100, 250, 500, 750],
+             "effects": [
+                 {"type": "debuff_enemy", "stat": "atk", "pct": 0.15, "duration": 3}, {"type": "debuff_enemy", "stat": "atk", "pct": 0.22, "duration": 3}, {"type": "debuff_enemy", "stat": "atk", "pct": 0.28, "duration": 3}, {"type": "debuff_enemy", "stat": "atk", "pct": 0.35, "duration": 3}, {"type": "debuff_enemy", "stat": "atk", "pct": 0.40, "duration": 3}
+             ]}
         ],
-        "special": {"name": "Dragon God's Wrath", "unlock_level": 10}
+        "special": {"name": "Dragon God's Wrath", "unlock_level": 10,
+                    "effect": {"type": "pierce_damage", "dmg_mult": 3.2, "def_ignore_pct": 1.0}}
     },
     "Seraphim": {
         "skills": [
