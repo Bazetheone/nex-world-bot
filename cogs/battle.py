@@ -315,6 +315,105 @@ class BattleView(discord.ui.View):
             self.enemy_hp -= dmg
             result = f"✨ **{skill_name}** dealt **{dmg:,}** damage!"
 
+        elif effect.get('type') == 'heal':
+            max_hp = self.player_data['hp']
+            heal = int(max_hp * effect.get('heal_pct', 0.2))
+            self.player_hp = min(max_hp, self.player_hp + heal)
+            result = f"✨ **{skill_name}** healed **{heal:,}** HP!"
+
+        elif effect.get('type') == 'buff_self':
+            pct = effect.get('pct', 0.2)
+            duration = effect.get('duration', 2)
+            now2 = time.time()
+            until = now2 + (duration * 40)
+            if effect.get('stat') == 'all':
+                self.buff_all_until = until
+                self.buff_all_pct = pct
+            elif effect.get('stat') == 'str':
+                self.buff_str_until = until
+                self.buff_str_pct = pct
+            elif effect.get('stat') == 'def':
+                self.buff_def_until = until
+                self.buff_def_pct = pct
+            result = f"✨ **{skill_name}** boosted your {effect.get('stat')} by {int(pct*100)}%!"
+
+        elif effect.get('type') == 'reflect':
+            self.reflect_pct = effect.get('reflect_pct', 0.25)
+            result = f"✨ **{skill_name}** readies a counter for {int(self.reflect_pct*100)}% reflect damage!"
+
+        elif effect.get('type') == 'damage_self_cost':
+            mult = effect.get('dmg_mult', 1.8)
+            dmg = calculate_damage(int(best_atk * mult), self.enemy['def'])
+            self.enemy_hp -= dmg
+            hp_cost = int(self.player_data['hp'] * effect.get('hp_cost_pct', 0.05))
+            self.player_hp = max(1, self.player_hp - hp_cost)
+            result = f"✨ **{skill_name}** dealt **{dmg:,}** damage, costing you **{hp_cost:,}** HP!"
+
+        elif effect.get('type') == 'hybrid_damage':
+            mult = effect.get('dmg_mult', 1.5)
+            hybrid_atk = self.player_data['str'] + self.player_data['mag']
+            dmg = calculate_damage(int(hybrid_atk * mult), self.enemy['def'])
+            self.enemy_hp -= dmg
+            result = f"✨ **{skill_name}** dealt **{dmg:,}** hybrid damage!"
+
+        elif effect.get('type') == 'first_strike_damage':
+            mult = effect.get('dmg_mult', 1.6)
+            if self.turn == 1:
+                mult += effect.get('bonus_mult', 0.5)
+            dmg = calculate_damage(int(best_atk * mult), self.enemy['def'])
+            self.enemy_hp -= dmg
+            result = f"✨ **{skill_name}** dealt **{dmg:,}** damage!" + (" (First strike bonus!)" if self.turn == 1 else "")
+
+        elif effect.get('type') == 'damage_and_debuff':
+            mult = effect.get('dmg_mult', 1.2)
+            dmg = calculate_damage(int(best_atk * mult), self.enemy['def'])
+            self.enemy_hp -= dmg
+            pct = effect.get('pct', 0.15)
+            duration = effect.get('duration', 2)
+            self.enemy_atk_debuff_pct = pct
+            self.enemy_atk_debuff_until = time.time() + (duration * 40)
+            result = f"✨ **{skill_name}** dealt **{dmg:,}** damage and weakened the enemy's ATK by {int(pct*100)}%!"
+
+        elif effect.get('type') == 'evade':
+            self.evade_chance = effect.get('chance', 0.3)
+            result = f"✨ **{skill_name}** heightens your reflexes! {int(self.evade_chance*100)}% chance to dodge the next attack!"
+
+        elif effect.get('type') == 'dot':
+            pct = effect.get('pct', 0.05)
+            ticks = effect.get('ticks', 3)
+            self.enemy_dot_pct = pct
+            self.enemy_dot_ticks_remaining = ticks
+            dmg = int(self.enemy['hp'] * pct)
+            self.enemy_hp -= dmg
+            result = f"✨ **{skill_name}** poisoned the enemy for **{dmg:,}** damage now, ticking for {ticks-1} more turns!"
+
+        elif effect.get('type') == 'debuff_enemy':
+            pct = effect.get('pct', 0.15)
+            duration = effect.get('duration', 3)
+            stat = effect.get('stat', 'def')
+            if stat == 'def':
+                self.enemy_def_debuff_pct = pct
+            else:
+                self.enemy_atk_debuff_pct = pct
+                self.enemy_atk_debuff_until = time.time() + (duration * 40)
+            result = f"✨ **{skill_name}** weakened the enemy's {stat.upper()} by {int(pct*100)}%!"
+
+        elif effect.get('type') == 'damage_and_stun':
+            mult = effect.get('dmg_mult', 1.3)
+            dmg = calculate_damage(int(best_atk * mult), self.enemy['def'])
+            self.enemy_hp -= dmg
+            stunned = random.random() < effect.get('stun_chance', 0.2)
+            if stunned:
+                self.enemy_stunned = True
+            result = f"✨ **{skill_name}** dealt **{dmg:,}** damage!" + (" The enemy is stunned!" if stunned else "")
+
+        elif effect.get('type') == 'execute_low_hp':
+            missing_pct = 1 - (self.player_hp / self.player_data['hp'])
+            mult = effect.get('dmg_mult', 1.5) + (missing_pct * effect.get('bonus_per_missing_pct', 1.5))
+            dmg = calculate_damage(int(best_atk * mult), self.enemy['def'])
+            self.enemy_hp -= dmg
+            result = f"✨ **{skill_name}** dealt **{dmg:,}** damage!"
+
         elif effect.get('type') == 'heal_and_damage':
             max_hp = self.player_data['hp']
             heal = int(max_hp * effect.get('heal_pct', 0.2))
