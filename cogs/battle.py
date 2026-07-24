@@ -79,6 +79,20 @@ class BattleView(discord.ui.View):
         self.turn = 1
         self.message = None
         self.shield_hp = 0
+        self.buff_all_pct = 0
+        self.buff_all_until = 0
+        self.buff_str_pct = 0
+        self.buff_str_until = 0
+        self.buff_def_pct = 0
+        self.buff_def_until = 0
+        self.reflect_pct = 0
+        self.evade_chance = 0
+        self.enemy_atk_debuff_pct = 0
+        self.enemy_atk_debuff_until = 0
+        self.enemy_def_debuff_pct = 0
+        self.enemy_stunned = False
+        self.enemy_dot_pct = 0
+        self.enemy_dot_ticks_remaining = 0
 
         from main import RACE_SKILLS
         race = player_data['race']
@@ -301,7 +315,13 @@ class BattleView(discord.ui.View):
         now = time.time()
         str_bonus = 100 if now < self.player_data.get('buff_str_boost_until', 0) else 0
         def_bonus = 100 if now < self.player_data.get('buff_def_boost_until', 0) else 0
-        best_atk = max(self.player_data['str'] + str_bonus, self.player_data['mag'] + str_bonus)
+        base_atk = max(self.player_data['str'] + str_bonus, self.player_data['mag'] + str_bonus)
+        atk_mult = 1.0
+        if now < self.buff_all_until:
+            atk_mult += self.buff_all_pct
+        if now < self.buff_str_until:
+            atk_mult += self.buff_str_pct
+        best_atk = int(base_atk * atk_mult)
 
         race = self.player_data['race']
         level = self.player_data.get('level', 1)
@@ -453,17 +473,59 @@ class BattleView(discord.ui.View):
             await self.end_battle(interaction, won=True)
             return
 
-        enemy_dmg = calculate_damage(self.enemy['atk'], self.player_data['def'] + def_bonus)
-        if self.shield_hp > 0:
-            absorbed = min(self.shield_hp, enemy_dmg)
-            self.shield_hp -= absorbed
-            enemy_dmg -= absorbed
-            if absorbed > 0:
-                result += f"\n🛡️ Shield absorbed **{absorbed:,}** damage!"
-        self.player_hp -= enemy_dmg
-        if enemy_dmg > 0:
-            result += f"\n{self.enemy['name']} hit back for **{enemy_dmg:,}**!"
+        now2 = time.time()
+        effective_def = self.player_data['def'] + def_bonus
+        def_mult = 1.0
+        if now2 < self.buff_all_until:
+            def_mult += self.buff_all_pct
+        if now2 < self.buff_def_until:
+            def_mult += self.buff_def_pct
+        effective_def = int(effective_def * def_mult)
+
+        enemy_atk = self.enemy['atk']
+        if now2 < self.enemy_atk_debuff_until:
+            enemy_atk = int(enemy_atk * (1 - self.enemy_atk_debuff_pct))
+
+        if self.enemy_stunned:
+            result += f"\n💫 {self.enemy['name']} is stunned and cannot attack!"
+            self.enemy_stunned = False
+        elif self.evade_chance > 0 and random.random() < self.evade_chance:
+            result += f"\n💨 You dodged {self.enemy['name']}'s attack!"
+            self.evade_chance = 0
+        else:
+            self.evade_chance = 0
+            enemy_dmg = calculate_damage(enemy_atk, effective_def)
+            if self.shield_hp > 0:
+                absorbed = min(self.shield_hp, enemy_dmg)
+                self.shield_hp -= absorbed
+                enemy_dmg -= absorbed
+                if absorbed > 0:
+                    result += f"\n🛡️ Shield absorbed **{absorbed:,}** damage!"
+            if self.reflect_pct > 0 and enemy_dmg > 0:
+                reflected = int(enemy_dmg * self.reflect_pct)
+                self.enemy_hp -= reflected
+                result += f"\n🔄 Reflected **{reflected:,}** damage back!"
+                self.reflect_pct = 0
+            self.player_hp -= enemy_dmg
+            if enemy_dmg > 0:
+                result += f"\n{self.enemy['name']} hit back for **{enemy_dmg:,}**!"
+
+        if self.enemy_dot_ticks_remaining > 0:
+            self.enemy_dot_ticks_remaining -= 1
+            if self.enemy_dot_ticks_remaining > 0:
+                dot_dmg = int(self.enemy['hp'] * self.enemy_dot_pct)
+                self.enemy_hp -= dot_dmg
+                result += f"\n☠️ Poison ticks for **{dot_dmg:,}** damage!"
+
         self.turn += 1
+
+        if self.enemy_hp <= 0:
+            self.enemy_hp = 0
+            self.battle_ended = True
+            await self.disable_all()
+            await interaction.response.edit_message(embed=await self.get_embed(result), view=self)
+            await self.end_battle(interaction, won=True)
+            return
 
         if self.player_hp <= 0:
             self.player_hp = 0
