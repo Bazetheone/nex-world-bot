@@ -614,82 +614,11 @@ class Economy(commands.Cog, name="Economy"):
 
         cp = players.search(Player.id == challenger_id)[0]
         dp = players.search(Player.id == defender_id)[0]
-        def get_effective_stats(p):
-            now = time.time()
-            str_bonus = 100 if now < p.get('buff_str_boost_until', 0) else 0
-            def_bonus = 100 if now < p.get('buff_def_boost_until', 0) else 0
-            eq = p.get('equipped', {})
-            inv = {}
-            for i in p.get('inventory', []):
-                uid_val = i.get('uid')
-                if uid_val and isinstance(uid_val, str):
-                    inv[uid_val] = i
-            atk = p['str'] + str_bonus
-            mag = p['mag'] + str_bonus
-            defense = p['def'] + def_bonus
-            for slot in ['weapon', 'body_armor', 'head_armor']:
-                uid = eq.get(slot)
-                if not uid or not isinstance(uid, str):
-                    continue
-                if uid in inv:
-                    item = inv[uid]
-                    stats = item.get('stats', {})
-                    atk += stats.get('str', 0)
-                    mag += stats.get('mag', 0)
-                    defense += stats.get('def', 0)
-            best_atk = max(atk, mag)
-            hp = p['hp']
-            return best_atk, defense, hp
 
-        c_atk, c_def, c_hp = get_effective_stats(cp)
-        d_atk, d_def, d_hp = get_effective_stats(dp)
-
-        c_cur_hp = c_hp
-        d_cur_hp = d_hp
-        log_lines = []
-        for rnd in range(1, 11):
-            c_dmg = max(1, c_atk - d_def // 2)
-            d_dmg = max(1, d_atk - c_def // 2)
-            d_cur_hp -= c_dmg
-            c_cur_hp -= d_dmg
-            log_lines.append(f"**R{rnd}**: {ctx.author.display_name} deals `{c_dmg}` | {opponent.display_name} deals `{d_dmg}`")
-            if d_cur_hp <= 0 or c_cur_hp <= 0:
-                break
-
-        c_cur_hp = max(0, c_cur_hp)
-        d_cur_hp = max(0, d_cur_hp)
-
-        if c_cur_hp > d_cur_hp:
-            winner, loser = ctx.author, opponent
-        elif d_cur_hp > c_cur_hp:
-            winner, loser = opponent, ctx.author
-        else:
-            winner = loser = None
-
-        reward = random.randint(2000, 5000)
-        result_embed = discord.Embed(title="⚔️ PvP Battle Result!", color=GOLD)
-        result_embed.add_field(name="📋 Battle Log", value="\n".join(log_lines[-5:]), inline=False)
-        try:
-            from quest_tracker import track_quest_progress
-            track_quest_progress(challenger_id, 'fight', 1)
-            track_quest_progress(defender_id, 'fight', 1)
-        except Exception:
-            pass
-        if winner:
-            winner_id = str(winner.id)
-            loser_id = str(loser.id)
-            wp = players.search(Player.id == winner_id)[0]
-            players.update({'nexcoins': wp['nexcoins'] + reward}, Player.id == winner_id)
-            result_embed.add_field(name="🏆 Winner", value=f"{winner.mention} wins `{reward:,}` Nexcoins!", inline=False)
-            try:
-                from quest_tracker import track_quest_progress
-                track_quest_progress(winner_id, 'fight_win', 1)
-            except Exception:
-                pass
-        else:
-            result_embed.add_field(name="🤝 Draw", value="Both fighters are equal!", inline=False)
-        result_embed.set_footer(text="Nexworld RPG • Fight again with !fight")
-        await ctx.send(embed=result_embed)
+        battle_view = PvPBattleView(ctx, ctx.author, opponent, cp, dp)
+        embed = await battle_view.get_embed()
+        msg = await ctx.send(embed=embed, view=battle_view)
+        battle_view.message = msg
 
     @commands.command(name="explore")
     async def explore(self, ctx):
