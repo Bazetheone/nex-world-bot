@@ -387,13 +387,31 @@ class RaidBattleView(discord.ui.View):
         return text
 
     async def use_skill(self, interaction, skill_index):
-        from main import RACE_SKILLS, get_skill_name
+        from main import RACE_SKILLS, get_skill_name, get_skill_effect
         race = self.player['race']
         level = self.player.get('level', 1)
         skill_name = get_skill_name(race, skill_index, level)
+        effect = get_skill_effect(race, skill_index, level)
 
         best_atk = max(self.player['str'], self.player['mag'])
-        raw_dmg = int(best_atk * 1.4 * self.player_dmg_mult)
+        heal_amt = 0
+        if effect and effect.get('type') == 'heal_and_damage':
+            mult = effect.get('dmg_mult', 1.0)
+            heal_pct = effect.get('heal_pct', 0)
+            max_hp = self.player['hp']
+            heal_amt = int(max_hp * heal_pct)
+            self.player_hp = min(max_hp, self.player_hp + heal_amt)
+        elif effect and effect.get('type') == 'pierce_damage':
+            mult = effect.get('dmg_mult', 1.8)
+        elif effect and effect.get('type') == 'hybrid_damage':
+            mult = effect.get('dmg_mult', 1.5)
+            best_atk = self.player['str'] + self.player['mag']
+        elif effect and effect.get('type') == 'damage':
+            mult = effect.get('dmg_mult', 1.4)
+        else:
+            mult = 1.4
+
+        raw_dmg = int(best_atk * mult * self.player_dmg_mult)
 
         if random.random() < self.player_evasion:
             result = f"🌫️ Your **{skill_name}** hit a mirage — 0 damage!"
@@ -407,7 +425,7 @@ class RaidBattleView(discord.ui.View):
                 result = f"🌊 Shield absorbed **{absorbed:,}**! **{skill_name}** dealt **{dmg:,}** damage!"
             else:
                 dmg = calculate_damage(raw_dmg, self.boss['def'])
-                result = f"✨ **{skill_name}** dealt **{dmg:,}** damage!"
+                result = f"✨ **{skill_name}** dealt **{dmg:,}** damage!" + (f" Healed **{heal_amt:,}** HP!" if heal_amt else "")
             self.boss_hp -= dmg
             self.total_damage += dmg
             if self.boss_extra_fire > 0:

@@ -325,6 +325,30 @@ class Profile(commands.Cog, name="Profile"):
                 return f"Grants a shield absorbing {int(effect.get('shield_pct', 0)*100)}% of your max HP in damage for {effect.get('duration', 1)} turn(s)."
             if t == 'pierce_damage':
                 return f"Deals piercing damage ({effect.get('dmg_mult', 1.0)}x power), ignoring {int(effect.get('def_ignore_pct', 0)*100)}% of enemy DEF."
+            if t == 'heal':
+                return f"Heals {int(effect.get('heal_pct', 0)*100)}% of your max HP."
+            if t == 'buff_self':
+                return f"Boosts your {effect.get('stat', 'stats')} by {int(effect.get('pct', 0)*100)}% for {effect.get('duration', 1)} turn(s)."
+            if t == 'reflect':
+                return f"Reflects {int(effect.get('reflect_pct', 0)*100)}% of the enemy's next attack back at them."
+            if t == 'damage_self_cost':
+                return f"Deals damage ({effect.get('dmg_mult', 1.0)}x power), costing {int(effect.get('hp_cost_pct', 0)*100)}% of your own HP."
+            if t == 'hybrid_damage':
+                return f"Deals hybrid damage ({effect.get('dmg_mult', 1.0)}x power) using both STR and MAG."
+            if t == 'first_strike_damage':
+                return f"Deals damage ({effect.get('dmg_mult', 1.0)}x power), with a bonus if used on the first turn."
+            if t == 'damage_and_debuff':
+                return f"Deals damage ({effect.get('dmg_mult', 1.0)}x power) and reduces the enemy's {effect.get('stat', 'ATK')} by {int(effect.get('pct', 0)*100)}%."
+            if t == 'evade':
+                return f"Grants a {int(effect.get('chance', 0)*100)}% chance to dodge the enemy's next attack."
+            if t == 'dot':
+                return f"Poisons the enemy for {int(effect.get('pct', 0)*100)}% of their max HP per turn, over {effect.get('ticks', 1)} turns."
+            if t == 'debuff_enemy':
+                return f"Reduces the enemy's {effect.get('stat', 'stat')} by {int(effect.get('pct', 0)*100)}%."
+            if t == 'damage_and_stun':
+                return f"Deals damage ({effect.get('dmg_mult', 1.0)}x power), with a {int(effect.get('stun_chance', 0)*100)}% chance to stun the enemy."
+            if t == 'execute_low_hp':
+                return f"Deals damage ({effect.get('dmg_mult', 1.0)}x power), stronger the lower your current HP is."
             return "Deals damage."
 
         embed = discord.Embed(title=f"⚔️ {member.name}'s Skills — {race}", color=GOLD)
