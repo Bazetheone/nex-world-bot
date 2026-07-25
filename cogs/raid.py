@@ -258,6 +258,21 @@ class RaidBattleView(discord.ui.View):
         self.boss_rebirth_ready = False
         self.boss_rebirth_used = False
         self.boss_shield = 0
+        self.player_shield_hp = 0
+        self.buff_all_pct = 0
+        self.buff_all_until = 0
+        self.buff_str_pct = 0
+        self.buff_str_until = 0
+        self.buff_def_pct = 0
+        self.buff_def_until = 0
+        self.reflect_pct = 0
+        self.evade_chance = 0
+        self.boss_atk_debuff_pct_skill = 0
+        self.boss_atk_debuff_until = 0
+        self.boss_def_debuff_pct = 0
+        self.boss_stunned = False
+        self.boss_dot_pct = 0
+        self.boss_dot_ticks_remaining = 0
 
         from main import RACE_SKILLS, get_skill_name
         race = player['race']
@@ -395,12 +410,13 @@ class RaidBattleView(discord.ui.View):
 
         best_atk = max(self.player['str'], self.player['mag'])
         heal_amt = 0
+        skip_damage = False
+        extra_note = ""
+
         if effect and effect.get('type') == 'heal_and_damage':
             mult = effect.get('dmg_mult', 1.0)
-            heal_pct = effect.get('heal_pct', 0)
-            max_hp = self.player['hp']
-            heal_amt = int(max_hp * heal_pct)
-            self.player_hp = min(max_hp, self.player_hp + heal_amt)
+            heal_amt = int(self.player['hp'] * effect.get('heal_pct', 0))
+            self.player_hp = min(self.player['hp'], self.player_hp + heal_amt)
         elif effect and effect.get('type') == 'pierce_damage':
             mult = effect.get('dmg_mult', 1.8)
         elif effect and effect.get('type') == 'hybrid_damage':
@@ -412,19 +428,65 @@ class RaidBattleView(discord.ui.View):
             heal_amt = int(self.player['hp'] * effect.get('heal_pct', 0.2))
             self.player_hp = min(self.player['hp'], self.player_hp + heal_amt)
             mult = 0
+            skip_damage = True
         elif effect and effect.get('type') == 'damage_self_cost':
             mult = effect.get('dmg_mult', 1.8)
         elif effect and effect.get('type') == 'first_strike_damage':
             mult = effect.get('dmg_mult', 1.6) + (effect.get('bonus_mult', 0.5) if self.turn == 1 else 0)
         elif effect and effect.get('type') == 'damage_and_debuff':
             mult = effect.get('dmg_mult', 1.2)
+            pct = effect.get('pct', 0.15)
+            duration = effect.get('duration', 2)
+            self.boss_atk_debuff_pct_skill = pct
+            self.boss_atk_debuff_until = time.time() + (duration * 40)
+            extra_note = f"\n💢 Weakened the boss's ATK by {int(pct*100)}%!"
         elif effect and effect.get('type') == 'damage_and_stun':
             mult = effect.get('dmg_mult', 1.3)
         elif effect and effect.get('type') == 'execute_low_hp':
             missing_pct = 1 - (self.player_hp / self.player['hp'])
             mult = effect.get('dmg_mult', 1.5) + (missing_pct * effect.get('bonus_per_missing_pct', 1.5))
-        elif effect and effect.get('type') in ('buff_self', 'reflect', 'evade', 'dot', 'debuff_enemy'):
-            mult = 1.6
+        elif effect and effect.get('type') == 'buff_self':
+            pct = effect.get('pct', 0.2)
+            duration = effect.get('duration', 2)
+            until = time.time() + (duration * 40)
+            if effect.get('stat') == 'all':
+                self.buff_all_until = until
+                self.buff_all_pct = pct
+            elif effect.get('stat') == 'str':
+                self.buff_str_until = until
+                self.buff_str_pct = pct
+            elif effect.get('stat') == 'def':
+                self.buff_def_until = until
+                self.buff_def_pct = pct
+            mult = 0
+            skip_damage = True
+            extra_note = f"\n💪 Boosted your {effect.get('stat')} by {int(pct*100)}%!"
+        elif effect and effect.get('type') == 'reflect':
+            self.reflect_pct = effect.get('reflect_pct', 0.25)
+            mult = 0
+            skip_damage = True
+            extra_note = f"\n🔄 Readies a counter for {int(self.reflect_pct*100)}% reflect damage!"
+        elif effect and effect.get('type') == 'evade':
+            self.evade_chance = effect.get('chance', 0.3)
+            mult = 0
+            skip_damage = True
+            extra_note = f"\n💨 {int(self.evade_chance*100)}% chance to dodge the boss's next attack!"
+        elif effect and effect.get('type') == 'dot':
+            pct = effect.get('pct', 0.05)
+            self.boss_dot_pct = pct
+            self.boss_dot_ticks_remaining = effect.get('ticks', 3)
+            mult = 1.0
+        elif effect and effect.get('type') == 'debuff_enemy':
+            pct = effect.get('pct', 0.15)
+            stat = effect.get('stat', 'def')
+            if stat == 'def':
+                self.boss_def_debuff_pct = pct
+            else:
+                self.boss_atk_debuff_pct_skill = pct
+                self.boss_atk_debuff_until = time.time() + (effect.get('duration', 3) * 40)
+            mult = 0
+            skip_damage = True
+            extra_note = f"\n💢 Weakened the boss's {stat.upper()} by {int(pct*100)}%!"
         else:
             mult = 1.4
 
