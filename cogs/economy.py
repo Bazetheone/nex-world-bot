@@ -139,6 +139,240 @@ class PvPAcceptView(discord.ui.View):
         self.stop()
 
 
+class PvPBattleView(discord.ui.View):
+    def __init__(self, ctx, challenger, defender, cp, dp):
+        super().__init__(timeout=60)
+        self.ctx = ctx
+        self.challenger = challenger
+        self.defender = defender
+        self.cp = cp
+        self.dp = dp
+        self.hp = {str(challenger.id): cp['hp'], str(defender.id): dp['hp']}
+        self.max_hp = {str(challenger.id): cp['hp'], str(defender.id): dp['hp']}
+        self.turn_id = str(challenger.id)
+        self.skill_uses = {str(challenger.id): 0, str(defender.id): 0}
+        self.special_available = {str(challenger.id): True, str(defender.id): True}
+        self.message = None
+        self.battle_ended = False
+        self.shield_hp = {str(challenger.id): 0, str(defender.id): 0}
+        self.turn = 1
+        self._update_buttons()
+
+    def _player_data(self, uid):
+        return self.cp if uid == str(self.challenger.id) else self.dp
+
+    def _member(self, uid):
+        return self.challenger if uid == str(self.challenger.id) else self.defender
+
+    def _other_id(self, uid):
+        return str(self.defender.id) if uid == str(self.challenger.id) else str(self.challenger.id)
+
+    def _update_buttons(self):
+        from main import RACE_SKILLS, get_skill_name
+        p = self._player_data(self.turn_id)
+        race = p['race']
+        level = p.get('level', 1)
+        special = RACE_SKILLS[race]['special']
+        for i in range(4):
+            self.children[i].label = get_skill_name(race, i, level)
+        self.children[4].label = special['name'] if level >= special['unlock_level'] else "🔒 Special"
+        self.children[4].disabled = not (self.special_available[self.turn_id] and level >= special['unlock_level'])
+
+    def get_hp_bar(self, current, maximum, length=10):
+        filled = max(0, min(length, int((current / maximum) * length)))
+        return f"`[{'█' * filled}{'░' * (length - filled)}]` {current:,}/{maximum:,}"
+
+    async def get_embed(self, result_text=""):
+        embed = discord.Embed(title=f"⚔️ {self.challenger.display_name} vs {self.defender.display_name}", color=GOLD)
+        embed.add_field(
+            name=f"👤 {self.challenger.display_name}",
+            value=f"❤️ {self.get_hp_bar(self.hp[str(self.challenger.id)], self.max_hp[str(self.challenger.id)])}",
+            inline=False)
+        embed.add_field(
+            name=f"👤 {self.defender.display_name}",
+            value=f"❤️ {self.get_hp_bar(self.hp[str(self.defender.id)], self.max_hp[str(self.defender.id)])}",
+            inline=False)
+        embed.add_field(name="🔄 Turn", value=f"`{self.turn}` — {self._member(self.turn_id).mention}'s move", inline=False)
+        if result_text:
+            embed.add_field(name="📋 Result", value=result_text, inline=False)
+        embed.set_footer(text="Nexworld RPG • PvP Duel")
+        return embed
+
+    async def _check_turn(self, interaction):
+        if str(interaction.user.id) != self.turn_id:
+            await interaction.response.send_message("It's not your turn!", ephemeral=True)
+            return False
+        return True
+
+    async def _apply_skill(self, interaction, skill_index):
+        from main import get_skill_name, get_skill_effect, RACE_SKILLS
+        uid = self.turn_id
+        target_id = self._other_id(uid)
+        p = self._player_data(uid)
+        race = p['race']
+        level = p.get('level', 1)
+        skill_name = get_skill_name(race, skill_index, level)
+        effect = get_skill_effect(race, skill_index, level)
+        best_atk = max(p['str'], p['mag'])
+        target_def = self._player_data(target_id)['def']
+        self.skill_uses[uid] += 1
+
+        if not effect or effect.get('type') == 'damage':
+            mult = effect.get('dmg_mult', 1.4) if effect else 1.4
+            dmg = calculate_damage(best_atk * mult, target_def)
+            self.hp[target_id] = max(0, self.hp[target_id] - dmg)
+            result = f"✨ **{skill_name}** dealt **{dmg:,}** damage!"
+        elif effect.get('type') == 'heal':
+            heal = int(self.max_hp[uid] * effect.get('heal_pct', 0.2))
+            self.hp[uid] = min(self.max_hp[uid], self.hp[uid] + heal)
+            result = f"✨ **{skill_name}** healed **{heal:,}** HP!"
+        elif effect.get('type') == 'heal_and_damage':
+            heal = int(self.max_hp[uid] * effect.get('heal_pct', 0.2))
+            self.hp[uid] = min(self.max_hp[uid], self.hp[uid] + heal)
+            dmg = calculate_damage(best_atk * effect.get('dmg_mult', 1.0), target_def)
+            self.hp[target_id] = max(0, self.hp[target_id] - dmg)
+            result = f"✨ **{skill_name}** healed **{heal:,}** HP and dealt **{dmg:,}** damage!"
+        elif effect.get('type') == 'shield':
+            amt = int(self.max_hp[uid] * effect.get('shield_pct', 0.2))
+            self.shield_hp[uid] += amt
+            result = f"✨ **{skill_name}** granted a **{amt:,}** HP shield!"
+        elif effect.get('type') == 'pierce_damage':
+            reduced_def = int(target_def * (1 - effect.get('def_ignore_pct', 0.3)))
+            dmg = calculate_damage(best_atk * effect.get('dmg_mult', 1.8), reduced_def)
+            self.hp[target_id] = max(0, self.hp[target_id] - dmg)
+            result = f"✨ **{skill_name}** pierced defenses for **{dmg:,}** damage!"
+        elif effect.get('type') == 'hybrid_damage':
+            hybrid_atk = p['str'] + p['mag']
+            dmg = calculate_damage(hybrid_atk * effect.get('dmg_mult', 1.5), target_def)
+            self.hp[target_id] = max(0, self.hp[target_id] - dmg)
+            result = f"✨ **{skill_name}** dealt **{dmg:,}** hybrid damage!"
+        elif effect.get('type') == 'damage_self_cost':
+            dmg = calculate_damage(best_atk * effect.get('dmg_mult', 1.8), target_def)
+            self.hp[target_id] = max(0, self.hp[target_id] - dmg)
+            cost = int(self.max_hp[uid] * effect.get('hp_cost_pct', 0.05))
+            self.hp[uid] = max(1, self.hp[uid] - cost)
+            result = f"✨ **{skill_name}** dealt **{dmg:,}** damage, costing you **{cost:,}** HP!"
+        else:
+            dmg = calculate_damage(best_atk * 1.4, target_def)
+            self.hp[target_id] = max(0, self.hp[target_id] - dmg)
+            result = f"✨ **{skill_name}** dealt **{dmg:,}** damage!"
+
+        if not self.special_available[uid] and self.skill_uses[uid] >= 2:
+            self.special_available[uid] = True
+
+        return result
+
+    async def _post_action(self, interaction, result):
+        target_id = self._other_id(self.turn_id)
+        if self.hp[target_id] <= 0:
+            self.battle_ended = True
+            for child in self.children:
+                child.disabled = True
+            await interaction.response.edit_message(embed=await self.get_embed(result), view=self)
+            await self._end_battle(interaction, winner_id=self.turn_id, loser_id=target_id)
+            return
+        self.turn_id = target_id
+        self.turn += 1
+        self._update_buttons()
+        await interaction.response.edit_message(embed=await self.get_embed(result), view=self)
+
+    @discord.ui.button(label="Skill 1", style=discord.ButtonStyle.blurple, row=0)
+    async def skill1(self, interaction, button):
+        if not await self._check_turn(interaction) or self.battle_ended:
+            return
+        result = await self._apply_skill(interaction, 0)
+        await self._post_action(interaction, result)
+
+    @discord.ui.button(label="Skill 2", style=discord.ButtonStyle.blurple, row=0)
+    async def skill2(self, interaction, button):
+        if not await self._check_turn(interaction) or self.battle_ended:
+            return
+        result = await self._apply_skill(interaction, 1)
+        await self._post_action(interaction, result)
+
+    @discord.ui.button(label="Skill 3", style=discord.ButtonStyle.blurple, row=0)
+    async def skill3(self, interaction, button):
+        if not await self._check_turn(interaction) or self.battle_ended:
+            return
+        result = await self._apply_skill(interaction, 2)
+        await self._post_action(interaction, result)
+
+    @discord.ui.button(label="Skill 4", style=discord.ButtonStyle.blurple, row=1)
+    async def skill4(self, interaction, button):
+        if not await self._check_turn(interaction) or self.battle_ended:
+            return
+        result = await self._apply_skill(interaction, 3)
+        await self._post_action(interaction, result)
+
+    @discord.ui.button(label="Special", style=discord.ButtonStyle.green, row=1)
+    async def special(self, interaction, button):
+        if not await self._check_turn(interaction) or self.battle_ended:
+            return
+        from main import get_special_effect, RACE_SKILLS
+        uid = self.turn_id
+        target_id = self._other_id(uid)
+        p = self._player_data(uid)
+        race = p['race']
+        level = p.get('level', 1)
+        special = RACE_SKILLS[race]['special']
+        if level < special['unlock_level'] or not self.special_available[uid]:
+            await interaction.response.send_message("Special not ready!", ephemeral=True)
+            return
+        best_atk = max(p['str'], p['mag'])
+        target_def = self._player_data(target_id)['def']
+        sp_effect = get_special_effect(race)
+        self.special_available[uid] = False
+        self.skill_uses[uid] = 0
+
+        if sp_effect and sp_effect.get('type') == 'heal_and_damage':
+            heal = int(self.max_hp[uid] * sp_effect.get('heal_pct', 0.3))
+            self.hp[uid] = min(self.max_hp[uid], self.hp[uid] + heal)
+            dmg = calculate_damage(best_atk * sp_effect.get('dmg_mult', 2.5), target_def // 2)
+            self.hp[target_id] = max(0, self.hp[target_id] - dmg)
+            result = f"💫 **{special['name']}** healed **{heal:,}** HP and dealt **{dmg:,}** MASSIVE damage!"
+        elif sp_effect and sp_effect.get('type') == 'pierce_damage':
+            reduced_def = int(target_def * (1 - sp_effect.get('def_ignore_pct', 0.5)))
+            dmg = calculate_damage(best_atk * sp_effect.get('dmg_mult', 3.0), reduced_def)
+            self.hp[target_id] = max(0, self.hp[target_id] - dmg)
+            result = f"💫 **{special['name']}** dealt **{dmg:,}** MASSIVE piercing damage!"
+        else:
+            dmg = calculate_damage(best_atk * 2.5, target_def // 2)
+            self.hp[target_id] = max(0, self.hp[target_id] - dmg)
+            result = f"💫 **{special['name']}** dealt **{dmg:,}** MASSIVE damage!"
+
+        await self._post_action(interaction, result)
+
+    async def _end_battle(self, interaction, winner_id, loser_id):
+        winner = self._member(winner_id)
+        reward = random.randint(2000, 5000)
+        wp = players.search(Player.id == winner_id)
+        if wp:
+            players.update({'nexcoins': wp[0].get('nexcoins', 0) + reward}, Player.id == winner_id)
+        try:
+            from quest_tracker import track_quest_progress
+            track_quest_progress(str(self.challenger.id), 'fight', 1)
+            track_quest_progress(str(self.defender.id), 'fight', 1)
+            track_quest_progress(winner_id, 'fight_win', 1)
+        except Exception:
+            pass
+        embed = discord.Embed(title="🏆 Duel Complete!", color=GOLD)
+        embed.add_field(name="Winner", value=f"{winner.mention} wins `{reward:,}` Nexcoins!", inline=False)
+        embed.set_footer(text="Nexworld RPG • Fight again with !fight")
+        await interaction.followup.send(embed=embed)
+        self.stop()
+
+    async def on_timeout(self):
+        if self.message and not self.battle_ended:
+            try:
+                for child in self.children:
+                    child.disabled = True
+                await self.message.edit(
+                    embed=discord.Embed(title="⏰ Duel Timed Out!", description="Nobody acted in time.", color=GOLD),
+                    view=self)
+            except Exception:
+                pass
+
+
 class Economy(commands.Cog, name="Economy"):
     def __init__(self, bot):
         self.bot = bot
