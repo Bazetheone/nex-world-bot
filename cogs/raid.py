@@ -408,8 +408,29 @@ class RaidBattleView(discord.ui.View):
             best_atk = self.player['str'] + self.player['mag']
         elif effect and effect.get('type') == 'damage':
             mult = effect.get('dmg_mult', 1.4)
+        elif effect and effect.get('type') == 'heal':
+            heal_amt = int(self.player['hp'] * effect.get('heal_pct', 0.2))
+            self.player_hp = min(self.player['hp'], self.player_hp + heal_amt)
+            mult = 0
+        elif effect and effect.get('type') == 'damage_self_cost':
+            mult = effect.get('dmg_mult', 1.8)
+        elif effect and effect.get('type') == 'first_strike_damage':
+            mult = effect.get('dmg_mult', 1.6) + (effect.get('bonus_mult', 0.5) if self.turn == 1 else 0)
+        elif effect and effect.get('type') == 'damage_and_debuff':
+            mult = effect.get('dmg_mult', 1.2)
+        elif effect and effect.get('type') == 'damage_and_stun':
+            mult = effect.get('dmg_mult', 1.3)
+        elif effect and effect.get('type') == 'execute_low_hp':
+            missing_pct = 1 - (self.player_hp / self.player['hp'])
+            mult = effect.get('dmg_mult', 1.5) + (missing_pct * effect.get('bonus_per_missing_pct', 1.5))
+        elif effect and effect.get('type') in ('buff_self', 'reflect', 'evade', 'dot', 'debuff_enemy'):
+            mult = 1.6
         else:
             mult = 1.4
+
+        if effect and effect.get('type') == 'damage_self_cost':
+            cost = int(self.player['hp'] * effect.get('hp_cost_pct', 0.05))
+            self.player_hp = max(1, self.player_hp - cost)
 
         raw_dmg = int(best_atk * mult * self.player_dmg_mult)
 
