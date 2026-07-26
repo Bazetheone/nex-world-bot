@@ -47,3 +47,6 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+nexworld.json
+clan_data.json
+guild_data.json
