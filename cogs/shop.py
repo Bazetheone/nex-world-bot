@@ -3,6 +3,7 @@ from discord.ext import commands
 from db import players, Player
 import random
 import time
+from main import NC_ICON, SS_ICON
 
 GOLD = 0xFFD700
 

@@ -6,6 +6,7 @@ import random
 import time
 import os
 import asyncio
+from main import NC_ICON, SS_ICON
 
 _COGS_DIR = os.path.dirname(os.path.abspath(__file__))
 _STATIC_DIR = os.path.join(os.path.dirname(_COGS_DIR), 'static')

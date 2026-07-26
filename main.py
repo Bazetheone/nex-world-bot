@@ -94,8 +94,8 @@ ADMIN_IDS = ["954487623462813757"]
 
 # ─── CURRENCY ICONS ─── (replace with real emoji IDs once uploaded to server)
 # Format: "<:nexcoin:1234567890123456789>"
-NC_ICON = "💰"   # Nexcoin custom emoji — replace this value
-SS_ICON = "✨"   # Starshard custom emoji — replace this value
+NC_ICON = "<:nexcoin:1530890951437058128>"
+SS_ICON = "<:starshard:1530891013751574539>"
 
 # ─── RACES ───
 RACES = {

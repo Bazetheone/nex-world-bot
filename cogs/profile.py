@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from db import players, Player
-from main import format_number
+from main import format_number, NC_ICON, SS_ICON
 
 GOLD = 0xFFD700
 
