@@ -60,7 +60,7 @@ def apply_level_up(p, user_id):
             'unspent_points': current_unspent
         }, Player.id == user_id)
 
-    return leveled_up, old_level, current_level
+    return leveled_up, old_level, current_level, points_gained
 
 class BattleView(discord.ui.View):
     def __init__(self, ctx, player_data, enemy, arc_num, enemy_num):
@@ -558,7 +558,7 @@ class BattleView(discord.ui.View):
             players.update({'exp': new_exp, 'nexcoins': new_coins}, Player.id == user_id)
 
             fresh_p = players.search(Player.id == user_id)[0]
-            leveled_up, old_level, new_level = apply_level_up(fresh_p, user_id)
+            leveled_up, old_level, new_level, points_gained = apply_level_up(fresh_p, user_id)
 
             arc_data = ARCS[self.arc_num]
             total_enemies = len(arc_data['enemies'])
@@ -588,41 +588,70 @@ class BattleView(discord.ui.View):
                     inv.append({'uid': uid, 'name': item_drop, 'rarity': self.enemy['rarity'], 'type': 'drop'})
                     players.update({'inventory': inv}, Player.id == user_id)
 
-            embed = discord.Embed(title=f"✅ Victory! {self.enemy['name']} defeated!", color=0x00FF00)
+            rarity_icon = RARITY_ICONS.get(self.enemy['rarity'], '⚪')
+            embed = discord.Embed(
+                title=f"⚔️ {self.ctx.author.name} vs {self.enemy['name']}",
+                color=0x00FF00)
+            embed.add_field(
+                name=f"👤 {self.ctx.author.name}",
+                value=f"❤️ {self.get_hp_bar(self.player_hp, self.player_data['hp'])}",
+                inline=False)
+            embed.add_field(
+                name=f"{rarity_icon} {self.enemy['name']} `{self.enemy['rarity']}`",
+                value=f"❤️ {self.get_hp_bar(0, self.enemy['hp'])}",
+                inline=False)
+            embed.add_field(name="🔄 Turns", value=f"`{self.turn}`", inline=True)
             embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
-            embed.add_field(name="💰 Nexcoins", value=f"`+{coins_gain:,}`", inline=True)
-            embed.add_field(name="🔮 EXP", value=f"`+{exp_gain:,}`", inline=True)
+            embed.add_field(
+                name=f"✅ {self.enemy['name']} Defeated — Rewards",
+                value=f"💰 `+{coins_gain:,}` Nexcoins  •  🔮 `+{exp_gain:,}` EXP",
+                inline=False)
 
             if item_drop:
-                embed.add_field(name="🎁 Drop!", value=f"**{item_drop}** `{self.enemy['rarity']}`", inline=False)
+                embed.add_field(name="🎁 Drop", value=f"**{item_drop}** `{self.enemy['rarity']}`", inline=False)
 
             if leveled_up:
                 embed.add_field(
-                    name="⬆️ LEVEL UP!",
-                    value=f"**{old_level} → {new_level}**\nGiven `{points_gained}` points to assign! Use `points` / `assign`.",
+                    name="⬆️ LEVEL UP",
+                    value=f"**{old_level} → {new_level}** • `+{points_gained}` pts to assign (`!assign`)",
                     inline=False)
 
             if arc_unlocked:
                 embed.add_field(
-                    name="🔓 Arc Unlocked!",
-                    value=f"**Arc {current_arc} — {ARCS[current_arc]['name']}** unlocked!\nUse `!arc {current_arc}`",
+                    name="🔓 New Arc Unlocked",
+                    value=f"**Arc {current_arc} — {ARCS[current_arc]['name']}**\nUse `!arc {current_arc}` to explore",
                     inline=False)
             else:
-                embed.add_field(name="➡️ Next", value=f"`!battle {next_enemy}` for the next enemy!", inline=False)
+                embed.add_field(name="➡️ Next", value=f"`!battle {next_enemy}`", inline=True)
 
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")
-            await interaction.followup.send(embed=embed)
+            await self.message.edit(embed=embed, view=discord.ui.View())
 
         else:
             consolation = random.randint(200, 300)
             new_coins = p.get('nexcoins', 0) + consolation
             players.update({'nexcoins': new_coins}, Player.id == user_id)
 
-            embed = discord.Embed(title=f"💀 Defeated by {self.enemy['name']}!", color=0xFF0000)
-            embed.add_field(name="💰 Consolation", value=f"`+{consolation:,}` Nexcoins for trying!", inline=False)
-            embed.add_field(name="💡 Tip", value="Fight previous enemies to get stronger!", inline=False)
+            rarity_icon = RARITY_ICONS.get(self.enemy['rarity'], '⚪')
+            embed = discord.Embed(
+                title=f"⚔️ {self.ctx.author.name} vs {self.enemy['name']}",
+                color=0xFF0000)
+            embed.add_field(
+                name=f"👤 {self.ctx.author.name}",
+                value=f"❤️ {self.get_hp_bar(0, self.player_data['hp'])}",
+                inline=False)
+            embed.add_field(
+                name=f"{rarity_icon} {self.enemy['name']} `{self.enemy['rarity']}`",
+                value=f"❤️ {self.get_hp_bar(self.enemy_hp, self.enemy['hp'])}",
+                inline=False)
+            embed.add_field(name="🔄 Turns", value=f"`{self.turn}`", inline=True)
+            embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
+            embed.add_field(
+                name=f"💀 Defeated by {self.enemy['name']}",
+                value=f"💰 `+{consolation:,}` Nexcoins consolation\n💡 Try a past arc with `!arc` to grind up first",
+                inline=False)
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")
-            await interaction.followup.send(embed=embed)
+            await self.message.edit(embed=embed, view=discord.ui.View())
 
         self.stop()
 
