@@ -76,10 +76,12 @@ async def handle_vote(user_id):
         pass
 
 def run():
-    app.run(host='0.0.0.0', port=8080)
+    try:
+        app.run(host='0.0.0.0', port=8080, use_reloader=False, threaded=True)
+    except OSError:
+        pass
 
-keep_alive_thread = Thread(target=run)
-keep_alive_thread.daemon = True
+keep_alive_thread = Thread(target=run, daemon=True)
 keep_alive_thread.start()
 
 # ─── DATABASE ───
