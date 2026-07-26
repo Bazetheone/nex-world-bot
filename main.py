@@ -92,6 +92,11 @@ GOLD = 0xFFD700
 ALLOWED_PREFIXES = ['!', '$', '-', '*', '?', '.']
 ADMIN_IDS = ["954487623462813757"]
 
+# ─── CURRENCY ICONS ─── (replace with real emoji IDs once uploaded to server)
+# Format: "<:nexcoin:1234567890123456789>"
+NC_ICON = "💰"   # Nexcoin custom emoji — replace this value
+SS_ICON = "✨"   # Starshard custom emoji — replace this value
+
 # ─── RACES ───
 RACES = {
     "Human":     {"rarity": "Common",    "rarity_icon": "⭐", "chance": "30%", "hp": 100, "str": 10, "mag": 10, "def": 10},
