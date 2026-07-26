@@ -699,7 +699,7 @@ async def adminhelp(ctx):
     embed = discord.Embed(title="🛡️ Admin Commands", color=GOLD)
     embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
     embed.add_field(name="👤 Player",
-        value="`!setrace @user <race>`\n`!setorigin @user <origin>`\n`!setlevel @user <level>`\n`!setexp @user <amount>`\n`!resetplayer @user`\n`!giveitem @user <rarity> <name>`",
+        value="`!setrace @user <race>`\n`!setorigin @user <origin>`\n`!setlevel @user <level>`\n`!setexp @user <amount>`\n`!resetplayer @user`\n`!giveitem @user <rarity> <name>`\n`!transferdata <old_id> <new_id>`",
         inline=False)
     embed.add_field(name="💰 Economy",
         value="`!addcoins @user <amount>`\n`!removecoins @user <amount>`\n`!addstarshards @user <amount>`\n`!removestarshards @user <amount>`",
@@ -892,6 +892,34 @@ async def resetplayer(ctx, member: discord.Member = None):
         return
     players.remove(Player.id == user_id)
     await ctx.send(embed=discord.Embed(title="✅ Player Reset", description=f"{member.mention}'s data wiped!", color=GOLD))
+
+@bot.command(name="transferdata")
+async def transferdata(ctx, old_id: str = None, new_id: str = None):
+    if not is_admin(ctx.author.id):
+        await ctx.send(embed=discord.Embed(description="❌ No permission.", color=GOLD))
+        return
+    if not old_id or not new_id:
+        await ctx.send(embed=discord.Embed(
+            description="Usage: `!transferdata <old_user_id> <new_user_id>`\nTransfers all data from lost account to new account.",
+            color=GOLD))
+        return
+    old_record = players.search(Player.id == old_id)
+    if not old_record:
+        await ctx.send(embed=discord.Embed(description=f"❌ No player found with ID `{old_id}`.", color=GOLD))
+        return
+    if players.search(Player.id == new_id):
+        await ctx.send(embed=discord.Embed(
+            description=f"❌ Account `{new_id}` already has a profile.\nUse `!resetplayer` on them first if you want to overwrite.",
+            color=GOLD))
+        return
+    data = dict(old_record[0])
+    data['id'] = new_id
+    players.remove(Player.id == old_id)
+    players.insert(data)
+    await ctx.send(embed=discord.Embed(
+        title="✅ Data Transferred",
+        description=f"All data moved from `{old_id}` → `{new_id}`!\nInventory, stats, quests, guild rank, clan, and progress fully transferred.",
+        color=GOLD))
 
 @bot.command(name="ban")
 async def ban(ctx, member: discord.Member = None):

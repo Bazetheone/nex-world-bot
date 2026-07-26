@@ -668,12 +668,14 @@ class Battle(commands.Cog, name="Battle"):
                 color=GOLD))
             return
 
+        players.update({'selected_arc': arc_num}, Player.id == user_id)
+
         arc_data = ARCS[arc_num]
         current_enemy = p.get('current_enemy', 1) if arc_num == current_arc else len(arc_data['enemies']) + 1
 
         embed = discord.Embed(
             title=f"Arc {arc_num} — {arc_data['name']}",
-            description=f"Level Range: `{arc_data['level_range'][0]}-{arc_data['level_range'][1]}`",
+            description=f"Level Range: `{arc_data['level_range'][0]}-{arc_data['level_range'][1]}`\n✅ **Arc {arc_num} selected** — `!battle <number>` will fight here.",
             color=GOLD)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
 
@@ -721,13 +723,16 @@ class Battle(commands.Cog, name="Battle"):
 
         current_arc = p.get('current_arc', 1)
         current_enemy = p.get('current_enemy', 1)
-        arc_data = ARCS.get(current_arc)
+        selected_arc = p.get('selected_arc', current_arc)
+        if selected_arc not in ARCS or selected_arc > current_arc:
+            selected_arc = current_arc
+        arc_data = ARCS.get(selected_arc)
 
         if not arc_data:
             await ctx.send(embed=discord.Embed(description="❌ No arc found!", color=GOLD))
             return
 
-        if enemy_num > current_enemy:
+        if selected_arc == current_arc and enemy_num > current_enemy:
             await ctx.send(embed=discord.Embed(
                 description=f"🔒 Enemy {enemy_num} locked! Defeat enemy {current_enemy} first.",
                 color=GOLD))
@@ -737,12 +742,12 @@ class Battle(commands.Cog, name="Battle"):
 
         if not enemy:
             await ctx.send(embed=discord.Embed(
-                description=f"❌ Enemy {enemy_num} not found!\nUse `!arc {current_arc}` to see enemies.",
+                description=f"❌ Enemy {enemy_num} not found!\nUse `!arc {selected_arc}` to see enemies.",
                 color=GOLD))
             return
 
         active_battles.add(user_id)
-        view = BattleView(ctx, p, enemy, current_arc, enemy_num)
+        view = BattleView(ctx, p, enemy, selected_arc, enemy_num)
         embed = await view.get_embed()
         msg = await ctx.send(embed=embed, view=view)
         view.message = msg

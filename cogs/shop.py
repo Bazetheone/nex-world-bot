@@ -352,7 +352,27 @@ class Shop(commands.Cog):
             cost = item['price']
             current = p.get('nexcoins', 0)
 
+            if item.get('name') == 'Raid Pass':
+                now_ts = time.time()
+                last_rp = p.get('last_raid_pass', 0)
+                if now_ts - last_rp < 1800:
+                    remaining = int(1800 - (now_ts - last_rp))
+                    m, s = divmod(remaining, 60)
+                    await ctx.send(embed=discord.Embed(
+                        description=f"⏰ Raid Pass on cooldown! Available in **{m}m {s}s**.",
+                        color=GOLD))
+                    return
+
             if item.get('type') == 'itempack':
+                now_ts = time.time()
+                last_ip = p.get('last_item_pack', 0)
+                if now_ts - last_ip < 3000:
+                    remaining = int(3000 - (now_ts - last_ip))
+                    m, s = divmod(remaining, 60)
+                    await ctx.send(embed=discord.Embed(
+                        description=f"⏰ Item Pack on cooldown! Available in **{m}m {s}s**.",
+                        color=GOLD))
+                    return
                 if current < cost:
                     await ctx.send(embed=discord.Embed(
                         description=f"❌ Not enough Nexcoins!\nCost: `{cost:,}` • Your balance: `{current:,}`",
@@ -371,7 +391,7 @@ class Shop(commands.Cog):
                 inv.append({'uid': uid, 'name': item_result['name'], 'rarity': rolled_rarity,
                             'type': item_result['type'], 'description': stat_desc, 'stats': stats})
                 new_coins = fresh_p.get('nexcoins', 0) - cost
-                players.update({'nexcoins': new_coins, 'inventory': inv}, Player.id == user_id)
+                players.update({'nexcoins': new_coins, 'inventory': inv, 'last_item_pack': time.time()}, Player.id == user_id)
                 rarity_icons = {"Common": "⚪", "Uncommon": "🟢", "Rare": "🔵",
                                 "Epic": "🟣", "Legendary": "🟠", "Mythic": "🔴"}
                 icon = rarity_icons.get(rolled_rarity, '📦')
@@ -396,6 +416,15 @@ class Shop(commands.Cog):
             current = p.get('starshards', 0)
 
             if item.get('type') == 'petpack':
+                now_ts = time.time()
+                last_pp = p.get('last_pet_pack', 0)
+                if now_ts - last_pp < 3000:
+                    remaining = int(3000 - (now_ts - last_pp))
+                    m, s = divmod(remaining, 60)
+                    await ctx.send(embed=discord.Embed(
+                        description=f"⏰ Pet Pack on cooldown! Available in **{m}m {s}s**.",
+                        color=GOLD))
+                    return
                 if current < cost:
                     await ctx.send(embed=discord.Embed(
                         description=f"❌ Not enough Starshards!\nCost: `{cost}` • Your balance: `{current}`",
@@ -413,7 +442,7 @@ class Shop(commands.Cog):
                 uid = str(random.randint(100000, 999999))
                 inv.append({'uid': uid, 'name': pet['name'], 'rarity': pet['rarity'], 'type': 'pet',
                             'description': pet['description'], 'stats': pet.get('stats', {})})
-                players.update({'starshards': current - cost, 'inventory': inv}, Player.id == user_id)
+                players.update({'starshards': current - cost, 'inventory': inv, 'last_pet_pack': time.time()}, Player.id == user_id)
                 rarity_icons = {"Common": "⚪", "Uncommon": "🟢", "Rare": "🔵",
                                 "Epic": "🟣", "Legendary": "🟠", "Mythic": "🔴", "Divine": "🟡"}
                 icon = rarity_icons.get(pet['rarity'], '✨')
@@ -482,7 +511,10 @@ class Shop(commands.Cog):
         inv = fresh_p[0].get('inventory', [])
         inv.append(new_item)
 
-        players.update({cost_type: current - cost, 'inventory': inv}, Player.id == user_id)
+        purchase_update = {cost_type: current - cost, 'inventory': inv}
+        if item.get('name') == 'Raid Pass':
+            purchase_update['last_raid_pass'] = time.time()
+        players.update(purchase_update, Player.id == user_id)
 
         embed = discord.Embed(
             title="✅ Purchase Successful!",
