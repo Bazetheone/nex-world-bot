@@ -487,6 +487,12 @@ class RaidBattleView(discord.ui.View):
             mult = 0
             skip_damage = True
             extra_note = f"\n💢 Weakened the boss's {stat.upper()} by {int(pct*100)}%!"
+        elif effect and effect.get('type') == 'shield':
+            amt = int(self.player['hp'] * effect.get('shield_pct', 0.2))
+            self.player_shield_hp += amt
+            mult = 0
+            skip_damage = True
+            extra_note = f"\n\U0001F6E1\uFE0F Granted a {amt:,} HP shield!"
         else:
             mult = 1.4
 
@@ -494,27 +500,42 @@ class RaidBattleView(discord.ui.View):
             cost = int(self.player['hp'] * effect.get('hp_cost_pct', 0.05))
             self.player_hp = max(1, self.player_hp - cost)
 
-        raw_dmg = int(best_atk * mult * self.player_dmg_mult)
+        now_atk = time.time()
+        atk_mult = 1.0
+        if now_atk < self.buff_all_until:
+            atk_mult += self.buff_all_pct
+        if now_atk < self.buff_str_until:
+            atk_mult += self.buff_str_pct
+        best_atk = int(best_atk * atk_mult)
 
-        if random.random() < self.player_evasion:
-            result = f"🌫️ Your **{skill_name}** hit a mirage — 0 damage!"
-            dmg = 0
+        self.skill_uses += 1
+
+        if skip_damage:
+            result = f"\u2728 **{skill_name}** activated!{extra_note}"
+            if heal_amt:
+                result += f" Healed **{heal_amt:,}** HP!"
         else:
-            if self.boss_shield > 0:
+            raw_dmg = int(best_atk * mult * self.player_dmg_mult)
+            if random.random() < self.player_evasion:
+                result = f"\U0001F4A8 Your **{skill_name}** hit a mirage \u2014 0 damage!"
+            elif self.boss_shield > 0:
                 tentative = calculate_damage(raw_dmg, self.boss['def'])
                 absorbed = min(self.boss_shield, tentative)
                 dmg = max(0, tentative - absorbed)
                 self.boss_shield = max(0, self.boss_shield - absorbed)
-                result = f"🌊 Shield absorbed **{absorbed:,}**! **{skill_name}** dealt **{dmg:,}** damage!"
+                self.boss_hp -= dmg
+                self.total_damage += dmg
+                result = f"\U0001F30A Shield absorbed **{absorbed:,}**! **{skill_name}** dealt **{dmg:,}** damage!"
             else:
                 dmg = calculate_damage(raw_dmg, self.boss['def'])
-                result = f"✨ **{skill_name}** dealt **{dmg:,}** damage!" + (f" Healed **{heal_amt:,}** HP!" if heal_amt else "")
-            self.boss_hp -= dmg
-            self.total_damage += dmg
-            if self.boss_extra_fire > 0:
-                self.boss_hp -= self.boss_extra_fire
-                result += f"\n🔥 Blazing Aura deals **{self.boss_extra_fire:,}** fire damage!"
-        self.skill_uses += 1
+                result = f"\u2728 **{skill_name}** dealt **{dmg:,}** damage!" + (f" Healed **{heal_amt:,}** HP!" if heal_amt else "")
+                self.boss_hp -= dmg
+                self.total_damage += dmg
+                if self.boss_extra_fire > 0:
+                    self.boss_hp -= self.boss_extra_fire
+                    result += f"\n\U0001F525 Blazing Aura deals **{self.boss_extra_fire:,}** fire damage!"
+            if extra_note:
+                result += extra_note
 
         if not self.special_available and self.skill_uses >= 2:
             self.special_available = True
