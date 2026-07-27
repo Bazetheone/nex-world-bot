@@ -8,6 +8,7 @@ import asyncio
 import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from main import NC_ICON, SS_ICON
 from quest_tracker import track_quest_progress
 
 GOLD = 0xFFD700
@@ -377,7 +378,7 @@ class AdventurersGuild(commands.Cog, name="AdventurersGuild"):
             embed.add_field(
                 name=f"`{q['id']}` — {q['title']} [{q['type']}] {status}",
                 value=(f"{q['desc']}\n"
-                       f"⏰ `{q['time_h']}h` | 🎖️ `+{q['rep']} Rep` | 💰 `{q['nc']:,} NC` | 🪙 `{q['cc']} CC`\n"
+                       f"⏰ `{q['time_h']}h` | 🎖️ `+{q['rep']} Rep` | {NC_ICON} `{q['nc']:,} NC` | 🪙 `{q['cc']} CC`\n"
                        f"Progress: `{bar}`"),
                 inline=False)
         embed.set_footer(text="Use !accept <ID> to accept a quest • Nexworld RPG")
@@ -447,7 +448,7 @@ class AdventurersGuild(commands.Cog, name="AdventurersGuild"):
         expires_in = f"{quest_data['time_h']}h"
         embed.add_field(name="⏰ Time Limit", value=f"`{expires_in}`", inline=True)
         embed.add_field(name="🎖️ Rep Reward", value=f"`+{quest_data['rep']}`", inline=True)
-        embed.add_field(name="💰 NC Reward", value=f"`{quest_data['nc']:,}`", inline=True)
+        embed.add_field(name=f"{NC_ICON} NC Reward", value=f"`{quest_data['nc']:,}`", inline=True)
         embed.add_field(name="🪙 CC Reward", value=f"`{quest_data['cc']}`", inline=True)
         embed.set_footer(text="Nexworld RPG • Adventurer's Guild")
         await ctx.send(embed=embed)
@@ -525,7 +526,7 @@ class AdventurersGuild(commands.Cog, name="AdventurersGuild"):
         embed = discord.Embed(title=f"✅ Quest Complete: {quest['title']}", color=0x00CC66)
         embed.description = flavor
         embed.add_field(name="🎖️ Reputation", value=f"`+{quest['reward_rep']}` (now `{new_rep:,}`)", inline=True)
-        embed.add_field(name="💰 Nexcoins", value=f"`+{quest['reward_nc']:,}`", inline=True)
+        embed.add_field(name=f"{NC_ICON} Nexcoins", value=f"`+{quest['reward_nc']:,}`", inline=True)
         embed.add_field(name="🪙 Clan Coins", value=f"`+{quest['reward_cc']}`", inline=True)
         embed.set_footer(text="Nexworld RPG • Adventurer's Guild")
         await ctx.send(embed=embed)

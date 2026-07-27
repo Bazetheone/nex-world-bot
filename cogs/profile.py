@@ -93,8 +93,8 @@ class LbView(discord.ui.View):
 
     CATEGORIES = {
         "level":      ("⚡ Leaderboard — Level",      lambda p: p.get('level', 1),      lambda p: f"Level {p.get('level', 1):,}"),
-        "coins":      ("💰 Leaderboard — Nexcoins",    lambda p: p.get('nexcoins', 0),    lambda p: f"{p.get('nexcoins', 0):,} NC"),
-        "starshards": ("✨ Leaderboard — Starshards",  lambda p: p.get('starshards', 0),  lambda p: f"{p.get('starshards', 0):,} SS"),
+        "coins":      (f"{NC_ICON} Leaderboard — Nexcoins",    lambda p: p.get('nexcoins', 0),    lambda p: f"{NC_ICON} {p.get('nexcoins', 0):,}"),
+        "starshards": (f"{SS_ICON} Leaderboard — Starshards",  lambda p: p.get('starshards', 0),  lambda p: f"{SS_ICON} {p.get('starshards', 0):,}"),
         "guildrank":  ("🎖️ Leaderboard — Guild Rank", lambda p: LbView.RANK_ORDER_LB.index(p.get('guild_rank', 'F')) if p.get('guild_rank', 'F') in LbView.RANK_ORDER_LB else 0, lambda p: f"{LbView.RANK_ICONS_LB.get(p.get('guild_rank', 'F'), '🩶')} {p.get('guild_rank', 'F')}-Rank"),
     }
 
@@ -155,7 +155,7 @@ class LbView(discord.ui.View):
         self.page = 1
         await interaction.response.edit_message(embed=self.build_embed(), view=self)
 
-    @discord.ui.button(label="💰 Nexcoins", style=discord.ButtonStyle.blurple, row=1)
+    @discord.ui.button(label=NC_ICON + " Nexcoins", style=discord.ButtonStyle.blurple, row=1)
     async def cat_coins(self, interaction: discord.Interaction, button: discord.ui.Button):
         if interaction.user.id != self.ctx.author.id:
             await interaction.response.send_message("This isn't your leaderboard!", ephemeral=True)
@@ -164,7 +164,7 @@ class LbView(discord.ui.View):
         self.page = 1
         await interaction.response.edit_message(embed=self.build_embed(), view=self)
 
-    @discord.ui.button(label="✨ Starshards", style=discord.ButtonStyle.blurple, row=1)
+    @discord.ui.button(label=SS_ICON + " Starshards", style=discord.ButtonStyle.blurple, row=1)
     async def cat_ss(self, interaction: discord.Interaction, button: discord.ui.Button):
         if interaction.user.id != self.ctx.author.id:
             await interaction.response.send_message("This isn't your leaderboard!", ephemeral=True)
@@ -224,8 +224,8 @@ class Profile(commands.Cog, name="Profile"):
         embed.add_field(name="🛡️ DEF", value=f"`{format_number(p['def'])}`", inline=True)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(
-            name="💰 Balance",
-            value=f"Nexcoins: `{format_number(p.get('nexcoins', 0))}`\nStarshards: `{format_number(p.get('starshards', 0))}`",
+            name="💰 Balance",  # field label kept plain — value shows icons inline
+            value=f"{NC_ICON} `{format_number(p.get('nexcoins', 0))}`\n{SS_ICON} `{format_number(p.get('starshards', 0))}`",
             inline=False)
 
         weapon = equipped.get('weapon')
@@ -275,10 +275,10 @@ class Profile(commands.Cog, name="Profile"):
             await ctx.send(embed=discord.Embed(description="❌ Player not found!", color=GOLD))
             return
         p = p[0]
-        embed = discord.Embed(title=f"💰 {member.name}'s Balance", color=GOLD)
+        embed = discord.Embed(title=f"{NC_ICON} {member.name}'s Balance", color=GOLD)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
-        embed.add_field(name="Nexcoins", value=f"`{p.get('nexcoins', 0):,}`", inline=True)
-        embed.add_field(name="Starshards", value=f"`{p.get('starshards', 0):,}`", inline=True)
+        embed.add_field(name=f"{NC_ICON} Nexcoins", value=f"`{p.get('nexcoins', 0):,}`", inline=True)
+        embed.add_field(name=f"{SS_ICON} Starshards", value=f"`{p.get('starshards', 0):,}`", inline=True)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.set_thumbnail(url=member.display_avatar.url)
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")

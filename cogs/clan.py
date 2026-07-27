@@ -136,7 +136,7 @@ class Clan(commands.Cog, name="Clan"):
         embed.add_field(name="👥 Members", value=f"`{len(members)}/{max_m}`", inline=True)
         embed.add_field(name="🔑 Status", value=lock, inline=True)
         embed.add_field(name="⭐ Season Rep", value=f"`{c.get('total_rep', 0):,}`", inline=True)
-        embed.add_field(name="💰 Treasury", value=f"`{c.get('treasury', 0):,}` NC", inline=True)
+        embed.add_field(name=f"{NC_ICON} Treasury", value=f"`{c.get('treasury', 0):,}` NC", inline=True)
         embed.add_field(name="🪙 Clan Coins", value=f"`{c.get('clan_coins', 0):,}` CC", inline=True)
         if c.get('officers'):
             embed.add_field(name="🛡️ Officers", value=", ".join(c['officers'][:5]) or "None", inline=False)
@@ -384,7 +384,7 @@ class Clan(commands.Cog, name="Clan"):
         players.update({'nexcoins': p['nexcoins'] - amount}, Player.id == user_id)
         new_treasury = c.get('treasury', 0) + amount
         clan_db.update({'treasury': new_treasury}, ClanQ.name == c['name'])
-        embed = discord.Embed(title="💰 Deposit Successful!", color=GOLD)
+        embed = discord.Embed(title=f"{NC_ICON} Deposit Successful!", color=GOLD)
         embed.add_field(name="Donated", value=f"`{amount:,}` NC", inline=True)
         embed.add_field(name="Treasury", value=f"`{new_treasury:,}` NC", inline=True)
         await ctx.send(embed=embed)
@@ -540,7 +540,7 @@ class Clan(commands.Cog, name="Clan"):
                 icon = medals[place] if place < 3 else f"#{place+1}"
                 recap_embed.add_field(
                     name=f"{icon} {c['name']}",
-                    value=f"⭐ `{c.get('total_rep', 0):,}` Rep | 💰 `{reward['nc']:,}` NC | ✨ {reward['rarity']} Item",
+                    value=f"⭐ `{c.get('total_rep', 0):,}` Rep | {NC_ICON} `{reward['nc']:,}` NC | ✨ {reward['rarity']} Item",
                     inline=False)
 
                 for member_id in c.get('members', []):
@@ -578,7 +578,7 @@ class Clan(commands.Cog, name="Clan"):
                                 title=f"🏆 Season {current_season[0]} Reward!",
                                 description=f"Your clan **{c['name']}** finished **{icon}**!",
                                 color=0xFFD700)
-                            dm_embed.add_field(name="💰 Nexcoins", value=f"`+{reward['nc']:,}`", inline=True)
+                            dm_embed.add_field(name=f"{NC_ICON} Nexcoins", value=f"`+{reward['nc']:,}`", inline=True)
                             dm_embed.add_field(name="⭐ EXP", value=f"`+{reward['exp']:,}`", inline=True)
                             dm_embed.add_field(name="🪙 Clan Coins", value=f"`+{reward['cc']:,}`", inline=True)
                             if chosen_item:

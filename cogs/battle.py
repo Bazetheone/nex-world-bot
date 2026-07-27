@@ -605,7 +605,7 @@ class BattleView(discord.ui.View):
             embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
             embed.add_field(
                 name=f"✅ {self.enemy['name']} Defeated — Rewards",
-                value=f"💰 `+{coins_gain:,}` Nexcoins  •  🔮 `+{exp_gain:,}` EXP",
+                value=f"{NC_ICON} `+{coins_gain:,}` Nexcoins  •  🔮 `+{exp_gain:,}` EXP",
                 inline=False)
 
             if item_drop:
@@ -649,7 +649,7 @@ class BattleView(discord.ui.View):
             embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
             embed.add_field(
                 name=f"💀 Defeated by {self.enemy['name']}",
-                value=f"💰 `+{consolation:,}` Nexcoins consolation\n💡 Try a past arc with `!arc` to grind up first",
+                value=f"{NC_ICON} `+{consolation:,}` Nexcoins consolation\n💡 Try a past arc with `!arc` to grind up first",
                 inline=False)
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")
             await self.message.edit(embed=embed, view=discord.ui.View())

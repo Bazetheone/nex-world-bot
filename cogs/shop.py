@@ -135,7 +135,7 @@ def build_nexcoin_shop_embed(page=1):
     page = max(1, min(page, total_pages))
     start = (page - 1) * _NEXCOIN_ITEMS_PER_PAGE
     page_items = sorted_items[start:start + _NEXCOIN_ITEMS_PER_PAGE]
-    embed = discord.Embed(title=f"💰 Nexcoin Shop  (Page {page}/{total_pages})", color=GOLD)
+    embed = discord.Embed(title=f"{NC_ICON} Nexcoin Shop  (Page {page}/{total_pages})", color=GOLD)
     embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
     for item in page_items:
         embed.add_field(
@@ -149,7 +149,7 @@ def build_nexcoin_shop_embed(page=1):
 
 def build_ss_shop_embed():
     sorted_items = sorted(SS_SHOP, key=lambda x: x['price'])
-    embed = discord.Embed(title="✨ Starshard Shop", color=GOLD)
+    embed = discord.Embed(title=f"{SS_ICON} Starshard Shop", color=GOLD)
     embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
     for item in sorted_items:
         embed.add_field(
@@ -257,14 +257,14 @@ class ShopView(discord.ui.View):
         super().__init__(timeout=60)
         self.ctx = ctx
 
-    @discord.ui.button(label="💰 Nexcoin Shop", style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label=NC_ICON + " Nexcoin Shop", style=discord.ButtonStyle.blurple)
     async def nexcoin_shop(self, interaction: discord.Interaction, button: discord.ui.Button):
         if interaction.user.id != self.ctx.author.id:
             await interaction.response.send_message("This isn't your shop!", ephemeral=True)
             return
         await interaction.response.edit_message(embed=build_nexcoin_shop_embed(1), view=NexcoinShopView(self.ctx, 1))
 
-    @discord.ui.button(label="✨ Starshard Shop", style=discord.ButtonStyle.green)
+    @discord.ui.button(label=SS_ICON + " Starshard Shop", style=discord.ButtonStyle.green)
     async def ss_shop(self, interaction: discord.Interaction, button: discord.ui.Button):
         if interaction.user.id != self.ctx.author.id:
             await interaction.response.send_message("This isn't your shop!", ephemeral=True)
@@ -399,7 +399,7 @@ class Shop(commands.Cog):
                 embed = discord.Embed(title="📦 Item Pack Opened!", color=GOLD)
                 embed.add_field(name="You got!", value=f"{icon} **{item_result['name']}** `{rolled_rarity}`", inline=False)
                 embed.add_field(name="Stats", value=stat_desc or "—", inline=True)
-                embed.add_field(name="Remaining Nexcoins", value=f"`{new_coins:,}`", inline=True)
+                embed.add_field(name=f"{NC_ICON} Remaining", value=f"`{new_coins:,}`", inline=True)
                 if luck_active:
                     embed.set_footer(text="🍀 Luck Potion active — boosted rarity chances!")
                 else:
@@ -450,7 +450,7 @@ class Shop(commands.Cog):
                 embed = discord.Embed(title="🎁 Pet Pack Opened!", color=GOLD)
                 embed.add_field(name="You got!", value=f"{icon} **{pet['name']}** `{pet['rarity']}`", inline=False)
                 embed.add_field(name="Stats", value=pet['description'], inline=True)
-                embed.add_field(name="Remaining Starshards", value=f"`{current - cost}`", inline=True)
+                embed.add_field(name=f"{SS_ICON} Remaining", value=f"`{current - cost}`", inline=True)
                 if luck_active:
                     embed.set_footer(text="🍀 Luck Potion active — boosted rarity chances!")
                 else:
@@ -604,11 +604,11 @@ class Shop(commands.Cog):
             value="**Epic/Legendary:** Void Shard, Chaos Crystal, Storm Feather, Dragon Scale Fragment, Soul Ember, Abyss Rune",
             inline=False)
         embed.add_field(
-            name="🏪 Shop 1 — Nexcoins `!shop 1`",
+            name=f"{NC_ICON} Shop 1 — Nexcoins `!shop 1`",
             value="Weapons & Armor (Rare → Legendary), HP Potions, EXP Boost Potion, Luck Potion, Item Pack",
             inline=False)
         embed.add_field(
-            name="✨ Shop 2 — Starshards `!shop 2`",
+            name=f"{SS_ICON} Shop 2 — Starshards `!shop 2`",
             value="Weapons & Armor (Mythic → Godly), Race Reroll Token, Pet Pack",
             inline=False)
         embed.add_field(

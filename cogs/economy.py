@@ -357,7 +357,7 @@ class PvPBattleView(discord.ui.View):
         except Exception:
             pass
         embed = discord.Embed(title="🏆 Duel Complete!", color=GOLD)
-        embed.add_field(name="Winner", value=f"{winner.mention} wins `{reward:,}` Nexcoins!", inline=False)
+        embed.add_field(name="Winner", value=f"{winner.mention} wins {NC_ICON} `{reward:,}` Nexcoins!", inline=False)
         embed.set_footer(text="Nexworld RPG • Fight again with !fight")
         await interaction.followup.send(embed=embed)
         self.stop()
@@ -489,8 +489,8 @@ class Economy(commands.Cog, name="Economy"):
         embed.add_field(name="✨ MAG", value=f"`{stats['mag']}`", inline=True)
         embed.add_field(name="🛡️ DEF", value=f"`{stats['def']}`", inline=True)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
-        embed.add_field(name="💰 Nexcoins", value="`1,500`", inline=True)
-        embed.add_field(name="✨ Starshards", value="`0`", inline=True)
+        embed.add_field(name=f"{NC_ICON} Nexcoins", value="`1,500`", inline=True)
+        embed.add_field(name=f"{SS_ICON} Starshards", value="`0`", inline=True)
         embed.set_thumbnail(url=ctx.author.display_avatar.url)
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
         await ctx.send(embed=embed)
@@ -525,9 +525,9 @@ class Economy(commands.Cog, name="Economy"):
         players.update({'nexcoins': new_coins, 'exp': new_exp, 'last_daily': now}, Player.id == user_id)
 
         embed = discord.Embed(title="🎁 Daily Reward!", color=GOLD)
-        embed.add_field(name="💰 Nexcoins", value=f"`+{reward_nc:,}`", inline=True)
+        embed.add_field(name=f"{NC_ICON} Nexcoins", value=f"`+{reward_nc:,}`", inline=True)
         embed.add_field(name="⭐ EXP", value=f"`+{reward_exp:,}`", inline=True)
-        embed.add_field(name="💰 New Balance", value=f"`{new_coins:,}`", inline=False)
+        embed.add_field(name=f"{NC_ICON} New Balance", value=f"`{new_coins:,}`", inline=False)
         embed.set_footer(text="Nexworld RPG • Come back tomorrow!")
         await ctx.send(embed=embed)
 
@@ -563,9 +563,9 @@ class Economy(commands.Cog, name="Economy"):
         except Exception:
             pass
         embed = discord.Embed(title="⏰ Hourly Reward!", color=GOLD)
-        embed.add_field(name="💰 Nexcoins", value=f"`+{reward_nc:,}`", inline=True)
+        embed.add_field(name=f"{NC_ICON} Nexcoins", value=f"`+{reward_nc:,}`", inline=True)
         embed.add_field(name="⭐ EXP", value=f"`+{reward_exp:,}`", inline=True)
-        embed.add_field(name="💰 New Balance", value=f"`{new_coins:,}`", inline=False)
+        embed.add_field(name=f"{NC_ICON} New Balance", value=f"`{new_coins:,}`", inline=False)
         embed.set_footer(text="Nexworld RPG • Come back in an hour!")
         await ctx.send(embed=embed)
 
@@ -710,7 +710,7 @@ class Economy(commands.Cog, name="Economy"):
             color=GOLD)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(name="🎁 Item Found", value=f"**{item['name']}** `{item['rarity']}`\nID: `{uid}`", inline=False)
-        embed.add_field(name="💰 Nexcoins", value=f"`+{coins_gain:,}`", inline=True)
+        embed.add_field(name=f"{NC_ICON} Nexcoins", value=f"`+{coins_gain:,}`", inline=True)
         embed.add_field(name="🔮 EXP", value=f"`+{format_num(exp_gain)}`", inline=True)
         if leveled_up:
             embed.add_field(name="⬆️ LEVEL UP!", value=f"**{old_level} → {current_level}**\nGiven `{points_gained}` points to assign! Use `points` / `assign`.", inline=False)
@@ -768,7 +768,7 @@ class Economy(commands.Cog, name="Economy"):
         embed = discord.Embed(title="🗳️ Vote for Nexworld!", color=GOLD)
         embed.add_field(name="Vote Link", value="[Click here to vote!](https://top.gg/bot/YOUR_BOT_ID)", inline=False)
         embed.add_field(name="Status", value=can_vote, inline=False)
-        embed.add_field(name="Next Reward", value=f"💰 **{next_reward:,} Nexcoins**\n✨ **10 Starshards** (40% chance)", inline=False)
+        embed.add_field(name="Next Reward", value=f"{NC_ICON} **{next_reward:,} Nexcoins**\n{SS_ICON} **10 Starshards** (40% chance)", inline=False)
         embed.add_field(name="🔥 Streak Ladder", value="x1: 25,000\nx2: 30,000\nx3: 35,000\nx4: 40,000\nx5: 45,000\nx6: 50,000\nx7+: 60,000", inline=False)
         embed.add_field(name="📊 Your Stats", value=f"Total Votes: `{total_votes}` • Current Streak: `x{streak}`", inline=False)
         embed.add_field(name="🔔 Reminders", value=f"Use `!votereminder` to toggle DM reminders when your cooldown resets.", inline=False)
@@ -822,8 +822,8 @@ class Economy(commands.Cog, name="Economy"):
         players.update({'nexcoins': sender_new}, Player.id == user_id)
         players.update({'nexcoins': target_new}, Player.id == target_id)
 
-        embed = discord.Embed(title="💰 Payment Sent!", color=GOLD)
-        embed.add_field(name="Amount", value=f"`{amount_int:,}` Nexcoins → {member.mention}", inline=False)
+        embed = discord.Embed(title=f"{NC_ICON} Payment Sent!", color=GOLD)
+        embed.add_field(name="Amount", value=f"{NC_ICON} `{amount_int:,}` → {member.mention}", inline=False)
         embed.add_field(name="Your Balance", value=f"`{sender_new:,}`", inline=True)
         embed.add_field(name=f"{member.name}'s Balance", value=f"`{target_new:,}`", inline=True)
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
@@ -869,8 +869,8 @@ class Economy(commands.Cog, name="Economy"):
         players.update({'starshards': sender_new}, Player.id == user_id)
         players.update({'starshards': target_new}, Player.id == target_id)
 
-        embed = discord.Embed(title="✨ Starshards Sent!", color=GOLD)
-        embed.add_field(name="Amount", value=f"`{amount:,}` Starshards → {member.mention}", inline=False)
+        embed = discord.Embed(title=f"{SS_ICON} Starshards Sent!", color=GOLD)
+        embed.add_field(name="Amount", value=f"{SS_ICON} `{amount:,}` → {member.mention}", inline=False)
         embed.add_field(name="Your Balance", value=f"`{sender_new:,}`", inline=True)
         embed.add_field(name=f"{member.name}'s Balance", value=f"`{target_new:,}`", inline=True)
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
@@ -1027,7 +1027,7 @@ class Economy(commands.Cog, name="Economy"):
             title="✅ Purchase Successful!",
             description=f"Bought **{listing['item_name']}** for `{listing['price']:,}` Nexcoins!",
             color=GOLD)
-        embed.add_field(name="💰 New Balance", value=f"`{buyer_new:,}`", inline=False)
+        embed.add_field(name=f"{NC_ICON} New Balance", value=f"`{buyer_new:,}`", inline=False)
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
         await ctx.send(embed=embed)
 
@@ -1366,10 +1366,10 @@ class Economy(commands.Cog, name="Economy"):
         inv.remove(item)
         new_coins = p.get('nexcoins', 0) + price
         players.update({'inventory': inv, 'nexcoins': new_coins}, Player.id == user_id)
-        embed = discord.Embed(title="💰 Item Sold!", color=GOLD)
+        embed = discord.Embed(title=f"{NC_ICON} Item Sold!", color=GOLD)
         embed.add_field(name="Item", value=f"**{item['name']}** `{rarity}`", inline=True)
-        embed.add_field(name="Earned", value=f"`{price:,}` Nexcoins", inline=True)
-        embed.add_field(name="New Balance", value=f"`{new_coins:,}` Nexcoins", inline=False)
+        embed.add_field(name=f"{NC_ICON} Earned", value=f"`{price:,}`", inline=True)
+        embed.add_field(name=f"{NC_ICON} New Balance", value=f"`{new_coins:,}`", inline=False)
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
         await ctx.send(embed=embed)
 
