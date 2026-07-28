@@ -560,16 +560,56 @@ class RaidBattleView(discord.ui.View):
                 self.stop()
                 return
 
+        now_counter = time.time()
         boss_atk = int(self.boss['atk'] * self.boss_atk_mult)
-        boss_dmg = calculate_damage(boss_atk, self.player['def'])
-        if self.boss_attacks_twice:
-            boss_dmg += calculate_damage(boss_atk, self.player['def'])
-        if self.boss_heals_on_hit and boss_dmg > 0:
-            heal = int(boss_dmg * 0.3)
-            self.boss_hp = min(self.total_boss_hp, self.boss_hp + heal)
-            result += f"\n🩸 Boss healed **{heal:,}** HP!"
-        self.player_hp -= boss_dmg
-        result += f"\n{self.boss['name']} dealt **{boss_dmg:,}** back!"
+        if now_counter < self.boss_atk_debuff_until:
+            boss_atk = int(boss_atk * (1 - self.boss_atk_debuff_pct_skill))
+
+        effective_def = self.player['def']
+        if now_counter < self.buff_all_until:
+            effective_def = int(effective_def * (1 + self.buff_all_pct))
+        if now_counter < self.buff_def_until:
+            effective_def = int(effective_def * (1 + self.buff_def_pct))
+
+        if self.boss_stunned:
+            result += f"\n\U0001F4AB {self.boss['name']} is stunned and cannot attack!"
+            self.boss_stunned = False
+            boss_dmg = 0
+        elif self.evade_chance > 0 and random.random() < self.evade_chance:
+            result += f"\n\U0001F4A8 You dodged {self.boss['name']}'s attack!"
+            self.evade_chance = 0
+            boss_dmg = 0
+        else:
+            self.evade_chance = 0
+            boss_dmg = calculate_damage(boss_atk, effective_def)
+            if self.boss_attacks_twice:
+                boss_dmg += calculate_damage(boss_atk, effective_def)
+            if self.boss_heals_on_hit and boss_dmg > 0:
+                heal = int(boss_dmg * 0.3)
+                self.boss_hp = min(self.total_boss_hp, self.boss_hp + heal)
+                result += f"\n\U0001FA79 Boss healed **{heal:,}** HP!"
+            if self.player_shield_hp > 0:
+                absorbed = min(self.player_shield_hp, boss_dmg)
+                self.player_shield_hp -= absorbed
+                boss_dmg -= absorbed
+                if absorbed > 0:
+                    result += f"\n\U0001F6E1\uFE0F Shield absorbed **{absorbed:,}** damage!"
+            if self.reflect_pct > 0 and boss_dmg > 0:
+                reflected = int(boss_dmg * self.reflect_pct)
+                self.boss_hp -= reflected
+                result += f"\n\U0001F504 Reflected **{reflected:,}** damage back!"
+                self.reflect_pct = 0
+            self.player_hp -= boss_dmg
+            if boss_dmg > 0:
+                result += f"\n{self.boss['name']} dealt **{boss_dmg:,}** back!"
+
+        if self.boss_dot_ticks_remaining > 0:
+            self.boss_dot_ticks_remaining -= 1
+            if self.boss_dot_ticks_remaining > 0:
+                dot_dmg = int(self.total_boss_hp * self.boss_dot_pct)
+                self.boss_hp -= dot_dmg
+                result += f"\n\u2620\uFE0F Poison ticks for **{dot_dmg:,}** damage!"
+
         self.turn += 1
 
         if self.player_hp <= 0:
@@ -670,16 +710,56 @@ class RaidBattleView(discord.ui.View):
                 self.stop()
                 return
 
+        now_counter = time.time()
         boss_atk = int(self.boss['atk'] * self.boss_atk_mult)
-        boss_dmg = calculate_damage(boss_atk, self.player['def'])
-        if self.boss_attacks_twice:
-            boss_dmg += calculate_damage(boss_atk, self.player['def'])
-        if self.boss_heals_on_hit and boss_dmg > 0:
-            heal = int(boss_dmg * 0.3)
-            self.boss_hp = min(self.total_boss_hp, self.boss_hp + heal)
-            result += f"\n🩸 Boss healed **{heal:,}** HP!"
-        self.player_hp -= boss_dmg
-        result += f"\n{self.boss['name']} dealt **{boss_dmg:,}** back!"
+        if now_counter < self.boss_atk_debuff_until:
+            boss_atk = int(boss_atk * (1 - self.boss_atk_debuff_pct_skill))
+
+        effective_def = self.player['def']
+        if now_counter < self.buff_all_until:
+            effective_def = int(effective_def * (1 + self.buff_all_pct))
+        if now_counter < self.buff_def_until:
+            effective_def = int(effective_def * (1 + self.buff_def_pct))
+
+        if self.boss_stunned:
+            result += f"\n\U0001F4AB {self.boss['name']} is stunned and cannot attack!"
+            self.boss_stunned = False
+            boss_dmg = 0
+        elif self.evade_chance > 0 and random.random() < self.evade_chance:
+            result += f"\n\U0001F4A8 You dodged {self.boss['name']}'s attack!"
+            self.evade_chance = 0
+            boss_dmg = 0
+        else:
+            self.evade_chance = 0
+            boss_dmg = calculate_damage(boss_atk, effective_def)
+            if self.boss_attacks_twice:
+                boss_dmg += calculate_damage(boss_atk, effective_def)
+            if self.boss_heals_on_hit and boss_dmg > 0:
+                heal = int(boss_dmg * 0.3)
+                self.boss_hp = min(self.total_boss_hp, self.boss_hp + heal)
+                result += f"\n\U0001FA79 Boss healed **{heal:,}** HP!"
+            if self.player_shield_hp > 0:
+                absorbed = min(self.player_shield_hp, boss_dmg)
+                self.player_shield_hp -= absorbed
+                boss_dmg -= absorbed
+                if absorbed > 0:
+                    result += f"\n\U0001F6E1\uFE0F Shield absorbed **{absorbed:,}** damage!"
+            if self.reflect_pct > 0 and boss_dmg > 0:
+                reflected = int(boss_dmg * self.reflect_pct)
+                self.boss_hp -= reflected
+                result += f"\n\U0001F504 Reflected **{reflected:,}** damage back!"
+                self.reflect_pct = 0
+            self.player_hp -= boss_dmg
+            if boss_dmg > 0:
+                result += f"\n{self.boss['name']} dealt **{boss_dmg:,}** back!"
+
+        if self.boss_dot_ticks_remaining > 0:
+            self.boss_dot_ticks_remaining -= 1
+            if self.boss_dot_ticks_remaining > 0:
+                dot_dmg = int(self.total_boss_hp * self.boss_dot_pct)
+                self.boss_hp -= dot_dmg
+                result += f"\n\u2620\uFE0F Poison ticks for **{dot_dmg:,}** damage!"
+
         self.turn += 1
 
         if self.player_hp <= 0:
