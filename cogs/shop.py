@@ -37,15 +37,20 @@ NEXCOIN_SHOP = [
 
 SS_SHOP = [
     {"id": 1,  "name": "Race Reroll Token",         "description": "Reroll your race with higher chances of Rare/Primordial", "price": 500, "rarity": "Legendary", "type": "consumable", "stats": {}},
-    {"id": 2,  "name": "World-Breaker Greatsword",  "description": "+500 Attack",                           "price": 150, "rarity": "Mythic", "type": "weapon",  "stats": {"str": 500}},
-    {"id": 3,  "name": "Staff of Infinite Cosmos",  "description": "+450 Magic Attack",                     "price": 150, "rarity": "Mythic", "type": "weapon",  "stats": {"mag": 450}},
-    {"id": 4,  "name": "Abyss-Forged Plating",      "description": "+800 Defense, +400 Health",             "price": 200, "rarity": "Mythic", "type": "armor",   "stats": {"def": 800, "hp": 400}},
-    {"id": 5,  "name": "Robes of Cosmic Balance",   "description": "+60 Magic Attack",                      "price": 200, "rarity": "Mythic", "type": "armor",   "stats": {"mag": 60}},
-    {"id": 6,  "name": "Halo of the Seraphim",      "description": "+500 Health, +300 Defense",             "price": 300, "rarity": "Godly",  "type": "head_armor", "stats": {"hp": 500, "def": 300}},
-    {"id": 7,  "name": "Crown of Eternal Void",     "description": "+80 Magic Attack",                      "price": 300, "rarity": "Godly",  "type": "head_armor", "stats": {"mag": 80}},
-    {"id": 8,  "name": "Ragnarok Executioner",      "description": "+600 Attack",                            "price": 350, "rarity": "Godly",  "type": "weapon",  "stats": {"str": 600}},
-    {"id": 9,  "name": "Apocalypse Scythe",         "description": "+550 Attack",                            "price": 350, "rarity": "Godly",  "type": "weapon",  "stats": {"str": 550}},
+    {"id": 2,  "name": "World-Breaker Greatsword",  "description": "+900 Attack",                           "price": 150, "rarity": "Mythic", "type": "weapon",  "stats": {"str": 900}},
+    {"id": 3,  "name": "Staff of Infinite Cosmos",  "description": "+850 Magic Attack",                     "price": 150, "rarity": "Mythic", "type": "weapon",  "stats": {"mag": 850}},
+    {"id": 4,  "name": "Abyss-Forged Plating",      "description": "+1,400 Defense, +800 Health",           "price": 200, "rarity": "Mythic", "type": "armor",   "stats": {"def": 1400, "hp": 800}},
+    {"id": 5,  "name": "Robes of Cosmic Balance",   "description": "+450 Magic Attack, +200 Defense",       "price": 200, "rarity": "Mythic", "type": "armor",   "stats": {"mag": 450, "def": 200}},
+    {"id": 6,  "name": "Halo of the Seraphim",      "description": "+1,200 Health, +700 Defense",           "price": 300, "rarity": "Godly",  "type": "head_armor", "stats": {"hp": 1200, "def": 700}},
+    {"id": 7,  "name": "Crown of Eternal Void",     "description": "+700 Magic Attack, +300 Health",        "price": 300, "rarity": "Godly",  "type": "head_armor", "stats": {"mag": 700, "hp": 300}},
+    {"id": 8,  "name": "Ragnarok Executioner",      "description": "+1,300 Attack",                         "price": 350, "rarity": "Godly",  "type": "weapon",  "stats": {"str": 1300}},
+    {"id": 9,  "name": "Apocalypse Scythe",         "description": "+1,200 Attack, +150 Magic Attack",      "price": 350, "rarity": "Godly",  "type": "weapon",  "stats": {"str": 1200, "mag": 150}},
     {"id": 10, "name": "Pet Pack",                  "description": "Open for a random pet! Common → Mythic chances. Luck Potion boosts rarity!", "price": 100, "rarity": "Special", "type": "petpack", "stats": {}},
+    {"id": 11, "name": "Wyrmscale Greatblade",      "description": "+950 Attack (Dragon-kin affinity)",     "price": 250, "rarity": "Mythic", "type": "weapon",  "stats": {"str": 950}},
+    {"id": 12, "name": "Draconic Bulwark Plate",    "description": "+1,300 Defense, +900 Health (Dragon-kin affinity)", "price": 300, "rarity": "Mythic", "type": "armor",   "stats": {"def": 1300, "hp": 900}},
+    {"id": 13, "name": "Radiant Judgment Staff",    "description": "+930 Magic Attack (Seraphim affinity)", "price": 250, "rarity": "Mythic", "type": "weapon",  "stats": {"mag": 930}},
+    {"id": 14, "name": "Wings of Dawn",             "description": "+1,250 Defense, +1,100 Health (Seraphim affinity)", "price": 300, "rarity": "Mythic", "type": "armor",   "stats": {"def": 1250, "hp": 1100}},
+    {"id": 15, "name": "Stat Reroll Ticket",        "description": "Refunds all manually assigned stat points (from !assign) back into unspent points. Does not affect race, level, gear bonuses, or rebirth bonus.", "price": 250, "rarity": "Legendary", "type": "consumable", "stats": {}},
 ]
 
 PETS = [
