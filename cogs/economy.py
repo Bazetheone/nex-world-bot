@@ -597,6 +597,18 @@ class Economy(commands.Cog, name="Economy"):
                 color=GOLD))
             return
 
+        if str(ctx.author.id) in active_pvp_battles:
+            await ctx.send(embed=discord.Embed(
+                description="❌ You're already in a duel! Finish your current fight first.",
+                color=GOLD))
+            return
+
+        if str(opponent.id) in active_pvp_battles:
+            await ctx.send(embed=discord.Embed(
+                description=f"❌ {opponent.display_name} is already in a duel! Try again later.",
+                color=GOLD))
+            return
+
         challenger_id = str(ctx.author.id)
         defender_id = str(opponent.id)
 
