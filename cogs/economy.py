@@ -1111,6 +1111,49 @@ class Economy(commands.Cog, name="Economy"):
                 embed.add_field(name="💡 Points Returned", value=f"`{total_returned}` back to unspent!", inline=False)
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")
             await ctx.send(embed=embed)
+        elif item['name'] == 'Stat Reroll Ticket':
+            from main import RACES
+            race_base = RACES.get(p['race'], RACES['Human'])
+            rebirth_mult = 1 + (p.get('rebirth_bonus', 0) / 100)
+
+            gear_bonus = {'hp': 0, 'str': 0, 'mag': 0, 'def': 0}
+            for slot_item in p.get('equipped', {}).values():
+                if slot_item:
+                    for stat, val in slot_item.get('stats', {}).items():
+                        if stat in gear_bonus:
+                            gear_bonus[stat] += val
+
+            true_hp = int(race_base['hp'] * rebirth_mult) + gear_bonus['hp']
+            true_str = int(race_base['str'] * rebirth_mult) + gear_bonus['str']
+            true_mag = int(race_base['mag'] * rebirth_mult) + gear_bonus['mag']
+            true_def = int(race_base['def'] * rebirth_mult) + gear_bonus['def']
+
+            refund = (
+                max(0, p.get('hp', 0) - true_hp) +
+                max(0, p.get('str', 0) - true_str) +
+                max(0, p.get('mag', 0) - true_mag) +
+                max(0, p.get('def', 0) - true_def)
+            )
+
+            new_inv = [i for i in inventory if i['uid'] != item_uid]
+            new_unspent = p.get('unspent_points', 0) + refund
+
+            players.update({
+                'hp': true_hp,
+                'str': true_str,
+                'mag': true_mag,
+                'def': true_def,
+                'unspent_points': new_unspent,
+                'inventory': new_inv
+            }, Player.id == user_id)
+
+            embed = discord.Embed(title="🔄 Stats Reset!", color=GOLD)
+            embed.add_field(name="Refunded Points", value=f"`{refund:,}` returned to your unspent pool!", inline=False)
+            embed.add_field(name="New Base Stats", value=f"❤️ `{true_hp:,}` • ⚔️ `{true_str:,}` • ✨ `{true_mag:,}` • 🛡️ `{true_def:,}`", inline=False)
+            embed.add_field(name="💡 Tip", value="Use `!points` to check your balance and `!assign <stat> <amount>` to reallocate!", inline=False)
+            embed.set_footer(text="Nexworld RPG • Your fate has been decided")
+            await ctx.send(embed=embed)
+
         elif item['type'] == 'consumable':
             await ctx.send(embed=discord.Embed(
                 description=f"💊 **{item['name']}** — Use this during battle for its effect!",
