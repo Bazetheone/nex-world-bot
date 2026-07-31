@@ -140,6 +140,12 @@ class PvPAcceptView(discord.ui.View):
         self.stop()
 
 
+active_pvp_battles = set()
+
+def calculate_damage(atk, def_stat):
+    base = max(1, int(atk) - int(def_stat) // 2)
+    return int(base * random.uniform(0.85, 1.15))
+
 class PvPBattleView(discord.ui.View):
     def __init__(self, ctx, challenger, defender, cp, dp):
         super().__init__(timeout=60)
@@ -157,7 +163,14 @@ class PvPBattleView(discord.ui.View):
         self.battle_ended = False
         self.shield_hp = {str(challenger.id): 0, str(defender.id): 0}
         self.turn = 1
+        active_pvp_battles.add(str(challenger.id))
+        active_pvp_battles.add(str(defender.id))
         self._update_buttons()
+
+    def stop(self):
+        active_pvp_battles.discard(str(self.challenger.id))
+        active_pvp_battles.discard(str(self.defender.id))
+        super().stop()
 
     def _player_data(self, uid):
         return self.cp if uid == str(self.challenger.id) else self.dp
@@ -363,6 +376,8 @@ class PvPBattleView(discord.ui.View):
         self.stop()
 
     async def on_timeout(self):
+        active_pvp_battles.discard(str(self.challenger.id))
+        active_pvp_battles.discard(str(self.defender.id))
         if self.message and not self.battle_ended:
             try:
                 for child in self.children:
