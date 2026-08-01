@@ -63,9 +63,9 @@ class RaidJoinView(discord.ui.View):
             title=f"👹 Raid — {boss['name']}",
             description=f"**Passive:** {boss['passive']} — *{boss['passive_desc']}*",
             color=0xFF4444)
-        embed.add_field(name="❤️ HP", value=f"`{boss['hp']:,}`", inline=True)
+        embed.add_field(name="<:hp:1530891103379652749> HP", value=f"`{boss['hp']:,}`", inline=True)
         embed.add_field(name="⚔️ ATK", value=f"`{boss['atk']:,}`", inline=True)
-        embed.add_field(name="🛡️ DEF", value=f"`{boss['def']:,}`", inline=True)
+        embed.add_field(name="<:def:1530891180173295738> DEF", value=f"`{boss['def']:,}`", inline=True)
         embed.add_field(name="🏆 Tier", value=f"`{TIER_NAMES[boss['tier']]}`", inline=True)
         embed.add_field(name="👥 Players", value=f"`{len(self.players)}/5`", inline=True)
         embed.add_field(name="⏰ Time", value="`5 minutes to join`", inline=True)
@@ -143,11 +143,11 @@ class RaidJoinView(discord.ui.View):
                 color=GOLD)
             embed.add_field(
                 name=f"👹 {boss['name']}",
-                value=f"❤️ HP: `{boss_hp:,}` / `{total_boss_hp:,}`",
+                value=f"<:hp:1530891103379652749> HP: `{boss_hp:,}` / `{total_boss_hp:,}`",
                 inline=False)
             embed.add_field(
                 name=f"👤 {player['name']}",
-                value=f"❤️ HP: `{player['hp']:,}`",
+                value=f"<:hp:1530891103379652749> HP: `{player['hp']:,}`",
                 inline=False)
             embed.add_field(
                 name="Remaining Players",
@@ -304,11 +304,11 @@ class RaidBattleView(discord.ui.View):
             color=GOLD)
         embed.add_field(
             name=f"👹 {self.boss['name']}",
-            value=f"❤️ {self.get_hp_bar(self.boss_hp, self.total_boss_hp)}",
+            value=f"<:hp:1530891103379652749> {self.get_hp_bar(self.boss_hp, self.total_boss_hp)}",
             inline=False)
         embed.add_field(
             name=f"👤 {self.player['name']}",
-            value=f"❤️ {self.get_hp_bar(self.player_hp, self.player['hp'])}",
+            value=f"<:hp:1530891103379652749> {self.get_hp_bar(self.player_hp, self.player['hp'])}",
             inline=False)
         embed.add_field(name="🔄 Turn", value=f"`{self.turn}`", inline=True)
         embed.add_field(name="⚡ Skill Uses", value=f"`{self.skill_uses}`", inline=True)
@@ -821,9 +821,9 @@ class Raid(commands.Cog):
             title=f"👹 RAID SPAWNED — {boss['name']}!",
             description=f"**Passive:** {boss['passive']} — *{boss['passive_desc']}*\n\nClick **Enter Raid** to join! Max 5 players.",
             color=0xFF4444)
-        embed.add_field(name="❤️ HP", value=f"`{boss['hp']:,}`", inline=True)
+        embed.add_field(name="<:hp:1530891103379652749> HP", value=f"`{boss['hp']:,}`", inline=True)
         embed.add_field(name="⚔️ ATK", value=f"`{boss['atk']:,}`", inline=True)
-        embed.add_field(name="🛡️ DEF", value=f"`{boss['def']:,}`", inline=True)
+        embed.add_field(name="<:def:1530891180173295738> DEF", value=f"`{boss['def']:,}`", inline=True)
         embed.add_field(name="🏆 Tier", value=f"`{TIER_NAMES[boss['tier']]}`", inline=True)
         embed.add_field(name="⏰ Join Timer", value="`5 minutes`", inline=True)
         embed.add_field(name="👥 Max Players", value="`5`", inline=True)

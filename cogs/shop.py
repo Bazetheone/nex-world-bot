@@ -579,10 +579,10 @@ class Shop(commands.Cog):
             title="🎲 Race Reroll!",
             description=f"Your new race is **{new_race}** `{stats['rarity']}`!",
             color=GOLD)
-        embed.add_field(name="❤️ HP", value=f"`{stats['hp']}`", inline=True)
+        embed.add_field(name="<:hp:1530891103379652749> HP", value=f"`{stats['hp']}`", inline=True)
         embed.add_field(name="⚔️ STR", value=f"`{stats['str']}`", inline=True)
         embed.add_field(name="✨ MAG", value=f"`{stats['mag']}`", inline=True)
-        embed.add_field(name="🛡️ DEF", value=f"`{stats['def']}`", inline=True)
+        embed.add_field(name="<:def:1530891180173295738> DEF", value=f"`{stats['def']}`", inline=True)
         if total_returned > 0:
             embed.add_field(
                 name="💡 Stat Points Returned",
@@ -663,10 +663,10 @@ class Shop(commands.Cog):
         stats = found.get('stats', {})
         if stats:
             stat_lines = []
-            if stats.get('hp'):  stat_lines.append(f"❤️ HP: `+{stats['hp']}`")
+            if stats.get('hp'):  stat_lines.append(f"<:hp:1530891103379652749> HP: `+{stats['hp']}`")
             if stats.get('str'): stat_lines.append(f"⚔️ ATK: `+{stats['str']}`")
             if stats.get('mag'): stat_lines.append(f"✨ MAG: `+{stats['mag']}`")
-            if stats.get('def'): stat_lines.append(f"🛡️ DEF: `+{stats['def']}`")
+            if stats.get('def'): stat_lines.append(f"<:def:1530891180173295738> DEF: `+{stats['def']}`")
             embed.add_field(name="Stat Boosts", value="\n".join(stat_lines), inline=False)
         price = found.get('price')
         if price:
@@ -731,7 +731,7 @@ class Shop(commands.Cog):
                 return
             inv.remove(item)
             players.update({'buff_def_boost_until': now + 300, 'inventory': inv}, Player.id == user_id)
-            embed = discord.Embed(title="🛡️ DEF Boost Active!", color=GOLD)
+            embed = discord.Embed(title="<:def:1530891180173295738> DEF Boost Active!", color=GOLD)
             embed.add_field(name="Effect", value="+100 DEF for 5 minutes", inline=True)
             embed.add_field(name="Duration", value="`5 minutes`", inline=True)
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")

@@ -137,11 +137,11 @@ class BattleView(discord.ui.View):
             color=GOLD)
         embed.add_field(
             name=f"👤 {self.ctx.author.name}",
-            value=f"❤️ {self.get_hp_bar(self.player_hp, self.player_data['hp'])}",
+            value=f"<:hp:1530891103379652749> {self.get_hp_bar(self.player_hp, self.player_data['hp'])}",
             inline=False)
         embed.add_field(
             name=f"{RARITY_ICONS.get(self.enemy['rarity'], '⚪')} {self.enemy['name']} `{self.enemy['rarity']}`",
-            value=f"❤️ {self.get_hp_bar(self.enemy_hp, self.enemy['hp'])}",
+            value=f"<:hp:1530891103379652749> {self.get_hp_bar(self.enemy_hp, self.enemy['hp'])}",
             inline=False)
         embed.add_field(name="🔄 Turn", value=f"`{self.turn}`", inline=True)
         embed.add_field(name="⚡ Skill Uses", value=f"`{self.skill_uses}`", inline=True)
@@ -247,7 +247,7 @@ class BattleView(discord.ui.View):
 
         await interaction.response.edit_message(embed=await self.get_embed(result), view=self)
 
-    @discord.ui.button(label="🧪 Potion", style=discord.ButtonStyle.grey, row=2)
+    @discord.ui.button(label="<:potion:1530891401053737121> Potion", style=discord.ButtonStyle.grey, row=2)
     async def use_potion(self, interaction: discord.Interaction, button: discord.ui.Button):
         if not await self.check_user(interaction) or self.battle_ended:
             return
@@ -595,11 +595,11 @@ class BattleView(discord.ui.View):
                 color=0x00FF00)
             embed.add_field(
                 name=f"👤 {self.ctx.author.name}",
-                value=f"❤️ {self.get_hp_bar(self.player_hp, self.player_data['hp'])}",
+                value=f"<:hp:1530891103379652749> {self.get_hp_bar(self.player_hp, self.player_data['hp'])}",
                 inline=False)
             embed.add_field(
                 name=f"{rarity_icon} {self.enemy['name']} `{self.enemy['rarity']}`",
-                value=f"❤️ {self.get_hp_bar(0, self.enemy['hp'])}",
+                value=f"<:hp:1530891103379652749> {self.get_hp_bar(0, self.enemy['hp'])}",
                 inline=False)
             embed.add_field(name="🔄 Turns", value=f"`{self.turn}`", inline=True)
             embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
@@ -639,11 +639,11 @@ class BattleView(discord.ui.View):
                 color=0xFF0000)
             embed.add_field(
                 name=f"👤 {self.ctx.author.name}",
-                value=f"❤️ {self.get_hp_bar(0, self.player_data['hp'])}",
+                value=f"<:hp:1530891103379652749> {self.get_hp_bar(0, self.player_data['hp'])}",
                 inline=False)
             embed.add_field(
                 name=f"{rarity_icon} {self.enemy['name']} `{self.enemy['rarity']}`",
-                value=f"❤️ {self.get_hp_bar(self.enemy_hp, self.enemy['hp'])}",
+                value=f"<:hp:1530891103379652749> {self.get_hp_bar(self.enemy_hp, self.enemy['hp'])}",
                 inline=False)
             embed.add_field(name="🔄 Turns", value=f"`{self.turn}`", inline=True)
             embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)

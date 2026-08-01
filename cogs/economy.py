@@ -200,11 +200,11 @@ class PvPBattleView(discord.ui.View):
         embed = discord.Embed(title=f"⚔️ {self.challenger.display_name} vs {self.defender.display_name}", color=GOLD)
         embed.add_field(
             name=f"👤 {self.challenger.display_name}",
-            value=f"❤️ {self.get_hp_bar(self.hp[str(self.challenger.id)], self.max_hp[str(self.challenger.id)])}",
+            value=f"<:hp:1530891103379652749> {self.get_hp_bar(self.hp[str(self.challenger.id)], self.max_hp[str(self.challenger.id)])}",
             inline=False)
         embed.add_field(
             name=f"👤 {self.defender.display_name}",
-            value=f"❤️ {self.get_hp_bar(self.hp[str(self.defender.id)], self.max_hp[str(self.defender.id)])}",
+            value=f"<:hp:1530891103379652749> {self.get_hp_bar(self.hp[str(self.defender.id)], self.max_hp[str(self.defender.id)])}",
             inline=False)
         embed.add_field(name="🔄 Turn", value=f"`{self.turn}` — {self._member(self.turn_id).mention}'s move", inline=False)
         if result_text:
@@ -499,10 +499,10 @@ class Economy(commands.Cog, name="Economy"):
             name="━━━━━━━━━━━━━━━━━━━━━━",
             value=f"{ORIGIN_ICONS[origin]} **Origin:** {origin}\n{stats['rarity_icon']} **Race:** {race_name} `{stats['rarity']}`",
             inline=False)
-        embed.add_field(name="❤️ HP", value=f"`{stats['hp']}`", inline=True)
+        embed.add_field(name="<:hp:1530891103379652749> HP", value=f"`{stats['hp']}`", inline=True)
         embed.add_field(name="⚔️ STR", value=f"`{stats['str']}`", inline=True)
         embed.add_field(name="✨ MAG", value=f"`{stats['mag']}`", inline=True)
-        embed.add_field(name="🛡️ DEF", value=f"`{stats['def']}`", inline=True)
+        embed.add_field(name="<:def:1530891180173295738> DEF", value=f"`{stats['def']}`", inline=True)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(name=f"{NC_ICON} Nexcoins", value="`1,500`", inline=True)
         embed.add_field(name=f"{SS_ICON} Starshards", value="`0`", inline=True)
@@ -738,9 +738,9 @@ class Economy(commands.Cog, name="Economy"):
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(name="🎁 Item Found", value=f"**{item['name']}** `{item['rarity']}`\nID: `{uid}`", inline=False)
         embed.add_field(name=f"{NC_ICON} Nexcoins", value=f"`+{coins_gain:,}`", inline=True)
-        embed.add_field(name="🔮 EXP", value=f"`+{format_num(exp_gain)}`", inline=True)
+        embed.add_field(name="<:exp:1530891250486611968> EXP", value=f"`+{format_num(exp_gain)}`", inline=True)
         if leveled_up:
-            embed.add_field(name="⬆️ LEVEL UP!", value=f"**{old_level} → {current_level}**\nGiven `{points_gained}` points to assign! Use `points` / `assign`.", inline=False)
+            embed.add_field(name="<:lvlup:1530891482892992702> LEVEL UP!", value=f"**{old_level} → {current_level}**\nGiven `{points_gained}` points to assign! Use `points` / `assign`.", inline=False)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(name="⏰ Cooldown", value="Explore again in **1 hour**!", inline=False)
         embed.set_thumbnail(url=ctx.author.display_avatar.url)
@@ -1103,10 +1103,10 @@ class Economy(commands.Cog, name="Economy"):
             }, Player.id == user_id)
 
             embed = discord.Embed(title="🎲 Race Rerolled!", description=f"New race: **{new_race}** `{stats['rarity']}`!", color=GOLD)
-            embed.add_field(name="❤️ HP", value=f"`{stats['hp']}`", inline=True)
+            embed.add_field(name="<:hp:1530891103379652749> HP", value=f"`{stats['hp']}`", inline=True)
             embed.add_field(name="⚔️ STR", value=f"`{stats['str']}`", inline=True)
             embed.add_field(name="✨ MAG", value=f"`{stats['mag']}`", inline=True)
-            embed.add_field(name="🛡️ DEF", value=f"`{stats['def']}`", inline=True)
+            embed.add_field(name="<:def:1530891180173295738> DEF", value=f"`{stats['def']}`", inline=True)
             if total_returned > 0:
                 embed.add_field(name="💡 Points Returned", value=f"`{total_returned}` back to unspent!", inline=False)
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")
