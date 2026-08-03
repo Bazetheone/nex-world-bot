@@ -169,7 +169,7 @@ def build_ss_shop_embed():
 def build_daily_shop_embed():
     daily_items, daily_pet = get_daily_shop()
     embed = discord.Embed(
-        title="🔄 Daily Shop",
+        title="<:daily:1533458477869961396> Daily Shop",
         description=f"Resets in: **{time_until_reset()}**",
         color=GOLD)
     embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
@@ -401,7 +401,7 @@ class Shop(commands.Cog):
                 rarity_icons = {"Common": "⚪", "Uncommon": "🟢", "Rare": "🔵",
                                 "Epic": "🟣", "Legendary": "🟠", "Mythic": "🔴"}
                 icon = rarity_icons.get(rolled_rarity, '📦')
-                embed = discord.Embed(title="📦 Item Pack Opened!", color=GOLD)
+                embed = discord.Embed(title="<:itempack:1533458814613852261> Item Pack Opened!", color=GOLD)
                 embed.add_field(name="You got!", value=f"{icon} **{item_result['name']}** `{rolled_rarity}`", inline=False)
                 embed.add_field(name="Stats", value=stat_desc or "—", inline=True)
                 embed.add_field(name=f"{NC_ICON} Remaining", value=f"`{new_coins:,}`", inline=True)
@@ -452,7 +452,7 @@ class Shop(commands.Cog):
                 rarity_icons = {"Common": "⚪", "Uncommon": "🟢", "Rare": "🔵",
                                 "Epic": "🟣", "Legendary": "🟠", "Mythic": "🔴", "Divine": "🟡"}
                 icon = rarity_icons.get(pet['rarity'], '✨')
-                embed = discord.Embed(title="🎁 Pet Pack Opened!", color=GOLD)
+                embed = discord.Embed(title="<:petpack:1533458731612897441> Pet Pack Opened!", color=GOLD)
                 embed.add_field(name="You got!", value=f"{icon} **{pet['name']}** `{pet['rarity']}`", inline=False)
                 embed.add_field(name="Stats", value=pet['description'], inline=True)
                 embed.add_field(name=f"{SS_ICON} Remaining", value=f"`{current - cost}`", inline=True)
@@ -580,8 +580,8 @@ class Shop(commands.Cog):
             description=f"Your new race is **{new_race}** `{stats['rarity']}`!",
             color=GOLD)
         embed.add_field(name="<:hp:1530891103379652749> HP", value=f"`{stats['hp']}`", inline=True)
-        embed.add_field(name="⚔️ STR", value=f"`{stats['str']}`", inline=True)
-        embed.add_field(name="✨ MAG", value=f"`{stats['mag']}`", inline=True)
+        embed.add_field(name="<:str:1533458366070784000> STR", value=f"`{stats['str']}`", inline=True)
+        embed.add_field(name="<:magic:1533459066897301514> MAG", value=f"`{stats['mag']}`", inline=True)
         embed.add_field(name="<:def:1530891180173295738> DEF", value=f"`{stats['def']}`", inline=True)
         if total_returned > 0:
             embed.add_field(
@@ -665,7 +665,7 @@ class Shop(commands.Cog):
             stat_lines = []
             if stats.get('hp'):  stat_lines.append(f"<:hp:1530891103379652749> HP: `+{stats['hp']}`")
             if stats.get('str'): stat_lines.append(f"⚔️ ATK: `+{stats['str']}`")
-            if stats.get('mag'): stat_lines.append(f"✨ MAG: `+{stats['mag']}`")
+            if stats.get('mag'): stat_lines.append(f"<:magic:1533459066897301514> MAG: `+{stats['mag']}`")
             if stats.get('def'): stat_lines.append(f"<:def:1530891180173295738> DEF: `+{stats['def']}`")
             embed.add_field(name="Stat Boosts", value="\n".join(stat_lines), inline=False)
         price = found.get('price')
@@ -745,7 +745,7 @@ class Shop(commands.Cog):
                 return
             inv.remove(item)
             players.update({'buff_str_boost_until': now + 300, 'inventory': inv}, Player.id == user_id)
-            embed = discord.Embed(title="⚔️ STR Boost Active!", color=GOLD)
+            embed = discord.Embed(title="<:str:1533458366070784000> STR Boost Active!", color=GOLD)
             embed.add_field(name="Effect", value="+100 STR & +100 MAG for 5 minutes", inline=True)
             embed.add_field(name="Duration", value="`5 minutes`", inline=True)
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")

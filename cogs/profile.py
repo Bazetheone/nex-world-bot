@@ -212,15 +212,15 @@ class Profile(commands.Cog, name="Profile"):
             name="🌍 Identity",
             value=f"{race_data['rarity_icon']} **Race:** {p['race']} `{race_data['rarity']}`\n"
                   f"{ORIGIN_ICONS.get(p['origin'], '❓')} **Origin:** {p['origin']}\n"
-                  f"⚡ **Level:** {level}\n"
+                  f"<:lvl:1533458636481757374> **Level:** {level}\n"
                   f"🎖️ **Guild Rank:** {get_rank_icon(p.get('guild_rank', 'F'))} {p.get('guild_rank', 'F')}-Rank\n"
                   f"<:exp:1530891250486611968> **EXP:** {format_number(exp)} / {format_number(exp_needed)}\n"
                   f"🔁 **Rebirths:** {rebirths}" + (f" `+{rebirth_bonus}% stats`" if rebirths > 0 else ""),
             inline=False)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(name="<:hp:1530891103379652749> HP", value=f"`{format_number(p['hp'])}`", inline=True)
-        embed.add_field(name="⚔️ STR", value=f"`{format_number(p['str'])}`", inline=True)
-        embed.add_field(name="✨ MAG", value=f"`{format_number(p['mag'])}`", inline=True)
+        embed.add_field(name="<:str:1533458366070784000> STR", value=f"`{format_number(p['str'])}`", inline=True)
+        embed.add_field(name="<:magic:1533459066897301514> MAG", value=f"`{format_number(p['mag'])}`", inline=True)
         embed.add_field(name="<:def:1530891180173295738> DEF", value=f"`{format_number(p['def'])}`", inline=True)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(
@@ -258,7 +258,7 @@ class Profile(commands.Cog, name="Profile"):
         embed.add_field(name="Unspent Points", value=f"`{unspent:,}`", inline=False)
         embed.add_field(
             name="Current Stats",
-            value=f"<:hp:1530891103379652749> HP: `{p.get('hp', 0):,}` • ⚔️ STR: `{p.get('str', 0):,}` • ✨ MAG: `{p.get('mag', 0):,}` • <:def:1530891180173295738> DEF: `{p.get('def', 0):,}`",
+            value=f"<:hp:1530891103379652749> HP: `{p.get('hp', 0):,}` • <:str:1533458366070784000> STR: `{p.get('str', 0):,}` • <:magic:1533459066897301514> MAG: `{p.get('mag', 0):,}` • <:def:1530891180173295738> DEF: `{p.get('def', 0):,}`",
             inline=False)
         if unspent > 0:
             embed.add_field(name="How to Spend", value="Use `!assign <stat> <amount>`\nValid stats: `hp`, `str`, `mag`, `def`", inline=False)
@@ -469,7 +469,7 @@ class Profile(commands.Cog, name="Profile"):
         for race_name, data in RACE_DATA.items():
             embed.add_field(
                 name=f"{data['rarity_icon']} {race_name} — `{data['rarity']}` ({chances.get(race_name, '?')})",
-                value=f"<:hp:1530891103379652749> HP: `{data['hp']}` • ⚔️ STR: `{data['str']}` • ✨ MAG: `{data['mag']}` • <:def:1530891180173295738> DEF: `{data['def']}`",
+                value=f"<:hp:1530891103379652749> HP: `{data['hp']}` • <:str:1533458366070784000> STR: `{data['str']}` • <:magic:1533459066897301514> MAG: `{data['mag']}` • <:def:1530891180173295738> DEF: `{data['def']}`",
                 inline=False)
 
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)

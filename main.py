@@ -69,7 +69,7 @@ async def handle_vote(user_id):
             embed.add_field(name="💰 Nexcoins", value=f"+{coin_reward:,}", inline=True)
             embed.add_field(name="🔥 Streak", value=f"x{streak}", inline=True)
             if ss_gained:
-                embed.add_field(name="✨ Starshards", value=f"+{ss_gained}", inline=True)
+                embed.add_field(name="<:starshard:1533458421037138020> Starshards", value=f"+{ss_gained}", inline=True)
             embed.set_footer(text="Nexworld RPG • Thanks for voting!")
             await user.send(embed=embed)
     except Exception:

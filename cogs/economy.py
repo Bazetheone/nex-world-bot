@@ -500,8 +500,8 @@ class Economy(commands.Cog, name="Economy"):
             value=f"{ORIGIN_ICONS[origin]} **Origin:** {origin}\n{stats['rarity_icon']} **Race:** {race_name} `{stats['rarity']}`",
             inline=False)
         embed.add_field(name="<:hp:1530891103379652749> HP", value=f"`{stats['hp']}`", inline=True)
-        embed.add_field(name="⚔️ STR", value=f"`{stats['str']}`", inline=True)
-        embed.add_field(name="✨ MAG", value=f"`{stats['mag']}`", inline=True)
+        embed.add_field(name="<:str:1533458366070784000> STR", value=f"`{stats['str']}`", inline=True)
+        embed.add_field(name="<:magic:1533459066897301514> MAG", value=f"`{stats['mag']}`", inline=True)
         embed.add_field(name="<:def:1530891180173295738> DEF", value=f"`{stats['def']}`", inline=True)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(name=f"{NC_ICON} Nexcoins", value="`1,500`", inline=True)
@@ -539,7 +539,7 @@ class Economy(commands.Cog, name="Economy"):
         new_exp = p.get('exp', 0) + reward_exp
         players.update({'nexcoins': new_coins, 'exp': new_exp, 'last_daily': now}, Player.id == user_id)
 
-        embed = discord.Embed(title="🎁 Daily Reward!", color=GOLD)
+        embed = discord.Embed(title="<:daily:1533458477869961396> Daily Reward!", color=GOLD)
         embed.add_field(name=f"{NC_ICON} Nexcoins", value=f"`+{reward_nc:,}`", inline=True)
         embed.add_field(name="⭐ EXP", value=f"`+{reward_exp:,}`", inline=True)
         embed.add_field(name=f"{NC_ICON} New Balance", value=f"`{new_coins:,}`", inline=False)
@@ -1104,8 +1104,8 @@ class Economy(commands.Cog, name="Economy"):
 
             embed = discord.Embed(title="🎲 Race Rerolled!", description=f"New race: **{new_race}** `{stats['rarity']}`!", color=GOLD)
             embed.add_field(name="<:hp:1530891103379652749> HP", value=f"`{stats['hp']}`", inline=True)
-            embed.add_field(name="⚔️ STR", value=f"`{stats['str']}`", inline=True)
-            embed.add_field(name="✨ MAG", value=f"`{stats['mag']}`", inline=True)
+            embed.add_field(name="<:str:1533458366070784000> STR", value=f"`{stats['str']}`", inline=True)
+            embed.add_field(name="<:magic:1533459066897301514> MAG", value=f"`{stats['mag']}`", inline=True)
             embed.add_field(name="<:def:1530891180173295738> DEF", value=f"`{stats['def']}`", inline=True)
             if total_returned > 0:
                 embed.add_field(name="💡 Points Returned", value=f"`{total_returned}` back to unspent!", inline=False)
