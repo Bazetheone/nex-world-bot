@@ -54,28 +54,28 @@ SS_SHOP = [
 ]
 
 PETS = [
-    {"id": 1,  "name": "Baby Direwolf",       "description": "+18 Attack",                              "price": 10,  "rarity": "Common",    "stats": {"str": 18}},
-    {"id": 2,  "name": "Ember Fox",           "description": "+15 Magic Attack",                        "price": 10,  "rarity": "Common",    "stats": {"mag": 15}},
-    {"id": 3,  "name": "Stone Turtle",        "description": "+22 Defense",                             "price": 10,  "rarity": "Common",    "stats": {"def": 22}},
-    {"id": 4,  "name": "Pixie",               "description": "+25 Magic Attack",                        "price": 15,  "rarity": "Uncommon",  "stats": {"mag": 25}},
-    {"id": 5,  "name": "Barn Owl",            "description": "+15 Attack, +10 Defense",                 "price": 15,  "rarity": "Uncommon",  "stats": {"str": 15, "def": 10}},
-    {"id": 6,  "name": "Razorbeak Falcon",    "description": "+18 Attack",                              "price": 15,  "rarity": "Uncommon",  "stats": {"str": 18}},
-    {"id": 7,  "name": "Shadow Panther",      "description": "+35 Attack",                              "price": 30,  "rarity": "Rare",      "stats": {"str": 35}},
-    {"id": 8,  "name": "Storm Eagle",         "description": "+25 Attack, +15 Magic Attack",            "price": 30,  "rarity": "Rare",      "stats": {"str": 25, "mag": 15}},
-    {"id": 9,  "name": "Pyre Drake",          "description": "+35 Attack, +15 Magic Attack",            "price": 30,  "rarity": "Rare",      "stats": {"str": 35, "mag": 15}},
-    {"id": 10, "name": "Ironbark Treant",     "description": "+70 Defense",                             "price": 40,  "rarity": "Epic",      "stats": {"def": 70}},
-    {"id": 11, "name": "Treasure Goblin",     "description": "+100 Health, +25 Attack",                 "price": 40,  "rarity": "Epic",      "stats": {"hp": 100, "str": 25}},
-    {"id": 12, "name": "Void Tadpole",        "description": "+60 Magic Attack, +50 Health",            "price": 40,  "rarity": "Epic",      "stats": {"mag": 60, "hp": 50}},
-    {"id": 13, "name": "Griffin Hatchling",   "description": "+90 Attack, +40 Defense",                 "price": 60,  "rarity": "Legendary", "stats": {"str": 90, "def": 40}},
-    {"id": 14, "name": "Phoenix Chick",       "description": "+400 Health, +50 Magic Attack",           "price": 60,  "rarity": "Legendary", "stats": {"hp": 400, "mag": 50}},
-    {"id": 15, "name": "Vampiric Bat",        "description": "+80 Attack, +120 Health",                 "price": 60,  "rarity": "Legendary", "stats": {"str": 80, "hp": 120}},
-    {"id": 16, "name": "Astral Dragon",       "description": "+220 Attack, +180 Magic Attack, +100 HP", "price": 100, "rarity": "Mythic",    "stats": {"str": 220, "mag": 180, "hp": 100}},
-    {"id": 17, "name": "Void Leviathan",      "description": "+650 Health, +120 Defense",               "price": 100, "rarity": "Mythic",    "stats": {"hp": 650, "def": 120}},
-    {"id": 18, "name": "Golden Kirin",        "description": "+100 Attack, +100 Magic Attack, +100 DEF","price": 100, "rarity": "Mythic",    "stats": {"str": 100, "mag": 100, "def": 100}},
+    {"id": 1,  "name": "Baby Direwolf",       "description": "+18 Attack",                              "price": 10,  "rarity": "Common",    "stats": {"str": 18}, "image": "https://cdn.discordapp.com/attachments/1522913701202759690/1534600898158923828/file_00000000e6f4820aa5cf1f78c18650cc.png"},
+    {"id": 2,  "name": "Ember Fox",           "description": "+15 Magic Attack",                        "price": 10,  "rarity": "Common",    "stats": {"mag": 15}, "image": "https://cdn.discordapp.com/attachments/1522913701202759690/1534600897395429416/Screenshot_20260805-173521_Gallery.jpg"},
+    {"id": 3,  "name": "Stone Turtle",        "description": "+22 Defense",                             "price": 10,  "rarity": "Common",    "stats": {"def": 22}, "image": "https://cdn.discordapp.com/attachments/1522913701202759690/1534600897781563583/Screenshot_20260805-173437_Gallery.jpg"},
+    {"id": 4,  "name": "Pixie",               "description": "+25 Magic Attack",                        "price": 15,  "rarity": "Uncommon",  "stats": {"mag": 25}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534601748205928578/file_0000000098ac81f4b8e09c28d29a2776.png"},
+    {"id": 5,  "name": "Barn Owl",            "description": "+15 Attack, +10 Defense",                 "price": 15,  "rarity": "Uncommon",  "stats": {"str": 15, "def": 10}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534602065727324291/file_0000000098ac81f4b8e09c28d29a2776.png"},
+    {"id": 6,  "name": "Razorbeak Falcon",    "description": "+18 Attack",                              "price": 15,  "rarity": "Uncommon",  "stats": {"str": 18}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534602378651762889/file_0000000098ac81f4b8e09c28d29a2776.png"},
+    {"id": 7,  "name": "Shadow Panther",      "description": "+35 Attack",                              "price": 30,  "rarity": "Rare",      "stats": {"str": 35}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534602888100446398/file_00000000499c81f498fc3c2b05721dc7.png"},
+    {"id": 8,  "name": "Storm Eagle",         "description": "+25 Attack, +15 Magic Attack",            "price": 30,  "rarity": "Rare",      "stats": {"str": 25, "mag": 15}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534603257455050823/file_00000000499c81f498fc3c2b05721dc7-1.png"},
+    {"id": 9,  "name": "Pyre Drake",          "description": "+35 Attack, +15 Magic Attack",            "price": 30,  "rarity": "Rare",      "stats": {"str": 35, "mag": 15}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534603571109302303/file_00000000499c81f498fc3c2b05721dc7-2.png"},
+    {"id": 10, "name": "Ironbark Treant",     "description": "+70 Defense",                             "price": 40,  "rarity": "Epic",      "stats": {"def": 70}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534604055928635629/file_00000000c14481f4a50eaf90d55da126.png"},
+    {"id": 11, "name": "Treasure Goblin",     "description": "+100 Health, +25 Attack",                 "price": 40,  "rarity": "Epic",      "stats": {"hp": 100, "str": 25}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534604405758755038/file_00000000c14481f4a50eaf90d55da126.png"},
+    {"id": 12, "name": "Void Tadpole",        "description": "+60 Magic Attack, +50 Health",            "price": 40,  "rarity": "Epic",      "stats": {"mag": 60, "hp": 50}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534604724320473189/file_00000000c14481f4a50eaf90d55da126.png"},
+    {"id": 13, "name": "Griffin Hatchling",   "description": "+90 Attack, +40 Defense",                 "price": 60,  "rarity": "Legendary", "stats": {"str": 90, "def": 40}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534605452137205860/file_00000000b51481f4aa316add303b86ff.png"},
+    {"id": 14, "name": "Phoenix Chick",       "description": "+400 Health, +50 Magic Attack",           "price": 60,  "rarity": "Legendary", "stats": {"hp": 400, "mag": 50}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534605471376474143/file_000000003f388243a8dc22012eda410f.png"},
+    {"id": 15, "name": "Vampiric Bat",        "description": "+80 Attack, +120 Health",                 "price": 60,  "rarity": "Legendary", "stats": {"str": 80, "hp": 120}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534605834926030849/file_00000000b51481f4aa316add303b86ff.png"},
+    {"id": 16, "name": "Astral Dragon",       "description": "+220 Attack, +180 Magic Attack, +100 HP", "price": 100, "rarity": "Mythic",    "stats": {"str": 220, "mag": 180, "hp": 100}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534606194730205245/file_0000000051e081f4b35487a296d96de8.png"},
+    {"id": 17, "name": "Void Leviathan",      "description": "+650 Health, +120 Defense",               "price": 100, "rarity": "Mythic",    "stats": {"hp": 650, "def": 120}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534606466042957854/file_0000000051e081f4b35487a296d96de8.png"},
+    {"id": 18, "name": "Golden Kirin",        "description": "+100 Attack, +100 Magic Attack, +100 DEF","price": 100, "rarity": "Mythic",    "stats": {"str": 100, "mag": 100, "def": 100}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534606657730908230/file_0000000051e081f4b35487a296d96de8.png"},
     {"id": 19, "name": "Cybernetic Behemoth", "description": "+380 Defense, +200 Health",               "price": 100, "rarity": "Mythic",    "stats": {"def": 380, "hp": 200}},
-    {"id": 20, "name": "Seraphic Pegasus",    "description": "+750 Health, +120 Magic Attack",          "price": 100, "rarity": "Divine",    "stats": {"hp": 750, "mag": 120}},
-    {"id": 21, "name": "Chaos Hydra",         "description": "+350 Attack, +120 Magic Attack",          "price": 100, "rarity": "Divine",    "stats": {"str": 350, "mag": 120}},
-    {"id": 22, "name": "Time-Keeper Sphinx",  "description": "+250 HP, +180 ATK, +180 MAG, +120 DEF",  "price": 100, "rarity": "Divine",    "stats": {"hp": 250, "str": 180, "mag": 180, "def": 120}},
+    {"id": 20, "name": "Seraphic Pegasus",    "description": "+750 Health, +120 Magic Attack",          "price": 100, "rarity": "Divine",    "stats": {"hp": 750, "mag": 120}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534607209688858695/file_000000002b9c81f4bdbf4698ef95d62d.png"},
+    {"id": 21, "name": "Chaos Hydra",         "description": "+350 Attack, +120 Magic Attack",          "price": 100, "rarity": "Divine",    "stats": {"str": 350, "mag": 120}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534607586953793798/file_000000002b9c81f4bdbf4698ef95d62d.png"},
+    {"id": 22, "name": "Time-Keeper Sphinx",  "description": "+250 HP, +180 ATK, +180 MAG, +120 DEF",  "price": 100, "rarity": "Divine",    "stats": {"hp": 250, "str": 180, "mag": 180, "def": 120}, "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534608518722883665/file_000000002b9c81f4bdbf4698ef95d62d-1.png"},
 ]
 
 ITEM_PACK_POOL = {
@@ -672,6 +672,8 @@ class Shop(commands.Cog):
         if price:
             currency = "Starshards" if found.get('source') == "Shop 2" else "Nexcoins"
             embed.add_field(name="Price", value=f"`{price:,}` {currency}", inline=True)
+        if found.get('image'):
+            embed.set_image(url=found['image'])
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
         await ctx.send(embed=embed)
 
