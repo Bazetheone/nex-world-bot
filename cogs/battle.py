@@ -247,7 +247,7 @@ class BattleView(discord.ui.View):
 
         await interaction.response.edit_message(embed=await self.get_embed(result), view=self)
 
-    @discord.ui.button(label="<:potion:1530891401053737121> Potion", style=discord.ButtonStyle.grey, row=2)
+    @discord.ui.button(label="Potion", emoji="<:potion:1530891401053737121>", style=discord.ButtonStyle.grey, row=2)
     async def use_potion(self, interaction: discord.Interaction, button: discord.ui.Button):
         if not await self.check_user(interaction) or self.battle_ended:
             return
