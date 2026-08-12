@@ -481,43 +481,81 @@ class Profile(commands.Cog, name="Profile"):
 
     @commands.command(name="help")
     async def help(self, ctx):
-        embed = discord.Embed(title="📖 Nexworld RPG — Commands", color=GOLD)
-        embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
-        embed.add_field(name="🌟 Starting",
-            value="`!start` • `!daily` • `!hourly` / `!hr` • `!explore` / `!e` • `!vote` • `!race` / `!races`",
-            inline=False)
-        embed.add_field(name="👤 Profile",
-            value="`!profile` / `!pf` • `!balance` / `!bal` • `!inventory` / `!inv` *(paginated, ◀▶)* • `!skills` • `!points` • `!assign <stat> <amt>` • `!rank` • `!leaderboard` / `!lb [level|coins|starshards]` *(paginated)* • `!equipped`",
-            inline=False)
-        embed.add_field(name="⚔️ Battle",
-            value="`!arc` • `!arc <number>` • `!battle <number>` / `!b <number>`\n*(You can only fight one battle at a time)*",
-            inline=False)
-        embed.add_field(name="🥊 PvP",
-            value="`!fight @user` — Challenge another player to a duel!\nWinner earns `2,000–5,000` Nexcoins.",
-            inline=False)
-        embed.add_field(name="👹 Raids",
-            value="`!raid` — Spawns a boss (costs 1x Raid Pass)\n`!raid <id>` — View a specific boss info",
-            inline=False)
-        embed.add_field(name="🏛️ Adventurer's Guild",
-            value="`!guild` — Guild rank & info\n`!guild board` — View quest board\n`!accept <ID>` — Accept a quest\n`!report <ID>` — Report quest\n`!abandon <ID>` — Abandon quest\n`!myquests` / `!mq` — View active quests\n`!rankup` — Rank up\n`!gather` — Collect herbs (5-min CD, quest only)\n`!travel` — Delivery mission with encounter",
-            inline=False)
-        embed.add_field(name="🏰 Clans",
-            value="`!clan register <name>` — Create (50,000 NC)\n`!clan join <name>` / `!cj <name>` — Join clan\n`!clan info <name>` / `!ci <name>` — View clan\n`!clans` — Clan leaderboard\n`!clan invite @user` • `!clan kick @user`\n`!clan deposit <amt>` • `!clan setdesc <text>`\n`!clan shop` / `!cs` — Clan shop\n`!inviteonly` / `!io` — Toggle invite-only",
-            inline=False)
-        embed.add_field(name="🎒 Items",
-            value="`!ie <id>` Equip • `!iue <slot>` Unequip • `!usebuff <id>` Use Buff\n`!sell <id>` Sell (materials/drops/raid drops) • `!equipped`",
-            inline=False)
-        embed.add_field(name="💰 Economy",
-            value="`!pay @user <amt>` • `!payss @user <amt>`\n*(Shortcuts: `10k` = 10,000 • `1m` = 1,000,000)*\n`!market` / `!m` • `!ma <id> <price>` List • `!mb <listing-id>` Buy • `!mr <listing-id>` Remove\n`!rebirth` • `!cd`",
-            inline=False)
-        embed.add_field(name="🛒 Shop",
-            value="`!shop` — Main menu\n`!shop 1` — Nexcoin Shop *(paginated, ◀▶)*\n`!shop 2` — Starshard Shop\n`!buy 1 <item id>` • `!buy 2 <item id>` • `!buy daily <1-5>`",
-            inline=False)
-        embed.add_field(name="⚙️ Settings",
-            value="`!setprefix <symbol>` — Allowed: `! $ - * ? .`",
-            inline=False)
-        embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
-        embed.set_footer(text="Nexworld RPG • Your fate has been decided")
+        description = (
+            "**🌟 STARTING**\n"
+            "`!start` • `!daily` • `!hourly` / `!hr`\n"
+            "`!explore` / `!e` • `!vote`\n"
+            "`!race` / `!races`\n\n"
+            "**👤 PROFILE**\n"
+            "`!profile` / `!pf` • `!balance` / `!bal`\n"
+            "`!inventory` / `!inv` • `!skills`\n"
+            "`!points` • `!assign <stat> <amt>`\n"
+            "`!rank` • `!leaderboard` / `!lb`\n"
+            "`!equipped`\n\n"
+            "**⚔️ BATTLE**\n"
+            "`!arc` • `!arc <number>`\n"
+            "`!battle <number>` / `!b <number>`\n"
+            "> ⚠️ You can only fight one battle at a time.\n\n"
+            "**🥊 PVP**\n"
+            "`!fight @user` — Challenge another player to a duel.\n\n"
+            "**👹 RAIDS**\n"
+            "`!raid` — Spawn a boss\n"
+            "`!raid <id>` — View boss information\n\n"
+            "**🏛️ ADVENTURER'S GUILD**\n"
+            "`!guild` — Guild rank & information\n"
+            "`!guild board` — View quest board\n"
+            "`!accept <ID>` — Accept a quest\n"
+            "`!report <ID>` — Report a quest\n"
+            "`!abandon <ID>` — Abandon a quest\n"
+            "`!myquests` / `!mq` — View active quests\n"
+            "`!rankup` — Rank up\n"
+            "`!gather` — Collect herbs *(5-min CD, quest only)*\n"
+            "`!travel` — Delivery mission with encounter\n\n"
+            "**🏰 CLANS**\n"
+            "`!clan register <name>` — Create a clan *(50,000 NC)*\n"
+            "`!clan join <name>` / `!cj <name>` — Join a clan\n"
+            "`!clan info <name>` / `!ci <name>` — View clan\n"
+            "`!clans` — Clan leaderboard\n"
+            "`!clan invite @user` — Invite a player\n"
+            "`!clan kick @user` — Kick a player\n"
+            "`!clan deposit <amt>` — Deposit Nexcoins\n"
+            "`!clan setdesc <text>` — Set clan description\n"
+            "`!clan shop` / `!cs` — Clan shop\n"
+            "`!inviteonly` / `!io` — Toggle invite-only\n\n"
+            "**🎒 ITEMS**\n"
+            "`!ie <id>` — Equip item\n"
+            "`!iue <slot>` — Unequip item\n"
+            "`!usebuff <id>` — Use buff\n"
+            "`!sell <id>` — Sell item\n"
+            "`!equipped` — View equipped items\n\n"
+            "**💰 ECONOMY**\n"
+            "`!pay @user <amt>` — Pay a player\n"
+            "`!payss @user <amt>` — Transfer Starshards\n"
+            "> 💡 Shortcuts: `10k` = 10,000 • `1m` = 1,000,000\n\n"
+            "`!market` / `!m` — Open marketplace\n"
+            "`!ma <id> <price>` — List an item\n"
+            "`!mb <listing-id>` — Buy listing\n"
+            "`!mr <listing-id>` — Remove listing\n"
+            "`!rebirth` / `!cd` — Rebirth information\n"
+            "`!trade @user` — Trade items with a player\n\n"
+            "**🛒 SHOP**\n"
+            "`!shop` — Open shop menu\n"
+            "`!shop 1` — Nexcoin Shop *(paginated)*\n"
+            "`!shop 2` — Starshard Shop\n"
+            "`!buy 1 <item id>` — Buy from Nexcoin Shop\n"
+            "`!buy 2 <item id>` — Buy from Starshard Shop\n"
+            "`!buy daily <1–5>` — Buy daily item\n\n"
+            "**📖 GUIDANCE**\n"
+            "`!tutorial` — Revisit The Guide's tutorial anytime\n\n"
+            "**⚙️ SETTINGS**\n"
+            "`!setprefix <symbol>` — Change bot prefix\n"
+            "Allowed: `!` `$` `-` `*` `?` `.`"
+        )
+        embed = discord.Embed(
+            title="📖 NEXWORLD RPG — COMMANDS",
+            description=description,
+            color=GOLD)
+        embed.set_footer(text="✨ Nexworld RPG • Your fate has been decided")
         await ctx.send(embed=embed)
 
 async def setup(bot):
