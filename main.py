@@ -622,32 +622,7 @@ def format_number(n):
     return f"{sign}{n:.2e}"
 
 def exp_required(level):
-    if level <= 10:
-        return int(60 * level)
-    elif level <= 25:
-        return int(600 + 120 * (level - 10))
-    elif level <= 50:
-        return int(2400 + 200 * (level - 25))
-    elif level <= 100:
-        return int(7400 + 400 * (level - 50))
-    elif level <= 150:
-        return int(27400 + 900 * (level - 100))
-    elif level <= 200:
-        return int(72400 + 1800 * (level - 150))
-    elif level <= 250:
-        return int(162400 + 3500 * (level - 200))
-    elif level <= 300:
-        return int(337400 + 6500 * (level - 250))
-    elif level <= 350:
-        return int(662400 + 12000 * (level - 300))
-    elif level <= 400:
-        return int(1262400 + 22000 * (level - 350))
-    elif level <= 450:
-        return int(2362400 + 40000 * (level - 400))
-    elif level <= 499:
-        return int(4362400 + 70000 * (level - 450))
-    else:
-        return 15000000
+    return int(100 * (1.5 ** (level - 1)))
 
 def get_skill_effect(race, skill_index, level):
     skill = RACE_SKILLS[race]["skills"][skill_index]
