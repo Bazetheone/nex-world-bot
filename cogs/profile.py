@@ -24,19 +24,78 @@ ORIGIN_ICONS = {
 def exp_required(level):
     return int(100 * (1.5 ** (level - 1)))
 
+class InvFilterSelect(discord.ui.Select):
+    def __init__(self, view_ref):
+        self.view_ref = view_ref
+        options = [
+            discord.SelectOption(label="All Items", value="all"),
+            discord.SelectOption(label="Common", value="rarity:Common"),
+            discord.SelectOption(label="Uncommon", value="rarity:Uncommon"),
+            discord.SelectOption(label="Rare", value="rarity:Rare"),
+            discord.SelectOption(label="Legendary+", value="rarity:legendaryplus"),
+            discord.SelectOption(label="Locked (Equipped)", value="locked"),
+            discord.SelectOption(label="Unlocked (Unequipped)", value="unlocked"),
+            discord.SelectOption(label="Materials", value="type:material"),
+            discord.SelectOption(label="Pets", value="type:pet"),
+            discord.SelectOption(label="Head Armor", value="type:head_armor"),
+            discord.SelectOption(label="Body Armor", value="type:body_armor"),
+            discord.SelectOption(label="Weapons", value="type:weapon"),
+            discord.SelectOption(label="Potions/Consumables", value="type:consumable"),
+        ]
+        super().__init__(placeholder="🔎 Filter Inventory", min_values=1, max_values=1, options=options, row=2)
+
+    async def callback(self, interaction: discord.Interaction):
+        if interaction.user.id != self.view_ref.ctx.author.id:
+            await interaction.response.send_message("This isn't your inventory!", ephemeral=True)
+            return
+        self.view_ref.active_filter = self.values[0]
+        self.view_ref.page = 1
+        await interaction.response.edit_message(embed=self.view_ref.build_embed(), view=self.view_ref)
+
 class InvView(discord.ui.View):
     RARITY_ICONS = {"Common": "⚪", "Uncommon": "🟢", "Rare": "🔵", "Epic": "🟣",
                     "Legendary": "🟠", "Mythic": "🔴", "Divine": "🟡", "Celestial": "💠", "Godly": "🔱"}
+    LEGENDARY_PLUS = {"Legendary", "Mythic", "Divine", "Celestial", "Godly"}
     PER_PAGE = 10
 
     def __init__(self, ctx, target, inv):
         super().__init__(timeout=60)
         self.ctx = ctx
         self.target = target
+        self.full_inv = inv
         self.inv = inv
         self.page = 1
+        self.active_filter = "all"
+        self.add_item(InvFilterSelect(self))
+
+    def _apply_filter(self):
+        p = players.search(Player.id == str(self.target.id))
+        equipped_uids = set()
+        if p:
+            eq = p[0].get('equipped', {})
+            equipped_uids = {v['uid'] for v in eq.values() if v and isinstance(v, dict) and 'uid' in v}
+
+        f = self.active_filter
+        if f == "all":
+            filtered = self.full_inv
+        elif f == "locked":
+            filtered = [i for i in self.full_inv if i.get('uid') in equipped_uids]
+        elif f == "unlocked":
+            filtered = [i for i in self.full_inv if i.get('uid') not in equipped_uids]
+        elif f == "rarity:legendaryplus":
+            filtered = [i for i in self.full_inv if i.get('rarity') in self.LEGENDARY_PLUS]
+        elif f.startswith("rarity:"):
+            rarity = f.split(":", 1)[1]
+            filtered = [i for i in self.full_inv if i.get('rarity') == rarity]
+        elif f.startswith("type:"):
+            type_val = f.split(":", 1)[1]
+            filtered = [i for i in self.full_inv if i.get('type') == type_val]
+        else:
+            filtered = self.full_inv
+        self.inv = filtered
 
     def build_embed(self):
+        self._apply_filter()
         total = len(self.inv)
         total_pages = max(1, (total + self.PER_PAGE - 1) // self.PER_PAGE)
         self.page = max(1, min(self.page, total_pages))

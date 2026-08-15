@@ -11,28 +11,32 @@ NEXCOIN_SHOP = [
     {"id": 1,  "name": "Small HP Potion",          "description": "Restores 15% of max HP in battle",                                               "price": 500,    "rarity": "Common",    "type": "consumable", "stats": {}},
     {"id": 2,  "name": "Item Pack",               "description": "Open for a random weapon or armor! Rare → Legendary. Luck Potion boosts chances!", "price": 1000,   "rarity": "Special",   "type": "itempack",   "stats": {}},
     {"id": 3,  "name": "Medium HP Potion",        "description": "Restores 30% of max HP in battle",                                               "price": 1500,   "rarity": "Uncommon",  "type": "consumable", "stats": {}},
-    {"id": 4,  "name": "EXP Boost Potion",        "description": "Doubles EXP gained for 5 minutes. Use with `!usebuff <uid>`",                    "price": 2000,   "rarity": "Uncommon",  "type": "buff",       "stats": {}},
-    {"id": 5,  "name": "Luck Potion",             "description": "Boosts drop luck & pet pack rarity for 5 minutes. Use with `!usebuff <uid>`",    "price": 3000,   "rarity": "Rare",      "type": "buff",       "stats": {}},
-    {"id": 6,  "name": "Large HP Potion",         "description": "Restores 50% of max HP in battle",                                               "price": 5000,   "rarity": "Rare",      "type": "consumable", "stats": {}},
-    {"id": 7,  "name": "Steel Broadsword",        "description": "+20 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 20}},
-    {"id": 8,  "name": "Iron Battleaxe",          "description": "+28 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 28}},
-    {"id": 9,  "name": "Assassin's Dagger",       "description": "+14 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 14}},
-    {"id": 10, "name": "Heavy Warhammer",         "description": "+32 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 32}},
-    {"id": 11, "name": "Heavy Iron Plate",        "description": "+30 Defense",                                                                     "price": 10000,  "rarity": "Rare",      "type": "armor",      "stats": {"def": 30}},
-    {"id": 12, "name": "Hardened Leather Jerkin", "description": "+18 Defense",                                                                     "price": 10000,  "rarity": "Rare",      "type": "armor",      "stats": {"def": 18}},
-    {"id": 13, "name": "Chainmail Hauberk",       "description": "+25 Defense, +50 Health",                                                         "price": 10000,  "rarity": "Rare",      "type": "armor",      "stats": {"def": 25, "hp": 50}},
-    {"id": 14, "name": "DEF Boost Potion",        "description": "+100 DEF for 5 minutes. Use with `!usebuff <uid>`",                              "price": 10000,  "rarity": "Rare",      "type": "buff",       "stats": {"def": 100}},
-    {"id": 15, "name": "Demonic Longsword",       "description": "+55 Attack",                                                                      "price": 15000,  "rarity": "Epic",      "type": "weapon",     "stats": {"str": 55}},
-    {"id": 16, "name": "Crystal Staff",           "description": "+45 Magic Attack",                                                                "price": 15000,  "rarity": "Epic",      "type": "weapon",     "stats": {"mag": 45}},
-    {"id": 17, "name": "Greatsword of Flame",     "description": "+65 Attack",                                                                      "price": 15000,  "rarity": "Epic",      "type": "weapon",     "stats": {"str": 65}},
-    {"id": 18, "name": "Raid Pass",               "description": "Used to summon a raid boss",                                                      "price": 15000,  "rarity": "Rare",      "type": "consumable", "stats": {}},
-    {"id": 19, "name": "STR Boost Potion",        "description": "+100 STR & +100 MAG for 5 minutes. Use with `!usebuff <uid>`",                   "price": 15000,  "rarity": "Epic",      "type": "buff",       "stats": {"str": 100, "mag": 100}},
-    {"id": 20, "name": "Knight-Captain's Plate",  "description": "+75 Defense, +60 Health",                                                         "price": 30000,  "rarity": "Epic",      "type": "armor",      "stats": {"def": 75, "hp": 60}},
-    {"id": 21, "name": "Obsidian Carapace",       "description": "+90 Defense",                                                                     "price": 30000,  "rarity": "Epic",      "type": "armor",      "stats": {"def": 90}},
-    {"id": 22, "name": "Excalibur",               "description": "+150 Attack, +50 Health",                                                         "price": 50000,  "rarity": "Legendary", "type": "weapon",     "stats": {"str": 150, "hp": 50}},
-    {"id": 23, "name": "Void-Rift Blade",         "description": "+140 Attack",                                                                     "price": 50000,  "rarity": "Legendary", "type": "weapon",     "stats": {"str": 140}},
-    {"id": 24, "name": "Dragonscale Breastplate", "description": "+200 Defense, +150 Health",                                                       "price": 100000, "rarity": "Legendary", "type": "armor",      "stats": {"def": 200, "hp": 150}},
-    {"id": 25, "name": "Immortal's Bulwark",      "description": "+350 Defense, +200 Health",                                                       "price": 100000, "rarity": "Legendary", "type": "armor",      "stats": {"def": 350, "hp": 200}},
+    {"id": 4,  "name": "Small EXP Boost Potion",  "description": "2x EXP gained for 5 minutes. Use with `!usebuff <uid>`",                          "price": 4000,   "rarity": "Uncommon",  "type": "buff",       "stats": {}},
+    {"id": 5,  "name": "Medium EXP Boost Potion", "description": "2.5x EXP gained for 10 minutes. Use with `!usebuff <uid>`",                       "price": 8500,   "rarity": "Rare",      "type": "buff",       "stats": {}},
+    {"id": 6,  "name": "Large EXP Boost Potion",  "description": "3.45x EXP gained for 15 minutes. Use with `!usebuff <uid>`",                      "price": 15000,  "rarity": "Epic",      "type": "buff",       "stats": {}},
+    {"id": 7,  "name": "Small Luck Potion",       "description": "Boosts drop luck to 55% for 5 minutes. Use with `!usebuff <uid>`",                "price": 3000,   "rarity": "Rare",      "type": "buff",       "stats": {}},
+    {"id": 8,  "name": "Medium Luck Potion",      "description": "Boosts drop luck to 65% for 10 minutes. Use with `!usebuff <uid>`",               "price": 6500,   "rarity": "Epic",      "type": "buff",       "stats": {}},
+    {"id": 9,  "name": "Large Luck Potion",       "description": "Boosts drop luck to 75% for 15 minutes. Use with `!usebuff <uid>`",               "price": 11000,  "rarity": "Legendary", "type": "buff",       "stats": {}},
+    {"id": 10, "name": "Large HP Potion",         "description": "Restores 50% of max HP in battle",                                               "price": 5000,   "rarity": "Rare",      "type": "consumable", "stats": {}},
+    {"id": 11, "name": "Steel Broadsword",        "description": "+20 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 20}},
+    {"id": 12, "name": "Iron Battleaxe",          "description": "+28 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 28}},
+    {"id": 13, "name": "Assassin's Dagger",       "description": "+14 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 14}},
+    {"id": 14, "name": "Heavy Warhammer",         "description": "+32 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 32}},
+    {"id": 15, "name": "Heavy Iron Plate",        "description": "+30 Defense",                                                                     "price": 10000,  "rarity": "Rare",      "type": "armor",      "stats": {"def": 30}},
+    {"id": 16, "name": "Hardened Leather Jerkin", "description": "+18 Defense",                                                                     "price": 10000,  "rarity": "Rare",      "type": "armor",      "stats": {"def": 18}},
+    {"id": 17, "name": "Chainmail Hauberk",       "description": "+25 Defense, +50 Health",                                                         "price": 10000,  "rarity": "Rare",      "type": "armor",      "stats": {"def": 25, "hp": 50}},
+    {"id": 18, "name": "DEF Boost Potion",        "description": "+100 DEF for 5 minutes. Use with `!usebuff <uid>`",                              "price": 10000,  "rarity": "Rare",      "type": "buff",       "stats": {"def": 100}},
+    {"id": 19, "name": "Demonic Longsword",       "description": "+55 Attack",                                                                      "price": 15000,  "rarity": "Epic",      "type": "weapon",     "stats": {"str": 55}},
+    {"id": 20, "name": "Crystal Staff",           "description": "+45 Magic Attack",                                                                "price": 15000,  "rarity": "Epic",      "type": "weapon",     "stats": {"mag": 45}},
+    {"id": 21, "name": "Greatsword of Flame",     "description": "+65 Attack",                                                                      "price": 15000,  "rarity": "Epic",      "type": "weapon",     "stats": {"str": 65}},
+    {"id": 22, "name": "Raid Pass",               "description": "Used to summon a raid boss",                                                      "price": 15000,  "rarity": "Rare",      "type": "consumable", "stats": {}},
+    {"id": 23, "name": "STR Boost Potion",        "description": "+100 STR & +100 MAG for 5 minutes. Use with `!usebuff <uid>`",                   "price": 15000,  "rarity": "Epic",      "type": "buff",       "stats": {"str": 100, "mag": 100}},
+    {"id": 24, "name": "Knight-Captain's Plate",  "description": "+75 Defense, +60 Health",                                                         "price": 30000,  "rarity": "Epic",      "type": "armor",      "stats": {"def": 75, "hp": 60}},
+    {"id": 25, "name": "Obsidian Carapace",       "description": "+90 Defense",                                                                     "price": 30000,  "rarity": "Epic",      "type": "armor",      "stats": {"def": 90}},
+    {"id": 26, "name": "Excalibur",               "description": "+150 Attack, +50 Health",                                                         "price": 50000,  "rarity": "Legendary", "type": "weapon",     "stats": {"str": 150, "hp": 50}},
+    {"id": 27, "name": "Void-Rift Blade",         "description": "+140 Attack",                                                                     "price": 50000,  "rarity": "Legendary", "type": "weapon",     "stats": {"str": 140}},
+    {"id": 28, "name": "Dragonscale Breastplate", "description": "+200 Defense, +150 Health",                                                       "price": 100000, "rarity": "Legendary", "type": "armor",      "stats": {"def": 200, "hp": 150}},
+    {"id": 29, "name": "Immortal's Bulwark",      "description": "+350 Defense, +200 Health",                                                       "price": 100000, "rarity": "Legendary", "type": "armor",      "stats": {"def": 350, "hp": 200}},
 ]
 
 SS_SHOP = [
@@ -698,7 +702,19 @@ class Shop(commands.Cog):
             await ctx.send(embed=discord.Embed(description=f"❌ Item `{uid}` not found in your inventory!", color=GOLD))
             return
         now = time.time()
-        if item.get('name') == 'EXP Boost Potion':
+        EXP_POTION_TIERS = {
+            'Small EXP Boost Potion': (300, 2.0, '5 minutes'),
+            'Medium EXP Boost Potion': (600, 2.5, '10 minutes'),
+            'Large EXP Boost Potion': (900, 3.45, '15 minutes'),
+        }
+        LUCK_POTION_TIERS = {
+            'Small Luck Potion': (300, 0.55, '5 minutes'),
+            'Medium Luck Potion': (600, 0.65, '10 minutes'),
+            'Large Luck Potion': (900, 0.75, '15 minutes'),
+        }
+
+        if item.get('name') in EXP_POTION_TIERS:
+            duration, mult, label = EXP_POTION_TIERS[item['name']]
             if now < p.get('buff_exp_boost_until', 0):
                 remaining = int(p['buff_exp_boost_until'] - now)
                 await ctx.send(embed=discord.Embed(
@@ -706,13 +722,14 @@ class Shop(commands.Cog):
                     color=GOLD))
                 return
             inv.remove(item)
-            players.update({'buff_exp_boost_until': now + 300, 'inventory': inv}, Player.id == user_id)
+            players.update({'buff_exp_boost_until': now + duration, 'buff_exp_boost_mult': mult, 'inventory': inv}, Player.id == user_id)
             embed = discord.Embed(title="⚗️ EXP Boost Active!", color=GOLD)
-            embed.add_field(name="Effect", value="EXP gain **doubled** ✨", inline=True)
-            embed.add_field(name="Duration", value="`5 minutes`", inline=True)
+            embed.add_field(name="Effect", value=f"EXP gain **x{mult}** ✨", inline=True)
+            embed.add_field(name="Duration", value=f"`{label}`", inline=True)
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")
             await ctx.send(embed=embed)
-        elif item.get('name') == 'Luck Potion':
+        elif item.get('name') in LUCK_POTION_TIERS:
+            duration, chance, label = LUCK_POTION_TIERS[item['name']]
             if now < p.get('buff_luck_until', 0):
                 remaining = int(p['buff_luck_until'] - now)
                 await ctx.send(embed=discord.Embed(
@@ -720,10 +737,10 @@ class Shop(commands.Cog):
                     color=GOLD))
                 return
             inv.remove(item)
-            players.update({'buff_luck_until': now + 300, 'inventory': inv}, Player.id == user_id)
+            players.update({'buff_luck_until': now + duration, 'buff_luck_chance': chance, 'inventory': inv}, Player.id == user_id)
             embed = discord.Embed(title="🍀 Luck Boost Active!", color=GOLD)
-            embed.add_field(name="Effect", value="Drop luck & pet pack rarity **boosted** 🍀", inline=True)
-            embed.add_field(name="Duration", value="`5 minutes`", inline=True)
+            embed.add_field(name="Effect", value=f"Drop chance boosted to **{int(chance*100)}%** 🍀", inline=True)
+            embed.add_field(name="Duration", value=f"`{label}`", inline=True)
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")
             await ctx.send(embed=embed)
         elif item.get('name') == 'DEF Boost Potion':

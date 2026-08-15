@@ -674,7 +674,7 @@ class Economy(commands.Cog, name="Economy"):
         coins_gain = random.randint(500, 4500)
         exp_gain = random.randint(20, 80)
         if time.time() < p.get('buff_exp_boost_until', 0):
-            exp_gain = int(exp_gain * 2)
+            exp_gain = int(exp_gain * p.get('buff_exp_boost_mult', 2.0))
         luck_active = time.time() < p.get('buff_luck_until', 0)
         if luck_active:
             rarity_weights = {'Common': 2, 'Uncommon': 5, 'Rare': 8, 'Epic': 5, 'Legendary': 3}

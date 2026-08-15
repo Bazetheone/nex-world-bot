@@ -551,7 +551,7 @@ class BattleView(discord.ui.View):
             coins_gain = random.randint(*self.enemy['coins'])
 
             if time.time() < p.get('buff_exp_boost_until', 0):
-                exp_gain = int(exp_gain * 2)
+                exp_gain = int(exp_gain * p.get('buff_exp_boost_mult', 2.0))
 
             new_exp = p.get('exp', 0) + exp_gain
             new_coins = p.get('nexcoins', 0) + coins_gain
@@ -578,7 +578,7 @@ class BattleView(discord.ui.View):
                 players.update({'current_arc': current_arc, 'current_enemy': next_enemy}, Player.id == user_id)
 
             item_drop = None
-            drop_chance = 0.55 if time.time() < p.get('buff_luck_until', 0) else 0.3
+            drop_chance = p.get('buff_luck_chance', 0.55) if time.time() < p.get('buff_luck_until', 0) else 0.3
             if random.random() < drop_chance:
                 item_drop = self.enemy.get('drop')
                 if item_drop:
