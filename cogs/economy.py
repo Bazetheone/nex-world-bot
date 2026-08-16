@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from tinydb import Query
-from db import players, market_table, prefixes_table, Player
+from db import players, market_table, prefixes_table, Player, generate_item_uid
 import random
 import time
 import os
@@ -685,7 +685,7 @@ class Economy(commands.Cog, name="Economy"):
         all_items = players.search(Player.id == user_id)[0].get('inventory', [])
         existing_ids = [i.get('uid', '') for i in all_items]
         counter = len([i for i in existing_ids if i.startswith('M')]) + 1
-        uid = f"M{str(counter).zfill(3)}"
+        uid = generate_item_uid()
 
         new_item = {
             'uid': uid,

@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from tinydb import Query
-from db import players, raids_table, Player
+from db import players, raids_table, Player, generate_item_uid
 import random
 import asyncio
 import time
@@ -199,7 +199,7 @@ class RaidJoinView(discord.ui.View):
                     p_data = players.search(Player.id == player['id'])
                     if p_data:
                         inv = p_data[0].get('inventory', [])
-                        uid = str(random.randint(100000, 999999))
+                        uid = generate_item_uid()
                         inv.append({'uid': uid, 'name': item_drop, 'rarity': rarity, 'type': 'raid_drop'})
                         players.update({'inventory': inv}, Player.id == player['id'])
 

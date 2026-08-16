@@ -85,7 +85,7 @@ keep_alive_thread = Thread(target=run, daemon=True)
 keep_alive_thread.start()
 
 # ─── DATABASE ───
-from db import db, players, prefixes_table, market_table, raids_table, Player, Prefix
+from db import db, players, prefixes_table, market_table, raids_table, Player, Prefix, generate_item_uid
 
 # ─── CONSTANTS ───
 GOLD = 0xFFD700
@@ -880,7 +880,7 @@ async def giveitem(ctx, member: discord.Member = None, rarity: str = None, *, it
         return
     inv = p[0].get('inventory', [])
     admin_items = [i for i in inv if i['uid'].startswith('A')]
-    uid = f"A{str(len(admin_items) + 1).zfill(3)}"
+    uid = generate_item_uid()
     inv.append({'uid': uid, 'name': item_name, 'rarity': rarity, 'type': 'admin_given'})
     players.update({'inventory': inv}, Player.id == user_id)
     await ctx.send(embed=discord.Embed(title="✅ Item Given", description=f"Gave **{item_name}** (`{rarity}`) to {member.mention}!\nID: `{uid}`", color=GOLD))

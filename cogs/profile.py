@@ -28,19 +28,24 @@ class InvFilterSelect(discord.ui.Select):
     def __init__(self, view_ref):
         self.view_ref = view_ref
         options = [
-            discord.SelectOption(label="All Items", value="all"),
-            discord.SelectOption(label="Common", value="rarity:Common"),
-            discord.SelectOption(label="Uncommon", value="rarity:Uncommon"),
-            discord.SelectOption(label="Rare", value="rarity:Rare"),
-            discord.SelectOption(label="Legendary+", value="rarity:legendaryplus"),
-            discord.SelectOption(label="Locked (Equipped)", value="locked"),
-            discord.SelectOption(label="Unlocked (Unequipped)", value="unlocked"),
-            discord.SelectOption(label="Materials", value="type:material"),
-            discord.SelectOption(label="Pets", value="type:pet"),
-            discord.SelectOption(label="Head Armor", value="type:head_armor"),
-            discord.SelectOption(label="Body Armor", value="type:body_armor"),
-            discord.SelectOption(label="Weapons", value="type:weapon"),
-            discord.SelectOption(label="Potions/Consumables", value="type:consumable"),
+            discord.SelectOption(label="All Items", value="all", emoji="📦"),
+            discord.SelectOption(label="Common", value="rarity:Common", emoji="⚪"),
+            discord.SelectOption(label="Uncommon", value="rarity:Uncommon", emoji="🟢"),
+            discord.SelectOption(label="Rare", value="rarity:Rare", emoji="🔵"),
+            discord.SelectOption(label="Epic", value="rarity:Epic", emoji="🟣"),
+            discord.SelectOption(label="Legendary", value="rarity:Legendary", emoji="🟠"),
+            discord.SelectOption(label="Mythic", value="rarity:Mythic", emoji="🔴"),
+            discord.SelectOption(label="Divine", value="rarity:Divine", emoji="🟡"),
+            discord.SelectOption(label="Celestial", value="rarity:Celestial", emoji="💠"),
+            discord.SelectOption(label="Godly", value="rarity:Godly", emoji="🔱"),
+            discord.SelectOption(label="Locked (Equipped)", value="locked", emoji="🔒"),
+            discord.SelectOption(label="Unlocked (Unequipped)", value="unlocked", emoji="🔓"),
+            discord.SelectOption(label="Materials & Drops", value="materials_drops", emoji="🧪"),
+            discord.SelectOption(label="Pets", value="type:pet", emoji="🐾"),
+            discord.SelectOption(label="Head Armor", value="type:head_armor", emoji="🪖"),
+            discord.SelectOption(label="Body Armor", value="type:body_armor", emoji="🛡️"),
+            discord.SelectOption(label="Weapons", value="type:weapon", emoji="⚔️"),
+            discord.SelectOption(label="Potions/Consumables", value="type:consumable", emoji="🧴"),
         ]
         super().__init__(placeholder="🔎 Filter Inventory", min_values=1, max_values=1, options=options, row=2)
 
@@ -82,8 +87,8 @@ class InvView(discord.ui.View):
             filtered = [i for i in self.full_inv if i.get('uid') in equipped_uids]
         elif f == "unlocked":
             filtered = [i for i in self.full_inv if i.get('uid') not in equipped_uids]
-        elif f == "rarity:legendaryplus":
-            filtered = [i for i in self.full_inv if i.get('rarity') in self.LEGENDARY_PLUS]
+        elif f == "materials_drops":
+            filtered = [i for i in self.full_inv if i.get('type') in ('material', 'drop', 'raid_drop')]
         elif f.startswith("rarity:"):
             rarity = f.split(":", 1)[1]
             filtered = [i for i in self.full_inv if i.get('rarity') == rarity]

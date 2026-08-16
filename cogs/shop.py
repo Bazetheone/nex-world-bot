@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from db import players, Player
+from db import players, Player, generate_item_uid
 import random
 import time
 from main import NC_ICON, SS_ICON
@@ -11,21 +11,21 @@ NEXCOIN_SHOP = [
     {"id": 1,  "name": "Small HP Potion",          "description": "Restores 15% of max HP in battle",                                               "price": 500,    "rarity": "Common",    "type": "consumable", "stats": {}},
     {"id": 2,  "name": "Item Pack",               "description": "Open for a random weapon or armor! Rare → Legendary. Luck Potion boosts chances!", "price": 1000,   "rarity": "Special",   "type": "itempack",   "stats": {}},
     {"id": 3,  "name": "Medium HP Potion",        "description": "Restores 30% of max HP in battle",                                               "price": 1500,   "rarity": "Uncommon",  "type": "consumable", "stats": {}},
-    {"id": 4,  "name": "Small EXP Boost Potion",  "description": "2x EXP gained for 5 minutes. Use with `!usebuff <uid>`",                          "price": 4000,   "rarity": "Uncommon",  "type": "buff",       "stats": {}},
-    {"id": 5,  "name": "Medium EXP Boost Potion", "description": "2.5x EXP gained for 10 minutes. Use with `!usebuff <uid>`",                       "price": 8500,   "rarity": "Rare",      "type": "buff",       "stats": {}},
-    {"id": 6,  "name": "Large EXP Boost Potion",  "description": "3.45x EXP gained for 15 minutes. Use with `!usebuff <uid>`",                      "price": 15000,  "rarity": "Epic",      "type": "buff",       "stats": {}},
-    {"id": 7,  "name": "Small Luck Potion",       "description": "Boosts drop luck to 55% for 5 minutes. Use with `!usebuff <uid>`",                "price": 3000,   "rarity": "Rare",      "type": "buff",       "stats": {}},
-    {"id": 8,  "name": "Medium Luck Potion",      "description": "Boosts drop luck to 65% for 10 minutes. Use with `!usebuff <uid>`",               "price": 6500,   "rarity": "Epic",      "type": "buff",       "stats": {}},
-    {"id": 9,  "name": "Large Luck Potion",       "description": "Boosts drop luck to 75% for 15 minutes. Use with `!usebuff <uid>`",               "price": 11000,  "rarity": "Legendary", "type": "buff",       "stats": {}},
-    {"id": 10, "name": "Large HP Potion",         "description": "Restores 50% of max HP in battle",                                               "price": 5000,   "rarity": "Rare",      "type": "consumable", "stats": {}},
-    {"id": 11, "name": "Steel Broadsword",        "description": "+20 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 20}},
-    {"id": 12, "name": "Iron Battleaxe",          "description": "+28 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 28}},
-    {"id": 13, "name": "Assassin's Dagger",       "description": "+14 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 14}},
-    {"id": 14, "name": "Heavy Warhammer",         "description": "+32 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 32}},
-    {"id": 15, "name": "Heavy Iron Plate",        "description": "+30 Defense",                                                                     "price": 10000,  "rarity": "Rare",      "type": "armor",      "stats": {"def": 30}},
-    {"id": 16, "name": "Hardened Leather Jerkin", "description": "+18 Defense",                                                                     "price": 10000,  "rarity": "Rare",      "type": "armor",      "stats": {"def": 18}},
-    {"id": 17, "name": "Chainmail Hauberk",       "description": "+25 Defense, +50 Health",                                                         "price": 10000,  "rarity": "Rare",      "type": "armor",      "stats": {"def": 25, "hp": 50}},
-    {"id": 18, "name": "DEF Boost Potion",        "description": "+100 DEF for 5 minutes. Use with `!usebuff <uid>`",                              "price": 10000,  "rarity": "Rare",      "type": "buff",       "stats": {"def": 100}},
+    {"id": 4,  "name": "Small Luck Potion",       "description": "Boosts drop luck to 55% for 5 minutes. Use with `!usebuff <uid>`",                "price": 3000,   "rarity": "Rare",      "type": "buff",       "stats": {}},
+    {"id": 5,  "name": "Small EXP Boost Potion",  "description": "2x EXP gained for 5 minutes. Use with `!usebuff <uid>`",                          "price": 4000,   "rarity": "Uncommon",  "type": "buff",       "stats": {}},
+    {"id": 6, "name": "Large HP Potion",         "description": "Restores 50% of max HP in battle",                                               "price": 5000,   "rarity": "Rare",      "type": "consumable", "stats": {}},
+    {"id": 7, "name": "Steel Broadsword",        "description": "+20 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 20}},
+    {"id": 8, "name": "Iron Battleaxe",          "description": "+28 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 28}},
+    {"id": 9, "name": "Assassin's Dagger",       "description": "+14 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 14}},
+    {"id": 10, "name": "Heavy Warhammer",         "description": "+32 Attack",                                                                      "price": 5000,   "rarity": "Rare",      "type": "weapon",     "stats": {"str": 32}},
+    {"id": 11,  "name": "Medium Luck Potion",      "description": "Boosts drop luck to 65% for 10 minutes. Use with `!usebuff <uid>`",               "price": 6500,   "rarity": "Epic",      "type": "buff",       "stats": {}},
+    {"id": 12,  "name": "Medium EXP Boost Potion", "description": "2.5x EXP gained for 10 minutes. Use with `!usebuff <uid>`",                       "price": 8500,   "rarity": "Rare",      "type": "buff",       "stats": {}},
+    {"id": 13, "name": "Heavy Iron Plate",        "description": "+30 Defense",                                                                     "price": 10000,  "rarity": "Rare",      "type": "armor",      "stats": {"def": 30}},
+    {"id": 14, "name": "Hardened Leather Jerkin", "description": "+18 Defense",                                                                     "price": 10000,  "rarity": "Rare",      "type": "armor",      "stats": {"def": 18}},
+    {"id": 15, "name": "Chainmail Hauberk",       "description": "+25 Defense, +50 Health",                                                         "price": 10000,  "rarity": "Rare",      "type": "armor",      "stats": {"def": 25, "hp": 50}},
+    {"id": 16, "name": "DEF Boost Potion",        "description": "+100 DEF for 5 minutes. Use with `!usebuff <uid>`",                              "price": 10000,  "rarity": "Rare",      "type": "buff",       "stats": {"def": 100}},
+    {"id": 17,  "name": "Large Luck Potion",       "description": "Boosts drop luck to 75% for 15 minutes. Use with `!usebuff <uid>`",               "price": 11000,  "rarity": "Legendary", "type": "buff",       "stats": {}},
+    {"id": 18,  "name": "Large EXP Boost Potion",  "description": "3.45x EXP gained for 15 minutes. Use with `!usebuff <uid>`",                      "price": 15000,  "rarity": "Epic",      "type": "buff",       "stats": {}},
     {"id": 19, "name": "Demonic Longsword",       "description": "+55 Attack",                                                                      "price": 15000,  "rarity": "Epic",      "type": "weapon",     "stats": {"str": 55}},
     {"id": 20, "name": "Crystal Staff",           "description": "+45 Magic Attack",                                                                "price": 15000,  "rarity": "Epic",      "type": "weapon",     "stats": {"mag": 45}},
     {"id": 21, "name": "Greatsword of Flame",     "description": "+65 Attack",                                                                      "price": 15000,  "rarity": "Epic",      "type": "weapon",     "stats": {"str": 65}},
@@ -395,7 +395,7 @@ class Shop(commands.Cog):
                 item_result = random.choice(item_pool)
                 fresh_p = players.search(Player.id == user_id)[0]
                 inv = fresh_p.get('inventory', [])
-                uid = str(random.randint(100000, 999999))
+                uid = generate_item_uid()
                 stats = item_result.get('stats', {})
                 stat_desc = ", ".join([f"+{v} {k.upper()}" for k, v in stats.items()])
                 inv.append({'uid': uid, 'name': item_result['name'], 'rarity': rolled_rarity,
@@ -449,7 +449,7 @@ class Shop(commands.Cog):
                 pet = random.choice(pet_pool)
                 fresh_p = players.search(Player.id == user_id)[0]
                 inv = fresh_p.get('inventory', [])
-                uid = str(random.randint(100000, 999999))
+                uid = generate_item_uid()
                 inv.append({'uid': uid, 'name': pet['name'], 'rarity': pet['rarity'], 'type': 'pet',
                             'description': pet['description'], 'stats': pet.get('stats', {})})
                 players.update({'starshards': current - cost, 'inventory': inv, 'last_pet_pack': time.time()}, Player.id == user_id)
@@ -492,7 +492,7 @@ class Shop(commands.Cog):
             return
 
         if item['name'] == "Race Reroll Token":
-            uid = str(random.randint(100000, 999999))
+            uid = generate_item_uid()
             new_item = {
                 'uid': uid,
                 'name': 'Race Reroll Token',
@@ -500,7 +500,7 @@ class Shop(commands.Cog):
                 'type': 'consumable'
             }
         else:
-            uid = str(random.randint(100000, 999999))
+            uid = generate_item_uid()
             if shop_num == "daily" and item_num == 5:
                 item_type = 'pet'
             else:

@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from db import players, Player
+from db import players, Player, generate_item_uid
 import random
 import asyncio
 import time
@@ -585,7 +585,7 @@ class BattleView(discord.ui.View):
                     fresh_p2 = players.search(Player.id == user_id)[0]
                     inv = fresh_p2.get('inventory', [])
                     drop_items = [i for i in inv if i['uid'].startswith('D')]
-                    uid = f"D{str(len(drop_items) + 1).zfill(3)}"
+                    uid = generate_item_uid()
                     inv.append({'uid': uid, 'name': item_drop, 'rarity': self.enemy['rarity'], 'type': 'drop'})
                     players.update({'inventory': inv}, Player.id == user_id)
 
