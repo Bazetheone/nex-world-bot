@@ -1216,13 +1216,24 @@ class Economy(commands.Cog, name="Economy"):
                 if stat == 'mag': mag  = max(1, mag  - val)
                 if stat == 'def': def_ = max(1, def_ - val)
 
-        new_stats = item.get('stats', {})
+        from cogs.shop import get_affinity_multiplier, RACE_AFFINITY
+        affinity_mult = get_affinity_multiplier(item['name'], p.get('race'))
+        raw_stats = item.get('stats', {})
+        new_stats = {stat: int(val * affinity_mult) for stat, val in raw_stats.items()}
         stat_lines = []
         for stat, val in new_stats.items():
             if stat == 'hp':  hp   += val; stat_lines.append(f"+{val} HP")
             if stat == 'str': str_ += val; stat_lines.append(f"+{val} STR")
             if stat == 'mag': mag  += val; stat_lines.append(f"+{val} MAG")
             if stat == 'def': def_ += val; stat_lines.append(f"+{val} DEF")
+
+        affinity_note = None
+        item_race = RACE_AFFINITY.get(item['name'])
+        if item_race:
+            if affinity_mult > 1.0:
+                affinity_note = f"✨ **{item_race} Affinity Match!** +10% bonus applied."
+            elif affinity_mult < 1.0:
+                affinity_note = f"⚠️ Off-race item ({item_race} affinity). Only 90% effectiveness applied."
 
         equipped[slot] = {
             'uid': item['uid'],
@@ -1242,6 +1253,8 @@ class Economy(commands.Cog, name="Economy"):
             color=GOLD)
         if stat_lines:
             embed.add_field(name="Stats Applied", value="\n".join(stat_lines), inline=False)
+        if affinity_note:
+            embed.add_field(name="Race Affinity", value=affinity_note, inline=False)
         if old_item:
             embed.add_field(name="Replaced", value=f"`{old_item['name']}`", inline=False)
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
