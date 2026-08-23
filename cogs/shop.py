@@ -9,7 +9,6 @@ GOLD = 0xFFD700
 
 NEXCOIN_SHOP = [
     {"id": 1,  "name": "Small HP Potion",          "description": "Restores 15% of max HP in battle",                                               "price": 500,    "rarity": "Common",    "type": "consumable", "stats": {}},
-    {"id": 2,  "name": "Item Pack",               "description": "Open for a random weapon or armor! Rare → Legendary. Luck Potion boosts chances!", "price": 1000,   "rarity": "Special",   "type": "itempack",   "stats": {}},
     {"id": 3,  "name": "Medium HP Potion",        "description": "Restores 30% of max HP in battle",                                               "price": 1500,   "rarity": "Uncommon",  "type": "consumable", "stats": {}},
     {"id": 4,  "name": "Small Luck Potion",       "description": "Boosts drop luck to 55% for 5 minutes. Use with `!usebuff <uid>`",                "price": 3000,   "rarity": "Rare",      "type": "buff",       "stats": {}},
     {"id": 5,  "name": "Small EXP Boost Potion",  "description": "2x EXP gained for 5 minutes. Use with `!usebuff <uid>`",                          "price": 4000,   "rarity": "Uncommon",  "type": "buff",       "stats": {}},
@@ -44,7 +43,6 @@ SS_SHOP = [
     {"id": 2,  "name": "Staff of Infinite Cosmos",  "description": "+850 Magic Attack",                     "price": 150, "rarity": "Mythic", "type": "weapon",  "stats": {"mag": 850}},
     {"id": 3,  "name": "Abyss-Forged Plating",      "description": "+1,400 Defense, +800 Health",           "price": 200, "rarity": "Mythic", "type": "armor",   "stats": {"def": 1400, "hp": 800}},
     {"id": 4,  "name": "Robes of Cosmic Balance",   "description": "+450 Magic Attack, +200 Defense",       "price": 200, "rarity": "Mythic", "type": "armor",   "stats": {"mag": 450, "def": 200}},
-    {"id": 5,  "name": "Pet Pack",                  "description": "Open for a random pet! Common → Mythic chances. Luck Potion boosts rarity!", "price": 250, "rarity": "Special", "type": "petpack", "stats": {}},
     {"id": 6,  "name": "Wyrmscale Greatblade",      "description": "+950 Attack (Dragon-kin affinity)",     "price": 250, "rarity": "Mythic", "type": "weapon",  "stats": {"str": 950}},
     {"id": 7,  "name": "Radiant Judgment Staff",    "description": "+930 Magic Attack (Seraphim affinity)", "price": 250, "rarity": "Mythic", "type": "weapon",  "stats": {"mag": 930}},
     {"id": 8,  "name": "Stat Reroll Ticket",        "description": "Refunds all manually assigned stat points (from !assign) back into unspent points. Does not affect race, level, gear bonuses, or rebirth bonus.", "price": 250, "rarity": "Legendary", "type": "consumable", "stats": {}},

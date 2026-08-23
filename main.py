@@ -1024,6 +1024,7 @@ async def load_cogs():
     await bot.load_extension('cogs.clan')
     await bot.load_extension('cogs.trade')
     await bot.load_extension('cogs.tutorial')
+    await bot.load_extension('cogs.pack')
 
 async def main():
     async with bot:
