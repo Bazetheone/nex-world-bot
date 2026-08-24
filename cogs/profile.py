@@ -92,6 +92,8 @@ class InvView(discord.ui.View):
         elif f.startswith("rarity:"):
             rarity = f.split(":", 1)[1]
             filtered = [i for i in self.full_inv if i.get('rarity') == rarity]
+        elif f == "type:consumable":
+            filtered = [i for i in self.full_inv if i.get('type') in ('consumable', 'buff')]
         elif f.startswith("type:"):
             type_val = f.split(":", 1)[1]
             filtered = [i for i in self.full_inv if i.get('type') == type_val]

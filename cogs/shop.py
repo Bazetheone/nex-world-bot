@@ -666,10 +666,23 @@ class Shop(commands.Cog):
         if stats:
             stat_lines = []
             if stats.get('hp'):  stat_lines.append(f"<:hp:1530891103379652749> HP: `+{stats['hp']}`")
-            if stats.get('str'): stat_lines.append(f"⚔️ ATK: `+{stats['str']}`")
+            if stats.get('str'): stat_lines.append(f"<:str:1533458366070784000> STR: `+{stats['str']}`")
             if stats.get('mag'): stat_lines.append(f"<:magic:1533459066897301514> MAG: `+{stats['mag']}`")
             if stats.get('def'): stat_lines.append(f"<:def:1530891180173295738> DEF: `+{stats['def']}`")
             embed.add_field(name="Stat Boosts", value="\n".join(stat_lines), inline=False)
+
+        from main import RACE_AFFINITY
+        affiliation = RACE_AFFINITY.get(found['name'])
+        if affiliation:
+            embed.add_field(
+                name="🌟 Race Affinity",
+                value=f"**{affiliation}** — 1.10x stat boost when equipped by this race.\nOther races: 90% effectiveness.",
+                inline=False)
+        else:
+            embed.add_field(
+                name="🌐 Race Affinity",
+                value="**Universal** — full stats for every race, no bonus or penalty.",
+                inline=False)
         price = found.get('price')
         if price:
             currency = "Starshards" if found.get('source') in ("Shop 2", "Pet Pack / Daily Shop") else "Nexcoins"
