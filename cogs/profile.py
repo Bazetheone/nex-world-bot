@@ -124,7 +124,7 @@ class InvView(discord.ui.View):
             for item in page_items:
                 icon = self.RARITY_ICONS.get(item.get('rarity', ''), '❔')
                 lock = " 🔒" if item.get('uid') in equipped_uids else ""
-                items_text += f"{icon} `{item.get('uid','?')}` **{item['name']}** — `{item.get('rarity','?')}`{lock}\n"
+                items_text += f"{icon} ({item.get('uid', '?')}) **{item['name']}** — `{item.get('rarity', '?')}`{lock}\n"
             embed.add_field(name=f"Items ({start+1}–{min(start+self.PER_PAGE, total)} of {total})", value=items_text or "—", inline=False)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(name="Commands", value="`!ie <id>` Equip • `!iue <slot>` Unequip • `!usebuff <id>` Use Buff • `!sell <id>` Sell • `!ma <id> <price>` Market", inline=False)

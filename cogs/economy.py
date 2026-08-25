@@ -1112,7 +1112,6 @@ class Economy(commands.Cog, name="Economy"):
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")
             await ctx.send(embed=embed)
         elif item['name'] == 'Stat Reroll Ticket':
-            from main import RACES
             race_base = RACES.get(p['race'], RACES['Human'])
             rebirth_mult = 1 + (p.get('rebirth_bonus', 0) / 100)
 
