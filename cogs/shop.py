@@ -3,7 +3,7 @@ from discord.ext import commands
 from db import players, Player, generate_item_uid
 import random
 import time
-from main import NC_ICON, SS_ICON
+from main import NC_ICON, SS_ICON, NC_BUTTON_EMOJI, SS_BUTTON_EMOJI
 
 GOLD = 0xFFD700
 
@@ -264,14 +264,14 @@ class ShopView(discord.ui.View):
         super().__init__(timeout=60)
         self.ctx = ctx
 
-    @discord.ui.button(label=NC_ICON + " Nexcoin Shop", style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label="Nexcoin Shop", style=discord.ButtonStyle.blurple, emoji=NC_BUTTON_EMOJI)
     async def nexcoin_shop(self, interaction: discord.Interaction, button: discord.ui.Button):
         if interaction.user.id != self.ctx.author.id:
             await interaction.response.send_message("This isn't your shop!", ephemeral=True)
             return
         await interaction.response.edit_message(embed=build_nexcoin_shop_embed(1), view=NexcoinShopView(self.ctx, 1))
 
-    @discord.ui.button(label=SS_ICON + " Starshard Shop", style=discord.ButtonStyle.green)
+    @discord.ui.button(label="Starshard Shop", style=discord.ButtonStyle.green, emoji=SS_BUTTON_EMOJI)
     async def ss_shop(self, interaction: discord.Interaction, button: discord.ui.Button):
         if interaction.user.id != self.ctx.author.id:
             await interaction.response.send_message("This isn't your shop!", ephemeral=True)
@@ -671,7 +671,6 @@ class Shop(commands.Cog):
             if stats.get('def'): stat_lines.append(f"<:def:1530891180173295738> DEF: `+{stats['def']}`")
             embed.add_field(name="Stat Boosts", value="\n".join(stat_lines), inline=False)
 
-        from main import RACE_AFFINITY
         affiliation = RACE_AFFINITY.get(found['name'])
         if affiliation:
             embed.add_field(

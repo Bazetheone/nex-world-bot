@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from db import players, Player
-from main import format_number, NC_ICON, SS_ICON
+from main import format_number, NC_ICON, SS_ICON, NC_BUTTON_EMOJI, SS_BUTTON_EMOJI
 
 GOLD = 0xFFD700
 
@@ -221,7 +221,7 @@ class LbView(discord.ui.View):
         self.page = 1
         await interaction.response.edit_message(embed=self.build_embed(), view=self)
 
-    @discord.ui.button(label=NC_ICON + " Nexcoins", style=discord.ButtonStyle.blurple, row=1)
+    @discord.ui.button(label="Nexcoins", style=discord.ButtonStyle.blurple, row=1, emoji=NC_BUTTON_EMOJI)
     async def cat_coins(self, interaction: discord.Interaction, button: discord.ui.Button):
         if interaction.user.id != self.ctx.author.id:
             await interaction.response.send_message("This isn't your leaderboard!", ephemeral=True)
@@ -230,7 +230,7 @@ class LbView(discord.ui.View):
         self.page = 1
         await interaction.response.edit_message(embed=self.build_embed(), view=self)
 
-    @discord.ui.button(label=SS_ICON + " Starshards", style=discord.ButtonStyle.blurple, row=1)
+    @discord.ui.button(label="Starshards", style=discord.ButtonStyle.blurple, row=1, emoji=SS_BUTTON_EMOJI)
     async def cat_ss(self, interaction: discord.Interaction, button: discord.ui.Button):
         if interaction.user.id != self.ctx.author.id:
             await interaction.response.send_message("This isn't your leaderboard!", ephemeral=True)

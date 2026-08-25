@@ -92,10 +92,12 @@ GOLD = 0xFFD700
 ALLOWED_PREFIXES = ['!', '$', '-', '*', '?', '.']
 ADMIN_IDS = ["954487623462813757"]
 
-# ─── CURRENCY ICONS ─── (replace with real emoji IDs once uploaded to server)
-# Format: "<:nexcoin:1234567890123456789>"
+# ─── CURRENCY ICONS ───
+# Keep the markup strings for embeds/messages; buttons use PartialEmoji below.
 NC_ICON = "<:nexcoin:1530890951437058128>"
-SS_ICON = "<:starshard:1530891013751574539>"
+SS_ICON = "<:starshard:1533458421037138020>"
+NC_BUTTON_EMOJI = discord.PartialEmoji.from_str(NC_ICON)
+SS_BUTTON_EMOJI = discord.PartialEmoji.from_str(SS_ICON)
 
 # ─── RACES ───
 RACES = {
