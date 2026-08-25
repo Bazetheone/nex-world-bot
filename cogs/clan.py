@@ -493,10 +493,11 @@ class Clan(commands.Cog, name="Clan"):
         if user_id not in ADMIN_IDS:
             await ctx.send(embed=discord.Embed(description="❌ Admin only!", color=GOLD))
             return
-        if not sub:
+        if not sub or sub.lower() == "help":
             embed = discord.Embed(title="🔧 Admin Commands", color=GOLD)
             embed.add_field(name="💰 Economy", value="`!admin give <@user> <amount>` — Give NC\n`!admin givess <@user> <amount>` — Give SS\n`!admin ban <@user> [minutes]` — Ban player\n`!admin unban <@user>` — Unban player\n`!admin setlevel <@user> <level>` — Set level\n`!admin wipe <@user>` — Wipe player data", inline=False)
             embed.add_field(name="🏆 Season Management", value="`!admin resetrep` — Reset all player guild rep\n`!admin resetclanrep` — Reset all clan reputation\n`!admin endseason` — End season & distribute rewards\n`!admin setseason <number>` — Set season number", inline=False)
+            embed.add_field(name="📬 NexMail", value='`!sendmail @user "Subject" "Message" [--reward type:value]`\n`!sendmailall "Subject" "Message" [--reward type:value]`\n`!mailreward @user <mail ID> <type:value>`\n`!announce "Subject" "Message" [--reward type:value]`\nRewards: `nexcoin:1000`, `starshard:5`, `item:Rare:Item Name`', inline=False)
             embed.set_footer(text="Nexworld RPG • Admin Panel")
             await ctx.send(embed=embed)
             return

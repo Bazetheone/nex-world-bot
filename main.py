@@ -713,6 +713,13 @@ async def adminhelp(ctx):
     embed.add_field(name="💰 Economy",
         value="`!addcoins @user <amount>`\n`!removecoins @user <amount>`\n`!addstarshards @user <amount>`\n`!removestarshards @user <amount>`",
         inline=False)
+    embed.add_field(name="📬 NexMail",
+        value='`!sendmail @user "Subject" "Message" [--reward type:value]`\n'
+              '`!sendmailall "Subject" "Message" [--reward type:value]`\n'
+              '`!mailreward @user <mail ID> <type:value>`\n'
+              '`!announce "Subject" "Message" [--reward type:value]`\n'
+              "Rewards: `nexcoin:1000`, `starshard:5`, `item:Rare:Item Name`",
+        inline=False)
     embed.add_field(name="🚫 Moderation",
         value="`!ban @user`\n`!unban @user`\n`!tempban @user <duration>`",
         inline=False)
@@ -1027,6 +1034,7 @@ async def load_cogs():
     await bot.load_extension('cogs.trade')
     await bot.load_extension('cogs.tutorial')
     await bot.load_extension('cogs.pack')
+    await bot.load_extension('cogs.mail')
 
 async def main():
     async with bot:
