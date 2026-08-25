@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from tinydb import TinyDB, Query
-from db import players, Player
+from db import players, Player, generate_item_uid
 import random
 import time
 import asyncio
@@ -559,8 +559,7 @@ class Clan(commands.Cog, name="Clan"):
                     }
                     if chosen_item:
                         inv = mp.get('inventory', [])
-                        import random as _random
-                        uid = str(_random.randint(100000, 999999))
+                        uid = generate_item_uid()
                         inv.append({
                             'uid': uid,
                             'name': chosen_item['name'],
