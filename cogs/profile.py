@@ -310,7 +310,7 @@ class Profile(commands.Cog, name="Profile"):
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
         await ctx.send(embed=embed)
 
-    @commands.command(name="points")
+    @commands.command(name="points", aliases=["stats"])
     async def points(self, ctx, member: discord.Member = None):
         member = member or ctx.author
         user_id = str(member.id)

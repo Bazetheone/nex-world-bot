@@ -16,6 +16,33 @@ RARITY_ICONS = {
 
 active_battles = set()
 
+# Arc unlocks are based on clearing enemies, not reaching a level. These ranges
+# reflect the level a normally progressing player is likely to have on arrival.
+REALISTIC_ARC_LEVEL_RANGES = {
+    1: (1, 4), 2: (4, 8), 3: (8, 12), 4: (12, 16),
+    5: (16, 22), 6: (22, 29), 7: (29, 36), 8: (36, 44),
+    9: (44, 52), 10: (52, 62), 11: (62, 72), 12: (72, 84),
+    13: (84, 96), 14: (96, 110), 15: (110, 126), 16: (126, 145),
+    17: (145, 165), 18: (165, 190), 19: (190, 220), 20: (220, 260),
+}
+
+
+def get_arc_level_range(arc_num, arc_data):
+    return REALISTIC_ARC_LEVEL_RANGES.get(arc_num, arc_data.get("level_range", (1, 1)))
+
+
+def scale_enemy_for_level(enemy, arc_data, player_level):
+    """Bring legacy enemy stats in line with the player's actual level."""
+    designed_range = arc_data.get("level_range", (1, 1))
+    designed_level = max(1, sum(designed_range) / 2)
+    level = max(1, int(player_level))
+    scale = min(1.0, max(0.45, (level / designed_level) ** 0.75))
+    scaled = dict(enemy)
+    for stat in ("hp", "atk", "def"):
+        scaled[stat] = max(1, int(enemy[stat] * scale))
+    return scaled
+
+
 def exp_required(level):
     return int(100 * (1.5 ** (level - 1)))
 
@@ -678,7 +705,7 @@ class Battle(commands.Cog, name="Battle"):
             embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
             for num, arc_data in ARCS.items():
                 status = "✅" if num <= current_arc else "🔒"
-                lvl = arc_data['level_range']
+                lvl = get_arc_level_range(num, arc_data)
                 embed.add_field(
                     name=f"{status} Arc {num} — {arc_data['name']}",
                     value=f"Levels `{lvl[0]}-{lvl[1]}` • `{len(arc_data['enemies'])}` enemies",
@@ -705,11 +732,12 @@ class Battle(commands.Cog, name="Battle"):
 
         embed = discord.Embed(
             title=f"Arc {arc_num} — {arc_data['name']}",
-            description=f"Level Range: `{arc_data['level_range'][0]}-{arc_data['level_range'][1]}`\n✅ **Arc {arc_num} selected** — `!battle <number>` will fight here.",
+            description=f"Level Range: `{get_arc_level_range(arc_num, arc_data)[0]}-{get_arc_level_range(arc_num, arc_data)[1]}`\n✅ **Arc {arc_num} selected** — `!battle <number>` will fight here.",
             color=GOLD)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
 
         for enemy in arc_data['enemies']:
+            display_enemy = scale_enemy_for_level(enemy, arc_data, p.get('level', 1))
             if arc_num < current_arc or (arc_num == current_arc and enemy['id'] < current_enemy):
                 status = "✅"
             elif arc_num == current_arc and enemy['id'] == current_enemy:
@@ -718,7 +746,7 @@ class Battle(commands.Cog, name="Battle"):
                 status = "🔒"
             embed.add_field(
                 name=f"{status} {enemy['id']}. {enemy['name']} — {RARITY_ICONS.get(enemy['rarity'], '⚪')} `{enemy['rarity']}`",
-                value=f"❤️ `{enemy['hp']:,}` • ⚔️ `{enemy['atk']:,}` • 🛡️ `{enemy['def']:,}` • 🎁 `{enemy['drop']}`",
+                value=f"❤️ `{display_enemy['hp']:,}` • ⚔️ `{display_enemy['atk']:,}` • 🛡️ `{display_enemy['def']:,}` • 🎁 `{display_enemy['drop']}`",
                 inline=False)
 
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
@@ -777,6 +805,7 @@ class Battle(commands.Cog, name="Battle"):
             return
 
         active_battles.add(user_id)
+        enemy = scale_enemy_for_level(enemy, arc_data, p.get('level', 1))
         view = BattleView(ctx, p, enemy, selected_arc, enemy_num)
         embed = await view.get_embed()
         msg = await ctx.send(embed=embed, view=view)
