@@ -935,7 +935,8 @@ class Economy(commands.Cog, name="Economy"):
 
         p = p[0]
         inventory = p.get('inventory', [])
-        item = next((i for i in inventory if i['uid'] == item_uid), None)
+        item_uid = str(item_uid).strip().strip('()')
+        item = next((i for i in inventory if str(i.get('uid')) == item_uid), None)
 
         if not item:
             await ctx.send(embed=discord.Embed(description=f"❌ Item `{item_uid}` not found!", color=GOLD))
@@ -1072,7 +1073,8 @@ class Economy(commands.Cog, name="Economy"):
 
         p = p[0]
         inventory = p.get('inventory', [])
-        item = next((i for i in inventory if i['uid'] == item_uid), None)
+        item_uid = str(item_uid).strip().strip('()')
+        item = next((i for i in inventory if str(i.get('uid')) == item_uid), None)
 
         if not item:
             await ctx.send(embed=discord.Embed(description=f"❌ Item `{item_uid}` not found!", color=GOLD))
@@ -1176,7 +1178,8 @@ class Economy(commands.Cog, name="Economy"):
 
         p = p[0]
         inventory = p.get('inventory', [])
-        item = next((i for i in inventory if i['uid'] == item_uid), None)
+        item_uid = str(item_uid).strip().strip('()')
+        item = next((i for i in inventory if str(i.get('uid')) == item_uid), None)
 
         if not item:
             await ctx.send(embed=discord.Embed(description=f"❌ Item `{item_uid}` not found!", color=GOLD))
@@ -1488,8 +1491,8 @@ class Economy(commands.Cog, name="Economy"):
         embed.add_field(name="🚀 Travel", value=fmt(p.get('last_travel', 0), 3600), inline=True)
         embed.add_field(name="🌿 Gather", value=fmt(p.get('last_gather', 0), 300), inline=True)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
-        embed.add_field(name="📦 Item Pack", value=fmt(p.get('last_item_pack', 0), 3000), inline=True)
-        embed.add_field(name="🐾 Pet Pack", value=fmt(p.get('last_pet_pack', 0), 3000), inline=True)
+        embed.add_field(name="📦 Item Pack", value=fmt(p.get('last_item_pack', 0), 3600), inline=True)
+        embed.add_field(name="🐾 Pet Pack", value=fmt(p.get('last_pet_pack', 0), 3600), inline=True)
         embed.add_field(name="🎟️ Raid Pass", value=fmt(p.get('last_raid_pass', 0), 1800), inline=True)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")

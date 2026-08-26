@@ -119,6 +119,20 @@ PET_PACK_RARITIES_LUCKY  = ['Common', 'Common',
                              'Legendary', 'Legendary',
                              'Mythic',]
 
+RACE_AFFINITY = {
+    "Wyrmscale Greatblade": "Dragon-kin",
+    "Radiant Judgment Staff": "Seraphim",
+    "Draconic Bulwark Plate": "Dragon-kin",
+    "Wings of Dawn": "Seraphim",
+}
+
+
+def get_affinity_multiplier(item_name, race):
+    item_race = RACE_AFFINITY.get(item_name)
+    if not item_race:
+        return 1.0
+    return 1.10 if item_race == race else 0.90
+
 def get_daily_shop():
     random.seed(int(time.time() // 86400))
     daily_items = random.sample(NEXCOIN_SHOP[:16], 4)
@@ -374,8 +388,8 @@ class Shop(commands.Cog):
             if item.get('type') == 'itempack':
                 now_ts = time.time()
                 last_ip = p.get('last_item_pack', 0)
-                if now_ts - last_ip < 3000:
-                    remaining = int(3000 - (now_ts - last_ip))
+                if now_ts - last_ip < 3600:
+                    remaining = int(3600 - (now_ts - last_ip))
                     m, s = divmod(remaining, 60)
                     await ctx.send(embed=discord.Embed(
                         description=f"⏰ Item Pack on cooldown! Available in **{m}m {s}s**.",
@@ -426,8 +440,8 @@ class Shop(commands.Cog):
             if item.get('type') == 'petpack':
                 now_ts = time.time()
                 last_pp = p.get('last_pet_pack', 0)
-                if now_ts - last_pp < 3000:
-                    remaining = int(3000 - (now_ts - last_pp))
+                if now_ts - last_pp < 3600:
+                    remaining = int(3600 - (now_ts - last_pp))
                     m, s = divmod(remaining, 60)
                     await ctx.send(embed=discord.Embed(
                         description=f"⏰ Pet Pack on cooldown! Available in **{m}m {s}s**.",

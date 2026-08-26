@@ -38,6 +38,7 @@ ITEM_PACK_RARITIES_NORMAL = ['Rare', 'Rare', 'Rare', 'Rare', 'Epic', 'Epic', 'Ep
 ITEM_PACK_RARITIES_LUCKY  = ['Rare', 'Rare', 'Epic', 'Epic', 'Epic', 'Legendary', 'Legendary', 'Legendary']
 
 PET_PACK_PRICE = 100
+PACK_COOLDOWN_SECONDS = 3600
 PET_PACK_RARITIES_NORMAL = ['Common', 'Common', 'Common', 'Common',
                              'Uncommon', 'Uncommon', 'Uncommon',
                              'Rare', 'Rare',
@@ -64,6 +65,21 @@ class PackView(discord.ui.View):
             return False
         return True
 
+    async def _check_pack_cooldown(self, interaction, player, field, label):
+        remaining = PACK_COOLDOWN_SECONDS - (time.time() - player.get(field, 0))
+        if remaining <= 0:
+            return True
+        minutes, seconds = divmod(int(remaining), 60)
+        hours, minutes = divmod(minutes, 60)
+        if hours:
+            available = f"{hours}h {minutes}m"
+        else:
+            available = f"{minutes}m {seconds}s"
+        await interaction.response.send_message(
+            f"⏰ {label} on cooldown! Available in **{available}**.",
+            ephemeral=True)
+        return False
+
     @discord.ui.button(label=f"Buy Item Pack — {ITEM_PACK_PRICE:,} NC", style=discord.ButtonStyle.blurple, emoji=ITEMPACK_EMOJI)
     async def buy_item_pack(self, interaction: discord.Interaction, button: discord.ui.Button):
         if not await self._check_user(interaction):
@@ -74,6 +90,9 @@ class PackView(discord.ui.View):
             await interaction.response.send_message("You haven't started yet!", ephemeral=True)
             return
         p = p[0]
+        if not await self._check_pack_cooldown(
+                interaction, p, 'last_item_pack', 'Item Pack'):
+            return
         if p.get('nexcoins', 0) < ITEM_PACK_PRICE:
             await interaction.response.send_message(
                 f"❌ Not enough Nexcoins! Cost: {ITEM_PACK_PRICE:,} • Your balance: {p.get('nexcoins', 0):,}",
@@ -93,7 +112,11 @@ class PackView(discord.ui.View):
         inv.append({'uid': uid, 'name': item_result['name'], 'rarity': rolled_rarity,
                     'type': item_result['type'], 'description': stat_desc, 'stats': stats})
         new_coins = p.get('nexcoins', 0) - ITEM_PACK_PRICE
-        players.update({'nexcoins': new_coins, 'inventory': inv}, Player.id == user_id)
+        players.update({
+            'nexcoins': new_coins,
+            'inventory': inv,
+            'last_item_pack': time.time()
+        }, Player.id == user_id)
 
         icon = RARITY_ICONS.get(rolled_rarity, '📦')
         embed = discord.Embed(title=f"{ITEMPACK_EMOJI} Item Pack Opened!", color=GOLD)
@@ -116,6 +139,9 @@ class PackView(discord.ui.View):
             await interaction.response.send_message("You haven't started yet!", ephemeral=True)
             return
         p = p[0]
+        if not await self._check_pack_cooldown(
+                interaction, p, 'last_pet_pack', 'Pet Pack'):
+            return
         if p.get('starshards', 0) < PET_PACK_PRICE:
             await interaction.response.send_message(
                 f"❌ Not enough Starshards! Cost: {PET_PACK_PRICE} • Your balance: {p.get('starshards', 0)}",
@@ -137,7 +163,11 @@ class PackView(discord.ui.View):
                     'description': pet.get('description', ''), 'stats': pet.get('stats', {}),
                     'passive': pet.get('passive'), 'passive_desc': pet.get('passive_desc')})
         new_ss = p.get('starshards', 0) - PET_PACK_PRICE
-        players.update({'starshards': new_ss, 'inventory': inv}, Player.id == user_id)
+        players.update({
+            'starshards': new_ss,
+            'inventory': inv,
+            'last_pet_pack': time.time()
+        }, Player.id == user_id)
 
         icon = RARITY_ICONS.get(pet['rarity'], '✨')
         embed = discord.Embed(title=f"{PETPACK_EMOJI} Pet Pack Opened!", color=GOLD)
