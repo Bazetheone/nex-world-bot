@@ -7,6 +7,7 @@ from tinydb import TinyDB, Query
 import random
 import time
 import asyncio
+import shlex
 from flask import Flask, request, jsonify
 from threading import Thread
 
@@ -708,7 +709,7 @@ async def adminhelp(ctx):
     embed = discord.Embed(title="🛡️ Admin Commands", color=GOLD)
     embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
     embed.add_field(name="👤 Player",
-        value="`!setrace @user <race>`\n`!setorigin @user <origin>`\n`!setlevel @user <level>`\n`!setexp @user <amount>`\n`!resetplayer @user`\n`!giveitem @user <rarity> <name>`\n`!transferdata <old_id> <new_id>`",
+        value="`!setrace @user <race>`\n`!setorigin @user <origin>`\n`!setlevel @user <level>`\n`!setexp @user <amount>`\n`!resetplayer @user`\n`!giveitem @user <item name> [quantity]`\n`!transferdata <old_id> <new_id>`",
         inline=False)
     embed.add_field(name="💰 Economy",
         value="`!addcoins @user <amount>`\n`!removecoins @user <amount>`\n`!addstarshards @user <amount>`\n`!removestarshards @user <amount>`",
@@ -875,24 +876,108 @@ async def removestarshards(ctx, member: discord.Member = None, amount: int = Non
     await ctx.send(embed=discord.Embed(title="✅ Starshards Removed", description=f"Removed **{amount}** from {member.mention}!\nBalance: `{new_ss}`", color=GOLD))
 
 @bot.command(name="giveitem")
-async def giveitem(ctx, member: discord.Member = None, rarity: str = None, *, item_name: str = None):
+async def giveitem(ctx, member: discord.Member = None, *, item_and_quantity: str = None):
     if not is_admin(ctx.author.id):
         await ctx.send(embed=discord.Embed(description="❌ No permission.", color=GOLD))
         return
-    if not member or not rarity or not item_name:
-        await ctx.send(embed=discord.Embed(description="Usage: `!giveitem @user <rarity> <item name>`", color=GOLD))
+    if not member or not item_and_quantity:
+        await ctx.send(embed=discord.Embed(
+            description="Usage: `!giveitem @user <item name> [quantity]`\n"
+                        "Example: `!giveitem @user Golden Kirin 3`",
+            color=GOLD))
         return
+
+    try:
+        parts = shlex.split(item_and_quantity)
+    except ValueError:
+        await ctx.send(embed=discord.Embed(
+            description="❌ Invalid item name format. Use quotes around names when needed.",
+            color=GOLD))
+        return
+
+    quantity = 1
+    if parts and parts[-1].isdigit():
+        quantity = int(parts.pop())
+    if quantity < 1 or quantity > 100:
+        await ctx.send(embed=discord.Embed(
+            description="❌ Quantity must be between 1 and 100.",
+            color=GOLD))
+        return
+    item_name = " ".join(parts).strip()
+    if not item_name:
+        await ctx.send(embed=discord.Embed(
+            description="❌ Enter an item name.",
+            color=GOLD))
+        return
+
+    from cogs.shop import NEXCOIN_SHOP, SS_SHOP, PETS
+
+    catalog = []
+    seen_names = set()
+    for definition in NEXCOIN_SHOP + SS_SHOP + PETS:
+        name_key = definition["name"].casefold()
+        if name_key in seen_names:
+            continue
+        seen_names.add(name_key)
+        catalog.append(definition)
+
+    query = item_name.casefold()
+    exact_matches = [item for item in catalog if item["name"].casefold() == query]
+    if exact_matches:
+        template = exact_matches[0]
+    else:
+        matches = [item for item in catalog if query in item["name"].casefold()]
+        if len(matches) > 1:
+            names = ", ".join(f"**{item['name']}**" for item in matches[:10])
+            await ctx.send(embed=discord.Embed(
+                description=f"❌ More than one item matches **{item_name}**:\n{names}\n"
+                            "Please enter the full item name.",
+                color=GOLD))
+            return
+        if not matches:
+            await ctx.send(embed=discord.Embed(
+                description=f"❌ Item **{item_name}** was not found in the item database.\n"
+                            "Use `!items` or `!info <item name>` to find a valid item.",
+                color=GOLD))
+            return
+        template = matches[0]
+
     user_id = str(member.id)
     p = players.search(Player.id == user_id)
     if not p:
         await ctx.send(embed=discord.Embed(description="❌ Player not found!", color=GOLD))
         return
+
+    is_pet = template in PETS
+    item_type = "pet" if is_pet else template.get("type", "item")
     inv = p[0].get('inventory', [])
-    admin_items = [i for i in inv if i['uid'].startswith('A')]
-    uid = generate_item_uid()
-    inv.append({'uid': uid, 'name': item_name, 'rarity': rarity, 'type': 'admin_given'})
+    granted_ids = []
+    for _ in range(quantity):
+        uid = generate_item_uid()
+        new_item = {
+            'uid': uid,
+            'name': template['name'],
+            'rarity': template.get('rarity', 'Common'),
+            'type': item_type,
+            'description': template.get('description', ''),
+            'stats': dict(template.get('stats') or {}),
+        }
+        for optional_field in ('passive', 'passive_desc', 'image'):
+            if template.get(optional_field) is not None:
+                new_item[optional_field] = template[optional_field]
+        inv.append(new_item)
+        granted_ids.append(uid)
+
     players.update({'inventory': inv}, Player.id == user_id)
-    await ctx.send(embed=discord.Embed(title="✅ Item Given", description=f"Gave **{item_name}** (`{rarity}`) to {member.mention}!\nID: `{uid}`", color=GOLD))
+    ids = ", ".join(f"`{uid}`" for uid in granted_ids)
+    await ctx.send(embed=discord.Embed(
+        title="✅ Item Given",
+        description=f"**Player:** {member.mention}\n"
+                    f"**Item:** {template['name']}\n"
+                    f"**Rarity:** {template.get('rarity', 'Common')}\n"
+                    f"**Quantity:** `{quantity}`\n"
+                    f"**Item IDs:** {ids}",
+        color=GOLD))
 
 @bot.command(name="resetplayer")
 async def resetplayer(ctx, member: discord.Member = None):
