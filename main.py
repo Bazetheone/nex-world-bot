@@ -78,7 +78,7 @@ async def handle_vote(user_id):
 
 def run():
     try:
-        app.run(host='0.0.0.0', port=8080, use_reloader=False, threaded=True)
+        app.run(host='0.0.0.0', port=int(os.getenv('PORT', '8080')), use_reloader=False, threaded=True)
     except OSError:
         pass
 
