@@ -648,7 +648,7 @@ class Economy(commands.Cog, name="Economy"):
         msg = await ctx.send(embed=embed, view=battle_view)
         battle_view.message = msg
 
-    @commands.command(name="explore")
+    @commands.command(name="explore", aliases=["e"])
     async def explore(self, ctx):
         user_id = str(ctx.author.id)
         p = players.search(Player.id == user_id)
@@ -713,6 +713,10 @@ class Economy(commands.Cog, name="Economy"):
             points_gained += get_points_for_level(current_level)
             leveled_up = True
 
+        from cogs.shop import get_equipped_pet_passive, get_passive_value
+        passive_name, _ = get_equipped_pet_passive(p)
+        if passive_name in ('Gold Finder I', 'Gold Finder II', 'Treasure Hunter'):
+            coins_gain = int(coins_gain * (1 + get_passive_value(passive_name, '%')))
         new_coins = p.get('nexcoins', 0) + coins_gain
 
         current_unspent = p.get('unspent_points', 0) + points_gained

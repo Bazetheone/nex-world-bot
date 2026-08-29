@@ -357,6 +357,11 @@ class BattleView(discord.ui.View):
         effect = get_skill_effect(race, skill_index, level)
         self.skill_uses += 1
 
+        from cogs.shop import get_equipped_pet_passive, get_passive_value
+        passive_name, _ = get_equipped_pet_passive(self.player_data)
+        if passive_name in ('Critical Eye',) and random.random() < get_passive_value(passive_name, '%'):
+            best_atk = int(best_atk * 1.5)
+
         if not effect or effect.get('type') == 'damage':
             mult = effect.get('dmg_mult', 1.4) if effect else 1.4
             dmg = calculate_damage(int(best_atk * mult), self.enemy['def'])
@@ -753,7 +758,7 @@ class Battle(commands.Cog, name="Battle"):
         embed.set_footer(text="Use !battle <number> to fight • Nexworld RPG")
         await ctx.send(embed=embed)
 
-    @commands.command(name="battle")
+    @commands.command(name="battle", aliases=["b"])
     @commands.cooldown(1, 1, commands.BucketType.user)
     async def battle(self, ctx, enemy_num: int = None):
         from main import ARCS
