@@ -7,6 +7,25 @@ from main import NC_ICON, SS_ICON, NC_BUTTON_EMOJI, SS_BUTTON_EMOJI
 
 GOLD = 0xFFD700
 
+def get_equipped_pet_passive(player_data):
+    eq = player_data.get('equipped', {})
+    pet = eq.get('pet')
+    if pet and isinstance(pet, dict):
+        return pet.get('passive'), pet.get('passive_desc')
+    return None, None
+
+def get_passive_value(passive_name, keyword_pct=None):
+    if not passive_name:
+        return 0.0
+    import re
+    for pet in PETS:
+        if pet.get('passive') == passive_name:
+            desc = pet.get('passive_desc', '')
+            m = re.search(r'([\d.]+)%', desc)
+            if m:
+                return float(m.group(1)) / 100
+    return 0.0
+
 NEXCOIN_SHOP = [
     {"id": 1,  "name": "Small HP Potion",          "description": "Restores 15% of max HP in battle",                                               "price": 500,    "rarity": "Common",    "type": "consumable", "stats": {}},
     {"id": 3,  "name": "Medium HP Potion",        "description": "Restores 30% of max HP in battle",                                               "price": 1500,   "rarity": "Uncommon",  "type": "consumable", "stats": {}},
@@ -74,7 +93,7 @@ PETS = [
     {"id": 16, "name": "Astral Dragon",       "description": "+3,000 Attack, +2,800 Magic Attack, +1,800 HP", "price": 500, "rarity": "Mythic",    "stats": {"str": 3000, "mag": 2800, "hp": 1800}, "passive": "Critical Eye", "passive_desc": "+12% critical hit chance", "image": "https://raw.githubusercontent.com/Bazetheone/nex-world-bot/main/static/pets/astral_dragon.png"},
     {"id": 17, "name": "Void Leviathan",      "description": "+3,200 Health, +1,800 Defense",            "price": 500, "rarity": "Mythic",    "stats": {"hp": 3200, "def": 1800}, "passive": "Tidal Ward", "passive_desc": "10% chance to fully block an attack", "image": "https://raw.githubusercontent.com/Bazetheone/nex-world-bot/main/static/pets/void_leviathan.png"},
     {"id": 18, "name": "Golden Kirin",        "description": "+1,600 Attack, +1,600 Magic Attack, +1,600 DEF","price": 500, "rarity": "Mythic",    "stats": {"str": 1600, "mag": 1600, "def": 1600}, "passive": "Balanced Soul", "passive_desc": "+25% to all stats when below 50% HP", "image": "https://raw.githubusercontent.com/Bazetheone/nex-world-bot/main/static/pets/golden_kirin.png"},
-    {"id": 19, "name": "Cybernetic Behemoth", "description": "+2,600 Defense, +1,800 Health",            "price": 500, "rarity": "Mythic",    "stats": {"def": 2600, "hp": 1800}, "passive": "Overclock", "passive_desc": "-30% off explore/hourly/travel cooldowns", "image": None},
+    {"id": 19, "name": "Cybernetic Behemoth", "description": "+2,600 Defense, +1,800 Health",            "price": 500, "rarity": "Mythic",    "stats": {"def": 2600, "hp": 1800}, "passive": "Overclock", "passive_desc": "-30% off explore/hourly/travel cooldowns", "image": "https://raw.githubusercontent.com/Bazetheone/nex-world-bot/main/static/pets/cybernetic_behemoth.png"},
     {"id": 20, "name": "Seraphic Pegasus",    "description": "+4,500 Health, +1,800 Magic Attack",       "price": 600, "rarity": "Divine",    "stats": {"hp": 4500, "mag": 1800}, "passive": "Divine Blessing", "passive_desc": "+65% to healing effects", "image": "https://raw.githubusercontent.com/Bazetheone/nex-world-bot/main/static/pets/seraphic_pegasus.png"},
     {"id": 21, "name": "Chaos Hydra",         "description": "+2,800 Attack, +1,600 Magic Attack",       "price": 600, "rarity": "Divine",    "stats": {"str": 2800, "mag": 1600}, "passive": "Frenzy", "passive_desc": "Up to +65% damage the lower your HP is", "image": "https://raw.githubusercontent.com/Bazetheone/nex-world-bot/main/static/pets/chaos_hydra.png"},
     {"id": 22, "name": "Time-Keeper Sphinx",  "description": "+2,200 HP, +1,600 ATK, +1,600 MAG, +1,000 DEF", "price": 100, "rarity": "Divine",    "stats": {"hp": 2200, "str": 1600, "mag": 1600, "def": 1000}, "passive": "Time Warp", "passive_desc": "+75% chance to act twice in a turn", "image": "https://cdn.discordapp.com/attachments/1522913773248184381/1534608518722883665/file_000000002b9c81f4bdbf4698ef95d62d-1.png"},
