@@ -357,7 +357,11 @@ class BattleView(discord.ui.View):
         effect = get_skill_effect(race, skill_index, level)
         self.skill_uses += 1
 
-        from cogs.shop import get_equipped_pet_passive, get_passive_value
+        try:
+            from cogs.shop import get_equipped_pet_passive, get_passive_value
+        except ImportError:
+            get_equipped_pet_passive = lambda p: (None, None)
+            get_passive_value = lambda n, k=None: 0.0
         passive_name, _ = get_equipped_pet_passive(self.player_data)
         if passive_name in ('Critical Eye',) and random.random() < get_passive_value(passive_name, '%'):
             best_atk = int(best_atk * 1.5)

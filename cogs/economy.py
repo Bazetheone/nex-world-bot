@@ -713,7 +713,11 @@ class Economy(commands.Cog, name="Economy"):
             points_gained += get_points_for_level(current_level)
             leveled_up = True
 
-        from cogs.shop import get_equipped_pet_passive, get_passive_value
+        try:
+            from cogs.shop import get_equipped_pet_passive, get_passive_value
+        except ImportError:
+            get_equipped_pet_passive = lambda p: (None, None)
+            get_passive_value = lambda n, k=None: 0.0
         passive_name, _ = get_equipped_pet_passive(p)
         if passive_name in ('Gold Finder I', 'Gold Finder II', 'Treasure Hunter'):
             coins_gain = int(coins_gain * (1 + get_passive_value(passive_name, '%')))
