@@ -18,14 +18,59 @@ app = Flask('')
 def home():
     return "Nexworld is alive!"
 
+PROCESSED_VOTE_IDS = set()
+
 @app.route('/vote-webhook', methods=['POST'])
 def vote_webhook():
-    auth = request.headers.get('Authorization')
-    expected = os.getenv('TOPGG_WEBHOOK_SECRET')
-    if not expected or auth != expected:
-        return jsonify({'error': 'unauthorized'}), 401
-    data = request.json or {}
-    user_id = str(data.get('user', ''))
+    import hmac, hashlib
+    import json as _json
+    secret = os.getenv('TOPGG_WEBHOOK_SECRET')
+    if not secret:
+        return jsonify({'error': 'not configured'}), 500
+    raw = request.get_data()
+    signature = request.headers.get('x-topgg-signature')
+    user_id = ''
+
+    if signature:
+        try:
+            parts = dict(p.split('=', 1) for p in signature.split(','))
+            timestamp = parts['t']
+            received = parts['v1']
+            ts_val = int(timestamp)
+        except Exception:
+            return jsonify({'error': 'bad signature header'}), 400
+        expected_sig = hmac.new(
+            secret.encode('utf-8'),
+            f"{timestamp}.".encode('utf-8') + raw,
+            hashlib.sha256).hexdigest()
+        if not hmac.compare_digest(expected_sig, received):
+            return jsonify({'error': 'unauthorized'}), 401
+        if ts_val > 100000000000:
+            ts_val = ts_val / 1000
+        if abs(time.time() - ts_val) > 600:
+            return jsonify({'error': 'stale request'}), 401
+        try:
+            payload = _json.loads(raw.decode('utf-8'))
+        except Exception:
+            return jsonify({'error': 'bad json'}), 400
+        event = payload.get('type')
+        data = payload.get('data') or {}
+        if event not in ('vote.create', 'webhook.test'):
+            return jsonify({'success': True}), 200
+        vote_id = data.get('id')
+        if event == 'vote.create' and vote_id:
+            if vote_id in PROCESSED_VOTE_IDS:
+                return jsonify({'success': True}), 200
+            PROCESSED_VOTE_IDS.add(vote_id)
+            if len(PROCESSED_VOTE_IDS) > 5000:
+                PROCESSED_VOTE_IDS.clear()
+        user_id = str((data.get('user') or {}).get('platform_id', ''))
+    else:
+        if request.headers.get('Authorization') != secret:
+            return jsonify({'error': 'unauthorized'}), 401
+        data = request.get_json(silent=True) or {}
+        user_id = str(data.get('user', ''))
+
     if not user_id:
         return jsonify({'error': 'no user'}), 400
     try:
