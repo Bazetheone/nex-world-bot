@@ -293,7 +293,7 @@ class Profile(commands.Cog, name="Profile"):
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(
             name="💰 Balance",  # field label kept plain — value shows icons inline
-            value=f"{NC_ICON} `{format_number(p.get('nexcoins', 0))}`\n{SS_ICON} `{format_number(p.get('starshards', 0))}`",
+            value=f"{NC_ICON} `{format_number(p.get('nexcoins', 0))}`\n{SS_ICON} `{format_number(p.get('starshards', 0))}`\n💎 `{format_number(p.get('nexite', 0))}`",
             inline=False)
 
         weapon = equipped.get('weapon')

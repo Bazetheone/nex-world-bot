@@ -189,7 +189,8 @@ class RaidJoinView(discord.ui.View):
                     p = p[0]
                     new_coins = p.get('nexcoins', 0) + coin_reward
                     new_exp = p.get('exp', 0) + exp_reward
-                    players.update({'nexcoins': new_coins, 'exp': new_exp}, Player.id == player['id'])
+                    nexite_reward = random.randint(10, 15)
+                    players.update({'nexcoins': new_coins, 'exp': new_exp, 'nexite': p.get('nexite', 0) + nexite_reward}, Player.id == player['id'])
 
                 item_drop = None
                 if random.random() < 0.5:
@@ -203,7 +204,7 @@ class RaidJoinView(discord.ui.View):
                         inv.append({'uid': uid, 'name': item_drop, 'rarity': rarity, 'type': 'raid_drop'})
                         players.update({'inventory': inv}, Player.id == player['id'])
 
-                rewards_text += f"**{player['name']}** — `{coin_reward:,}` Nexcoins, `{exp_reward:,}` EXP"
+                rewards_text += f"**{player['name']}** — `{coin_reward:,}` Nexcoins, `{exp_reward:,}` EXP, 💎 `{nexite_reward}` Nexite"
                 if item_drop:
                     rewards_text += f", 🎁 {item_drop} `{rarity}`"
                 rewards_text += "\n"
@@ -216,8 +217,9 @@ class RaidJoinView(discord.ui.View):
                     p = p[0]
                     new_coins = p.get('nexcoins', 0) + consolation
                     new_exp = p.get('exp', 0) + exp_reward
-                    players.update({'nexcoins': new_coins, 'exp': new_exp}, Player.id == player['id'])
-                rewards_text += f"**{player['name']}** — `{consolation:,}` Nexcoins (supported), `{exp_reward:,}` EXP\n"
+                    nexite_support = random.randint(4, 6)
+                    players.update({'nexcoins': new_coins, 'exp': new_exp, 'nexite': p.get('nexite', 0) + nexite_support}, Player.id == player['id'])
+                rewards_text += f"**{player['name']}** — `{consolation:,}` Nexcoins (supported), `{exp_reward:,}` EXP, 💎 `{nexite_support}` Nexite\n"
 
             embed.add_field(name="🏆 Rewards", value=rewards_text or "No rewards", inline=False)
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")
