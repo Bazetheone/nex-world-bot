@@ -90,6 +90,8 @@ def apply_level_up(p, user_id):
 
     return leveled_up, old_level, current_level, points_gained
 
+BATTLE_EXP_MULTIPLIER = 2.0
+
 class BattleView(discord.ui.View):
     def __init__(self, ctx, player_data, enemy, arc_num, enemy_num):
         super().__init__(timeout=50)
@@ -233,6 +235,12 @@ class BattleView(discord.ui.View):
         str_bonus_sp = 100 if now < self.player_data.get('buff_str_boost_until', 0) else 0
         def_bonus_sp = 100 if now < self.player_data.get('buff_def_boost_until', 0) else 0
         best_atk = max(self.player_data['str'] + str_bonus_sp, self.player_data['mag'] + str_bonus_sp)
+        special_buff_mult = 1.0
+        if time.time() < self.buff_all_until:
+            special_buff_mult += self.buff_all_pct
+        if time.time() < self.buff_str_until:
+            special_buff_mult += self.buff_str_pct
+        best_atk = int(best_atk * special_buff_mult)
 
         sp_effect = get_special_effect(race)
         self.special_available = False
@@ -583,7 +591,7 @@ class BattleView(discord.ui.View):
         p = p[0]
 
         if won:
-            exp_gain = random.randint(*self.enemy['exp'])
+            exp_gain = int(random.randint(*self.enemy['exp']) * BATTLE_EXP_MULTIPLIER)
             coins_gain = random.randint(*self.enemy['coins'])
 
             if time.time() < p.get('buff_exp_boost_until', 0):
