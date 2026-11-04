@@ -24,6 +24,8 @@ ORIGIN_ICONS = {
 def exp_required(level):
     return int(100 * (1.5 ** (level - 1)))
 
+NEXITE_ICON = "💎"
+
 class InvFilterSelect(discord.ui.Select):
     def __init__(self, view_ref):
         self.view_ref = view_ref
@@ -345,6 +347,7 @@ class Profile(commands.Cog, name="Profile"):
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(name=f"{NC_ICON} Nexcoins", value=f"`{p.get('nexcoins', 0):,}`", inline=True)
         embed.add_field(name=f"{SS_ICON} Starshards", value=f"`{p.get('starshards', 0):,}`", inline=True)
+        embed.add_field(name=f"{NEXITE_ICON} Nexite", value=f"`{p.get('nexite', 0):,}`", inline=True)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.set_thumbnail(url=member.display_avatar.url)
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")

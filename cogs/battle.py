@@ -92,6 +92,17 @@ def apply_level_up(p, user_id):
 
 BATTLE_EXP_MULTIPLIER = 2.0
 
+NEXITE_ICON = "💎"
+NEXITE_DROPS = {
+    'Common': (0, 1), 'Uncommon': (1, 1), 'Rare': (1, 2), 'Epic': (2, 3),
+    'Legendary': (3, 5), 'Mythic': (5, 8), 'Mythical': (5, 8),
+    'Divine': (8, 12), 'Celestial': (12, 16), 'Godly': (16, 20),
+}
+
+def roll_nexite(rarity):
+    low, high = NEXITE_DROPS.get(rarity, (0, 1))
+    return random.randint(low, high)
+
 class BattleView(discord.ui.View):
     def __init__(self, ctx, player_data, enemy, arc_num, enemy_num):
         super().__init__(timeout=50)
@@ -600,7 +611,8 @@ class BattleView(discord.ui.View):
             new_exp = p.get('exp', 0) + exp_gain
             new_coins = p.get('nexcoins', 0) + coins_gain
 
-            players.update({'exp': new_exp, 'nexcoins': new_coins}, Player.id == user_id)
+            nexite_gain = roll_nexite(self.enemy.get('rarity'))
+            players.update({'exp': new_exp, 'nexcoins': new_coins, 'nexite': p.get('nexite', 0) + nexite_gain}, Player.id == user_id)
 
             fresh_p = players.search(Player.id == user_id)[0]
             leveled_up, old_level, new_level, points_gained = apply_level_up(fresh_p, user_id)
@@ -649,7 +661,7 @@ class BattleView(discord.ui.View):
             embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
             embed.add_field(
                 name=f"✅ {self.enemy['name']} Defeated — Rewards",
-                value=f"{NC_ICON} `+{coins_gain:,}` Nexcoins  •  🔮 `+{exp_gain:,}` EXP",
+                value=f"{NC_ICON} `+{coins_gain:,}` Nexcoins  •  🔮 `+{exp_gain:,}` EXP" + (f"  •  {NEXITE_ICON} `+{nexite_gain}` Nexite" if nexite_gain else ""),
                 inline=False)
 
             if item_drop:
