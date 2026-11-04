@@ -417,7 +417,7 @@ class Economy(commands.Cog, name="Economy"):
                                 title="🗳️ You can vote again!",
                                 description="Your vote cooldown has reset — vote now to keep your streak alive!",
                                 color=GOLD)
-                            embed.add_field(name="Vote Link", value="[Click here to vote!](https://top.gg/bot/YOUR_BOT_ID)", inline=False)
+                            embed.add_field(name="Vote Link", value="[Click here to vote!](https://top.gg/bot/1511469836578848880/vote)", inline=False)
                             await user.send(embed=embed)
                             players.update({'vote_reminder_sent': True}, Player.id == p['id'])
                     except Exception:
@@ -801,7 +801,7 @@ class Economy(commands.Cog, name="Economy"):
             can_vote = "✅ You can vote now!"
 
         embed = discord.Embed(title="🗳️ Vote for Nexworld!", color=GOLD)
-        embed.add_field(name="Vote Link", value="[Click here to vote!](https://top.gg/bot/YOUR_BOT_ID)", inline=False)
+        embed.add_field(name="Vote Link", value="[Click here to vote!](https://top.gg/bot/1511469836578848880/vote)", inline=False)
         embed.add_field(name="Status", value=can_vote, inline=False)
         embed.add_field(name="Next Reward", value=f"{NC_ICON} **{next_reward:,} Nexcoins**\n{SS_ICON} **10 Starshards** (40% chance)", inline=False)
         embed.add_field(name="🔥 Streak Ladder", value="x1: 25,000\nx2: 30,000\nx3: 35,000\nx4: 40,000\nx5: 45,000\nx6: 50,000\nx7+: 60,000", inline=False)
