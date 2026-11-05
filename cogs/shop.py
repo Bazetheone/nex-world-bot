@@ -838,3 +838,30 @@ class Shop(commands.Cog):
 
 async def setup(bot):
     await bot.add_cog(Shop(bot))
+
+
+# --- percentage descriptions ---
+def _apply_pct_descriptions():
+    try:
+        from stats import derive_item_pct
+        labels = {'hp': 'HP', 'str': 'STR', 'def': 'DEF', 'mag': 'Magic Power'}
+        gear_types = ('weapon', 'armor', 'head_armor', 'body_armor')
+
+        def build(item, is_pet):
+            pct = derive_item_pct(item, is_pet=is_pet)
+            if not pct:
+                return None
+            text = ", ".join(f"+{v:g}% {labels[k]}" for k, v in pct.items())
+            race = RACE_AFFINITY.get(item.get('name'))
+            return text + (f" ({race} affinity)" if race else " (Universal)")
+
+        for lst, is_pet in ((NEXCOIN_SHOP, False), (SS_SHOP, False), (PETS, True)):
+            for it in lst:
+                if is_pet or it.get('type') in gear_types:
+                    d = build(it, is_pet)
+                    if d:
+                        it['description'] = d
+    except Exception as e:
+        print(f"Shop description conversion skipped: {e}")
+
+_apply_pct_descriptions()

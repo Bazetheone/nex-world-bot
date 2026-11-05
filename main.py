@@ -694,15 +694,15 @@ def get_skill_name(race, skill_index, level):
 
 def get_points_for_level(level):
     if level <= 100:
-        return 58
+        return 22
     elif level <= 250:
-        return 97
+        return 36
     elif level <= 500:
-        return 155
+        return 58
     elif level <= 750:
-        return 225
+        return 84
     else:
-        return 340
+        return 128
 
 def get_stat_increase(level):
     if level <= 100:
