@@ -766,6 +766,9 @@ async def adminhelp(ctx):
               '`!announce "Subject" "Message" [--reward type:value]`\n'
               "Rewards: `nexcoin:1000`, `starshard:5`, `item:Rare:Item Name`",
         inline=False)
+    embed.add_field(name="💎 Nexite & Gear",
+        value="`!givenexite @user <amount>`\n`!takenexite @user <amount>`\n`!convertgear @user` or `!convertgear all`\n`!statcheck [@user]`",
+        inline=False)
     embed.add_field(name="🚫 Moderation",
         value="`!ban @user`\n`!unban @user`\n`!tempban @user <duration>`",
         inline=False)

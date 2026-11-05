@@ -697,11 +697,27 @@ class Shop(commands.Cog):
             embed.add_field(name="Obtained From", value=found['source'], inline=True)
         stats = found.get('stats', {})
         if stats:
+            from stats import derive_item_pct
+            is_pet = bool(found.get('passive')) or found.get('type') == 'pet'
+            is_gear = found.get('type') in ('weapon', 'armor', 'head_armor', 'body_armor')
             stat_lines = []
-            if stats.get('hp'):  stat_lines.append(f"<:hp:1530891103379652749> HP: `+{stats['hp']}`")
-            if stats.get('str'): stat_lines.append(f"<:str:1533458366070784000> STR: `+{stats['str']}`")
-            if stats.get('mag'): stat_lines.append(f"<:magic:1533459066897301514> MAG: `+{stats['mag']}`")
-            if stats.get('def'): stat_lines.append(f"<:def:1530891180173295738> DEF: `+{stats['def']}`")
+            if is_pet or is_gear:
+                pct = derive_item_pct(found, is_pet=is_pet)
+                label_map = {
+                    'hp': '<:hp:1530891103379652749> HP',
+                    'str': '<:str:1533458366070784000> STR',
+                    'def': '<:def:1530891180173295738> DEF',
+                    'mag': '<:magic:1533459066897301514> Magic Power',
+                }
+                for k, v in pct.items():
+                    stat_lines.append(f"{label_map[k]}: `+{v:g}%`")
+                if is_gear:
+                    stat_lines.append("⚒️ Each `!forge` upgrade adds +30% of this bonus")
+            else:
+                if stats.get('hp'): stat_lines.append(f"<:hp:1530891103379652749> HP: `+{stats['hp']:,}`")
+                if stats.get('str'): stat_lines.append(f"<:str:1533458366070784000> STR: `+{stats['str']:,}`")
+                if stats.get('mag'): stat_lines.append(f"<:magic:1533459066897301514> MAG: `+{stats['mag']:,}`")
+                if stats.get('def'): stat_lines.append(f"<:def:1530891180173295738> DEF: `+{stats['def']:,}`")
             embed.add_field(name="Stat Boosts", value="\n".join(stat_lines), inline=False)
 
         affiliation = RACE_AFFINITY.get(found['name'])

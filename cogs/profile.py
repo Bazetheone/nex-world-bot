@@ -303,11 +303,16 @@ class Profile(commands.Cog, name="Profile"):
         body = equipped.get('body_armor')
         pet = equipped.get('pet')
 
+        def tag(it):
+            if not it:
+                return 'None'
+            lv = it.get('upgrade_level', 1)
+            return it['name'] + (f" +{lv - 1}" if lv > 1 else "")
         equipped_text = (
-            f"🪖 Head: `{head['name'] if head else 'None'}`\n"
-            f"🛡️ Body: `{body['name'] if body else 'None'}`\n"
-            f"⚔️ Weapon: `{weapon['name'] if weapon else 'None'}`\n"
-            f"🐾 Pet: `{pet['name'] if pet else 'None'}`"
+            f"🪖 Head: `{tag(head)}`\n"
+            f"🛡️ Body: `{tag(body)}`\n"
+            f"⚔️ Weapon: `{tag(weapon)}`\n"
+            f"🐾 Pet: `{tag(pet)}`"
         )
         embed.add_field(name="🎽 Equipped", value=equipped_text, inline=False)
         embed.set_thumbnail(url=member.display_avatar.url)
@@ -331,7 +336,7 @@ class Profile(commands.Cog, name="Profile"):
             value=f"<:hp:1530891103379652749> HP: `{p.get('hp', 0):,}` • <:str:1533458366070784000> STR: `{p.get('str', 0):,}` • <:magic:1533459066897301514> MAG: `{p.get('mag', 0):,}` • <:def:1530891180173295738> DEF: `{p.get('def', 0):,}`",
             inline=False)
         if unspent > 0:
-            embed.add_field(name="How to Spend", value="Use `!assign <stat> <amount>`\nValid stats: `hp`, `str`, `mag`, `def`", inline=False)
+            embed.add_field(name="How to Spend", value="Use `!assign <stat> <amount>`\nValid stats: `hp`, `str`, `def`, `mag`\n100 `mag` points = 1% Magic Power (max 100%)", inline=False)
         embed.set_thumbnail(url=member.display_avatar.url)
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
         await ctx.send(embed=embed)
