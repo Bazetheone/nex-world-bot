@@ -4,6 +4,12 @@
 STAT_KEYS = ('hp', 'str', 'def', 'mag')
 MAIN_THRESHOLD = 0.8
 UPGRADE_STEP = 0.3
+MP_DAMAGE_BONUS = 0.15   # extra damage at 100% Magic Power
+MP_HEAL_BONUS = 0.6      # extra healing at 100% Magic Power
+MP_SHIELD_BONUS = 0.6    # extra shield at 100% Magic Power
+MP_GEAR_WEIGHT = 0.5     # gear MAG counts this much toward Magic Power
+HEAL_CAP = 0.65          # one heal never restores more than this share of max HP
+SHIELD_CAP = 0.5         # one shield never exceeds this share of max HP
 
 # rarity: (main stat %, other stat %)
 GEAR_PCT = {
@@ -82,7 +88,7 @@ def get_effective_stats(p):
     base = base_stats(p)
     bonus = get_gear_bonuses(p)
     eff = {k: int(base[k] * (1 + bonus[k] / 100)) for k in ('hp', 'str', 'def')}
-    mp_pct = min(100.0, base['mag'] / 100 + bonus['mag'])
+    mp_pct = min(100.0, base['mag'] / 100 + bonus['mag'] * MP_GEAR_WEIGHT)
     eff['magic_power_pct'] = mp_pct
     eff['magic_power'] = mp_pct / 100
     return eff, base, bonus
@@ -103,7 +109,7 @@ def build_battle_player(p):
         q = dict(p)
         q['hp'] = eff['hp']
         q['def'] = eff['def']
-        q['str'] = int(eff['str'] * (1 + 0.5 * mp))
+        q['str'] = int(eff['str'] * (1 + MP_DAMAGE_BONUS * mp))
         q['mag'] = 0
         q['magic_power'] = mp
         return q
@@ -117,9 +123,9 @@ def scale_effect(effect, mp):
     e = dict(effect)
     t = e.get('type')
     if 'heal_pct' in e:
-        e['heal_pct'] = min(0.75, e['heal_pct'] * (1 + mp))
+        e['heal_pct'] = min(HEAL_CAP, e['heal_pct'] * (1 + MP_HEAL_BONUS * mp))
     if t == 'shield' and 'shield_pct' in e:
-        e['shield_pct'] = min(0.6, e['shield_pct'] * (1 + mp))
+        e['shield_pct'] = min(SHIELD_CAP, e['shield_pct'] * (1 + MP_SHIELD_BONUS * mp))
     if t == 'buff_self' and 'pct' in e:
         e['pct'] = e['pct'] + max(0.0, 0.5 - e['pct']) * mp
     return e

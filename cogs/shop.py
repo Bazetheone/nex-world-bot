@@ -702,6 +702,7 @@ class Shop(commands.Cog):
             is_gear = found.get('type') in ('weapon', 'armor', 'head_armor', 'body_armor')
             stat_lines = []
             if is_pet or is_gear:
+                embed.description = None
                 pct = derive_item_pct(found, is_pet=is_pet)
                 label_map = {
                     'hp': '<:hp:1530891103379652749> HP',

@@ -4,7 +4,7 @@ from db import players, Player
 
 GOLD = 0xFFD700
 NEXITE_ICON = "<:nexite:1567658459342831636>"
-MAX_UPGRADE_LEVEL = 10
+MAX_UPGRADE_LEVEL = 5
 FORGEABLE_TYPES = ('weapon', 'armor', 'head_armor', 'body_armor')
 
 NEXITE_BASE_COST = {

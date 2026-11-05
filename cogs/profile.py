@@ -251,6 +251,49 @@ class LbView(discord.ui.View):
         await interaction.response.edit_message(embed=self.build_embed(), view=self)
 
 
+class HelpView(discord.ui.View):
+    def __init__(self, ctx, pages):
+        super().__init__(timeout=120)
+        self.ctx = ctx
+        self.pages = pages
+        self.page = 0
+        self.message = None
+        for i, e in enumerate(pages):
+            e.set_footer(text=f"✨ Nexworld RPG • Page {i + 1}/{len(pages)}")
+        self._sync()
+
+    def _sync(self):
+        self.children[0].disabled = self.page == 0
+        self.children[1].disabled = self.page == len(self.pages) - 1
+
+    async def interaction_check(self, interaction: discord.Interaction):
+        if interaction.user.id != self.ctx.author.id:
+            await interaction.response.send_message("This isn't your help menu!", ephemeral=True)
+            return False
+        return True
+
+    @discord.ui.button(label="◀ Previous", style=discord.ButtonStyle.grey)
+    async def prev_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
+        self.page = max(0, self.page - 1)
+        self._sync()
+        await interaction.response.edit_message(embed=self.pages[self.page], view=self)
+
+    @discord.ui.button(label="Next ▶", style=discord.ButtonStyle.grey)
+    async def next_btn(self, interaction: discord.Interaction, button: discord.ui.Button):
+        self.page = min(len(self.pages) - 1, self.page + 1)
+        self._sync()
+        await interaction.response.edit_message(embed=self.pages[self.page], view=self)
+
+    async def on_timeout(self):
+        if self.message:
+            try:
+                for c in self.children:
+                    c.disabled = True
+                await self.message.edit(view=self)
+            except Exception:
+                pass
+
+
 class Profile(commands.Cog, name="Profile"):
     def __init__(self, bot):
         self.bot = bot
@@ -632,26 +675,23 @@ class Profile(commands.Cog, name="Profile"):
             description=description,
             color=GOLD)
         embed.set_footer(text="✨ Nexworld RPG • Your fate has been decided")
-        await ctx.send(embed=embed)
         embed2 = discord.Embed(
-            title="🆕 NEW: STATS, GEAR & NEXITE",
+            title="📖 NEXWORLD RPG — NEW COMMANDS",
             description=(
-                "**📈 Stats**\n"
-                "Gear and pets now give **% bonuses** instead of flat numbers.\n"
-                "STR = all your damage • DEF = damage resistance • HP = max health\n\n"
-                "**🔮 MAG = Magic Power**\n"
-                "100 MAG points = 1% Magic Power (max 100%). It boosts your heals, shields and buffs. See the bar on `!profile`.\n\n"
-                "**💎 Nexite**\n"
-                "Drops from battle and raid wins. Check it in `!balance`. Upgrades coming soon.\n\n"
-                "**🎁 Also useful**\n"
-                "`!pack` — buy Item & Pet Packs\n"
-                "`!info <name>` — details + race affinity\n"
-                "`!use <id>` — use consumables\n"
-                "`!b <id>` / `!e` — battle and explore shortcuts"
+                "**🎁 PACKS**\n"
+                "`!pack` — Open the pack menu (Item Pack & Pet Pack)\n\n"
+                "**⚒️ NEXFORGE**\n"
+                "`!forge <id>` / `!upgrade <id>` / `!nf <id>` — Upgrade equipment with Nexite\n\n"
+                "**🔎 INFO**\n"
+                "`!info <name>` — View item or pet details\n"
+                "`!use <id>` — Use a consumable item\n\n"
+                "**🗳️ VOTING**\n"
+                "`!vote` — Vote for Nexworld & earn rewards\n"
+                "`!votereminder` / `!vr` — Toggle vote reminders"
             ),
             color=GOLD)
-        embed2.set_footer(text="✨ Nexworld RPG • Your fate has been decided")
-        await ctx.send(embed=embed2)
+        help_view = HelpView(ctx, [embed, embed2])
+        help_view.message = await ctx.send(embed=embed, view=help_view)
 
 async def setup(bot):
     await bot.add_cog(Profile(bot))
