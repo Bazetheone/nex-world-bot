@@ -1166,6 +1166,7 @@ async def load_cogs():
     await bot.load_extension('cogs.pack')
     await bot.load_extension('cogs.statcheck')
     await bot.load_extension('cogs.adminnew')
+    await bot.load_extension('cogs.forge')
     await bot.load_extension('cogs.mail')
 
 async def main():
