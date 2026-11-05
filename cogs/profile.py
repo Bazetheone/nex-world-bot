@@ -628,6 +628,25 @@ class Profile(commands.Cog, name="Profile"):
             color=GOLD)
         embed.set_footer(text="✨ Nexworld RPG • Your fate has been decided")
         await ctx.send(embed=embed)
+        embed2 = discord.Embed(
+            title="🆕 NEW: STATS, GEAR & NEXITE",
+            description=(
+                "**📈 Stats**\n"
+                "Gear and pets now give **% bonuses** instead of flat numbers.\n"
+                "STR = all your damage • DEF = damage resistance • HP = max health\n\n"
+                "**🔮 MAG = Magic Power**\n"
+                "100 MAG points = 1% Magic Power (max 100%). It boosts your heals, shields and buffs. See the bar on `!profile`.\n\n"
+                "**💎 Nexite**\n"
+                "Drops from battle and raid wins. Check it in `!balance`. Upgrades coming soon.\n\n"
+                "**🎁 Also useful**\n"
+                "`!pack` — buy Item & Pet Packs\n"
+                "`!info <name>` — details + race affinity\n"
+                "`!use <id>` — use consumables\n"
+                "`!b <id>` / `!e` — battle and explore shortcuts"
+            ),
+            color=GOLD)
+        embed2.set_footer(text="✨ Nexworld RPG • Your fate has been decided")
+        await ctx.send(embed=embed2)
 
 async def setup(bot):
     await bot.add_cog(Profile(bot))

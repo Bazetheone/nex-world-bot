@@ -121,5 +121,5 @@ def scale_effect(effect, mp):
     if t == 'shield' and 'shield_pct' in e:
         e['shield_pct'] = min(0.6, e['shield_pct'] * (1 + mp))
     if t == 'buff_self' and 'pct' in e:
-        e['pct'] = min(0.5, e['pct'] * (1 + mp))
+        e['pct'] = e['pct'] + max(0.0, 0.5 - e['pct']) * mp
     return e

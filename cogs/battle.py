@@ -254,6 +254,8 @@ class BattleView(discord.ui.View):
         best_atk = int(best_atk * special_buff_mult)
 
         sp_effect = get_special_effect(race)
+        from stats import scale_effect
+        sp_effect = scale_effect(sp_effect, self.player_data.get('magic_power', 0))
         self.special_available = False
         self.skill_uses = 0
         self.children[4].disabled = True
@@ -429,7 +431,7 @@ class BattleView(discord.ui.View):
 
         elif effect.get('type') == 'hybrid_damage':
             mult = effect.get('dmg_mult', 1.5)
-            hybrid_atk = self.player_data['str'] + self.player_data['mag']
+            hybrid_atk = int(self.player_data['str'] * 1.25)
             dmg = calculate_damage(int(hybrid_atk * mult), self.enemy['def'])
             self.enemy_hp -= dmg
             result = f"✨ **{skill_name}** dealt **{dmg:,}** hybrid damage!"

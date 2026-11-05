@@ -426,7 +426,7 @@ class RaidBattleView(discord.ui.View):
             mult = effect.get('dmg_mult', 1.8)
         elif effect and effect.get('type') == 'hybrid_damage':
             mult = effect.get('dmg_mult', 1.5)
-            best_atk = self.player['str'] + self.player['mag']
+            best_atk = int(self.player['str'] * 1.25)
         elif effect and effect.get('type') == 'damage':
             mult = effect.get('dmg_mult', 1.4)
         elif effect and effect.get('type') == 'heal':

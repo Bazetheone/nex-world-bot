@@ -258,7 +258,7 @@ class PvPBattleView(discord.ui.View):
             self.hp[target_id] = max(0, self.hp[target_id] - dmg)
             result = f"✨ **{skill_name}** pierced defenses for **{dmg:,}** damage!"
         elif effect.get('type') == 'hybrid_damage':
-            hybrid_atk = p['str'] + p['mag']
+            hybrid_atk = int(p['str'] * 1.25)
             dmg = calculate_damage(hybrid_atk * effect.get('dmg_mult', 1.5), target_def)
             self.hp[target_id] = max(0, self.hp[target_id] - dmg)
             result = f"✨ **{skill_name}** dealt **{dmg:,}** hybrid damage!"
@@ -337,6 +337,8 @@ class PvPBattleView(discord.ui.View):
         best_atk = max(p['str'], p['mag'])
         target_def = self._player_data(target_id)['def']
         sp_effect = get_special_effect(race)
+        from stats import scale_effect
+        sp_effect = scale_effect(sp_effect, p.get('magic_power', 0))
         self.special_available[uid] = False
         self.skill_uses[uid] = 0
 
