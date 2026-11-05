@@ -24,7 +24,7 @@ ORIGIN_ICONS = {
 def exp_required(level):
     return int(100 * (1.5 ** (level - 1)))
 
-NEXITE_ICON = "💎"
+NEXITE_ICON = "<:nexite:1567658459342831636>"
 
 class InvFilterSelect(discord.ui.Select):
     def __init__(self, view_ref):
@@ -286,14 +286,16 @@ class Profile(commands.Cog, name="Profile"):
                   f"🔁 **Rebirths:** {rebirths}" + (f" `+{rebirth_bonus}% stats`" if rebirths > 0 else ""),
             inline=False)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
-        embed.add_field(name="<:hp:1530891103379652749> HP", value=f"`{format_number(p['hp'])}`", inline=True)
-        embed.add_field(name="<:str:1533458366070784000> STR", value=f"`{format_number(p['str'])}`", inline=True)
-        embed.add_field(name="<:magic:1533459066897301514> MAG", value=f"`{format_number(p['mag'])}`", inline=True)
-        embed.add_field(name="<:def:1530891180173295738> DEF", value=f"`{format_number(p['def'])}`", inline=True)
+        from stats import get_effective_stats, magic_bar
+        eff, base_s, gear_b = get_effective_stats(p)
+        embed.add_field(name="<:hp:1530891103379652749> HP", value=f"`{format_number(eff['hp'])}`", inline=True)
+        embed.add_field(name="<:str:1533458366070784000> STR", value=f"`{format_number(eff['str'])}`", inline=True)
+        embed.add_field(name="<:def:1530891180173295738> DEF", value=f"`{format_number(eff['def'])}`", inline=True)
+        embed.add_field(name="<:magic:1533459066897301514> Magic Power", value=magic_bar(eff['magic_power_pct']), inline=False)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(
             name="💰 Balance",  # field label kept plain — value shows icons inline
-            value=f"{NC_ICON} `{format_number(p.get('nexcoins', 0))}`\n{SS_ICON} `{format_number(p.get('starshards', 0))}`\n💎 `{format_number(p.get('nexite', 0))}`",
+            value=f"{NC_ICON} `{format_number(p.get('nexcoins', 0))}`\n{SS_ICON} `{format_number(p.get('starshards', 0))}`\n<:nexite:1567658459342831636> `{format_number(p.get('nexite', 0))}`",
             inline=False)
 
         weapon = equipped.get('weapon')
@@ -466,7 +468,7 @@ class Profile(commands.Cog, name="Profile"):
 
         if not stat or stat.lower() not in valid_stats:
             await ctx.send(embed=discord.Embed(
-                description="Usage: `!assign <stat> <amount>`\nValid: `hp`, `str`, `mag`, `def`",
+                description="Usage: `!assign <stat> <amount>`\nValid: `hp`, `str`, `def`, `mag`\nMagic Power: 100 points in `mag` = 1% (max 100%)",
                 color=GOLD))
             return
 

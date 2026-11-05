@@ -92,7 +92,7 @@ def apply_level_up(p, user_id):
 
 BATTLE_EXP_MULTIPLIER = 2.0
 
-NEXITE_ICON = "💎"
+NEXITE_ICON = "<:nexite:1567658459342831636>"
 NEXITE_DROPS = {
     'Common': (0, 1), 'Uncommon': (1, 1), 'Rare': (1, 2), 'Epic': (2, 3),
     'Legendary': (3, 5), 'Mythic': (5, 8), 'Mythical': (5, 8),
@@ -374,6 +374,8 @@ class BattleView(discord.ui.View):
         level = self.player_data.get('level', 1)
         skill_name = get_skill_name(race, skill_index, level)
         effect = get_skill_effect(race, skill_index, level)
+        from stats import scale_effect
+        effect = scale_effect(effect, self.player_data.get('magic_power', 0))
         self.skill_uses += 1
 
         try:
@@ -835,7 +837,8 @@ class Battle(commands.Cog, name="Battle"):
 
         active_battles.add(user_id)
         enemy = scale_enemy_for_level(enemy, arc_data, p.get('level', 1))
-        view = BattleView(ctx, p, enemy, selected_arc, enemy_num)
+        from stats import build_battle_player
+        view = BattleView(ctx, build_battle_player(p), enemy, selected_arc, enemy_num)
         embed = await view.get_embed()
         msg = await ctx.send(embed=embed, view=view)
         view.message = msg

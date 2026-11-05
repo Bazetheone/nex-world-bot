@@ -227,6 +227,8 @@ class PvPBattleView(discord.ui.View):
         level = p.get('level', 1)
         skill_name = get_skill_name(race, skill_index, level)
         effect = get_skill_effect(race, skill_index, level)
+        from stats import scale_effect
+        effect = scale_effect(effect, p.get('magic_power', 0))
         best_atk = max(p['str'], p['mag'])
         target_def = self._player_data(target_id)['def']
         self.skill_uses[uid] += 1
@@ -643,7 +645,8 @@ class Economy(commands.Cog, name="Economy"):
         cp = players.search(Player.id == challenger_id)[0]
         dp = players.search(Player.id == defender_id)[0]
 
-        battle_view = PvPBattleView(ctx, ctx.author, opponent, cp, dp)
+        from stats import build_battle_player
+        battle_view = PvPBattleView(ctx, ctx.author, opponent, build_battle_player(cp), build_battle_player(dp))
         embed = await battle_view.get_embed()
         msg = await ctx.send(embed=embed, view=battle_view)
         battle_view.message = msg
@@ -1214,28 +1217,26 @@ class Economy(commands.Cog, name="Economy"):
         slot = slot_map[item_type]
         old_item = equipped.get(slot)
 
-        hp  = p.get('hp',  100)
+        from stats import derive_item_pct
+        from cogs.shop import get_affinity_multiplier, RACE_AFFINITY
+
+        hp = p.get('hp', 100)
         str_ = p.get('str', 10)
         mag = p.get('mag', 10)
         def_ = p.get('def', 10)
-
-        if old_item:
+        if old_item and not old_item.get('pct_mode'):
             for stat, val in old_item.get('stats', {}).items():
                 if stat == 'hp':  hp   = max(1, hp   - val)
                 if stat == 'str': str_ = max(1, str_ - val)
                 if stat == 'mag': mag  = max(1, mag  - val)
                 if stat == 'def': def_ = max(1, def_ - val)
 
-        from cogs.shop import get_affinity_multiplier, RACE_AFFINITY
         affinity_mult = get_affinity_multiplier(item['name'], p.get('race'))
-        raw_stats = item.get('stats', {})
-        new_stats = {stat: int(val * affinity_mult) for stat, val in raw_stats.items()}
+        pct = derive_item_pct(item, is_pet=(slot == 'pet'))
         stat_lines = []
-        for stat, val in new_stats.items():
-            if stat == 'hp':  hp   += val; stat_lines.append(f"+{val} HP")
-            if stat == 'str': str_ += val; stat_lines.append(f"+{val} STR")
-            if stat == 'mag': mag  += val; stat_lines.append(f"+{val} MAG")
-            if stat == 'def': def_ += val; stat_lines.append(f"+{val} DEF")
+        for stat, val in pct.items():
+            label = "Magic Power" if stat == 'mag' else stat.upper()
+            stat_lines.append(f"+{val * affinity_mult:.1f}% {label}")
 
         affinity_note = None
         item_race = RACE_AFFINITY.get(item['name'])
@@ -1249,7 +1250,9 @@ class Economy(commands.Cog, name="Economy"):
             'uid': item['uid'],
             'name': item['name'],
             'rarity': item['rarity'],
-            'stats': new_stats
+            'stats': item.get('stats', {}),
+            'pct_mode': True,
+            'upgrade_level': item.get('upgrade_level', 1),
         }
 
         players.update({
@@ -1299,7 +1302,7 @@ class Economy(commands.Cog, name="Economy"):
         str_ = p.get('str', 10)
         mag  = p.get('mag', 10)
         def_ = p.get('def', 10)
-        for stat, val in item.get('stats', {}).items():
+        for stat, val in ({} if item.get('pct_mode') else item.get('stats', {})).items():
             if stat == 'hp':  hp   = max(1, hp   - val)
             if stat == 'str': str_ = max(1, str_ - val)
             if stat == 'mag': mag  = max(1, mag  - val)

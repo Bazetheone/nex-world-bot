@@ -155,7 +155,8 @@ class RaidJoinView(discord.ui.View):
                 inline=False)
             embed.set_footer(text="You have 2 minutes to act!")
 
-            view = RaidBattleView(player, boss, boss_hp, total_boss_hp, i, self.players)
+            from stats import build_battle_player
+            view = RaidBattleView(build_battle_player(player), boss, boss_hp, total_boss_hp, i, self.players)
             msg = await self.channel.send(embed=embed, view=view)
             view.message = msg
 
@@ -204,7 +205,7 @@ class RaidJoinView(discord.ui.View):
                         inv.append({'uid': uid, 'name': item_drop, 'rarity': rarity, 'type': 'raid_drop'})
                         players.update({'inventory': inv}, Player.id == player['id'])
 
-                rewards_text += f"**{player['name']}** — `{coin_reward:,}` Nexcoins, `{exp_reward:,}` EXP, 💎 `{nexite_reward}` Nexite"
+                rewards_text += f"**{player['name']}** — `{coin_reward:,}` Nexcoins, `{exp_reward:,}` EXP, <:nexite:1567658459342831636> `{nexite_reward}` Nexite"
                 if item_drop:
                     rewards_text += f", 🎁 {item_drop} `{rarity}`"
                 rewards_text += "\n"
@@ -219,7 +220,7 @@ class RaidJoinView(discord.ui.View):
                     new_exp = p.get('exp', 0) + exp_reward
                     nexite_support = random.randint(4, 6)
                     players.update({'nexcoins': new_coins, 'exp': new_exp, 'nexite': p.get('nexite', 0) + nexite_support}, Player.id == player['id'])
-                rewards_text += f"**{player['name']}** — `{consolation:,}` Nexcoins (supported), `{exp_reward:,}` EXP, 💎 `{nexite_support}` Nexite\n"
+                rewards_text += f"**{player['name']}** — `{consolation:,}` Nexcoins (supported), `{exp_reward:,}` EXP, <:nexite:1567658459342831636> `{nexite_support}` Nexite\n"
 
             embed.add_field(name="🏆 Rewards", value=rewards_text or "No rewards", inline=False)
             embed.set_footer(text="Nexworld RPG • Your fate has been decided")
@@ -409,6 +410,8 @@ class RaidBattleView(discord.ui.View):
         level = self.player.get('level', 1)
         skill_name = get_skill_name(race, skill_index, level)
         effect = get_skill_effect(race, skill_index, level)
+        from stats import scale_effect
+        effect = scale_effect(effect, self.player.get('magic_power', 0))
 
         best_atk = max(self.player['str'], self.player['mag'])
         heal_amt = 0
