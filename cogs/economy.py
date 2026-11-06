@@ -1471,6 +1471,46 @@ class Economy(commands.Cog, name="Economy"):
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
         await ctx.send(embed=embed)
 
+    @commands.command(name="sellall", aliases=["sa"])
+    async def sellall(self, ctx, rarity_filter: str = None):
+        user_id = str(ctx.author.id)
+        found = players.search(Player.id == user_id)
+        if not found:
+            await ctx.send(embed=discord.Embed(description="❌ You haven't started yet!", color=GOLD))
+            return
+        p = found[0]
+        inv = p.get('inventory', [])
+        unsellable = ('weapon', 'armor', 'head_armor', 'body_armor', 'pet', 'buff', 'consumable', 'itempack', 'petpack')
+        price_ranges = {
+            'Common': (100, 300), 'Uncommon': (300, 500), 'Rare': (500, 900),
+            'Epic': (900, 1500), 'Legendary': (1500, 3000), 'Mythic': (3000, 6000),
+            'Divine': (6000, 12000), 'Celestial': (10000, 25000),
+        }
+        wanted = rarity_filter.capitalize() if rarity_filter else None
+        keep = []
+        counts = {}
+        total = 0
+        for it in inv:
+            if it.get('type') in unsellable or (wanted and it.get('rarity') != wanted):
+                keep.append(it)
+                continue
+            rarity = it.get('rarity', 'Common')
+            low, high = price_ranges.get(rarity, (100, 300))
+            total += random.randint(low, high)
+            counts[rarity] = counts.get(rarity, 0) + 1
+        if not counts:
+            await ctx.send(embed=discord.Embed(description="❌ You have no materials or drops to sell!", color=GOLD))
+            return
+        new_coins = p.get('nexcoins', 0) + total
+        players.update({'inventory': keep, 'nexcoins': new_coins}, Player.id == user_id)
+        summary = "\n".join(f"{n}x {r}" for r, n in counts.items())
+        embed = discord.Embed(title=f"{NC_ICON} Sold Everything!", color=GOLD)
+        embed.add_field(name="Items Sold", value=f"`{sum(counts.values())}` total\n{summary}", inline=False)
+        embed.add_field(name=f"{NC_ICON} Earned", value=f"`{total:,}`", inline=True)
+        embed.add_field(name=f"{NC_ICON} New Balance", value=f"`{new_coins:,}`", inline=True)
+        embed.set_footer(text="Nexworld RPG • Your fate has been decided")
+        await ctx.send(embed=embed)
+
     @commands.command(name="cooldown", aliases=["cd"])
     async def cooldown(self, ctx):
         user_id = str(ctx.author.id)

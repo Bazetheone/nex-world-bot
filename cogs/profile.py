@@ -690,7 +690,7 @@ class Profile(commands.Cog, name="Profile"):
                 "`!forge <id>` / `!upgrade <id>` / `!nf <id>` — Upgrade equipment with Nexite\n\n"
                 "**🔎 INFO**\n"
                 "`!info <name>` — View item or pet details\n"
-                "`!use <id>` — Use a consumable item\n\n"
+                "`!use <id>` — Use a consumable item\n`!sellall [rarity]` — Sell all materials and drops\n\n"
                 "**🗳️ VOTING**\n"
                 "`!vote` — Vote for Nexworld & earn rewards\n"
                 "`!votereminder` / `!vr` — Toggle vote reminders"

@@ -11,26 +11,26 @@ Raid = Query()
 GOLD = 0xFFD700
 
 BOSSES = [
-    {"id": 1,  "name": "The Broodmother",          "tier": 1, "hp": 30000,   "atk": 1800,  "def": 500,   "passive": "Infestation",     "passive_desc": "Spawns a spider minion that deals extra damage"},
-    {"id": 2,  "name": "Goblin King Grik",          "tier": 1, "hp": 40000,   "atk": 2200,  "def": 700,   "passive": "Coward's Command", "passive_desc": "Gains +30% DEF when HP falls below 50%"},
-    {"id": 3,  "name": "Corrupted Oak Ent",         "tier": 1, "hp": 55000,   "atk": 1600,  "def": 1200,  "passive": "Deep Roots",       "passive_desc": "Regenerates 15% Max HP upon reaching 50%"},
-    {"id": 4,  "name": "The Shadow Stalker",        "tier": 1, "hp": 30000,   "atk": 2800,  "def": 400,   "passive": "Flicker",          "passive_desc": "Gains 30% evasion when HP falls below 50%"},
-    {"id": 5,  "name": "Arch-Necromancer Malakor",  "tier": 2, "hp": 100000,  "atk": 4500,  "def": 1200,  "passive": "Soul Feast",       "passive_desc": "Heals for 30% of damage dealt for the rest of the fight"},
-    {"id": 6,  "name": "The Bloodless Executioner", "tier": 2, "hp": 140000,  "atk": 5500,  "def": 2000,  "passive": "Heavy Cleave",     "passive_desc": "Deals an extra 50% damage hit on activation"},
-    {"id": 7,  "name": "Skeletal Titan",            "tier": 2, "hp": 180000,  "atk": 4000,  "def": 3000,  "passive": "Bone Armor",       "passive_desc": "Reduces your damage by 25% for the rest of the fight"},
-    {"id": 8,  "name": "The Banshee Queen",         "tier": 2, "hp": 80000,   "atk": 6500,  "def": 1000,  "passive": "Screech",          "passive_desc": "Reduces your damage by 20% for the rest of the fight"},
-    {"id": 9,  "name": "Infernal Wyrm",             "tier": 3, "hp": 300000,  "atk": 3500,  "def": 1300,  "passive": "Blazing Aura",     "passive_desc": "Ignites, dealing bonus fire damage each turn"},
-    {"id": 10, "name": "Dreadlord of the Pit",      "tier": 3, "hp": 350000,  "atk": 4200, "def": 1500,  "passive": "Terror",           "passive_desc": "Reduces your damage by 15% for the rest of the fight"},
-    {"id": 11, "name": "Empress of the Oasis",      "tier": 3, "hp": 250000,  "atk": 4600, "def": 1100,  "passive": "Mirage",           "passive_desc": "50% of your attacks hit a mirage and deal no damage"},
-    {"id": 12, "name": "Colossus of Iron & Rust",   "tier": 3, "hp": 500000,  "atk": 3000,  "def": 2600,  "passive": "Unstoppable",      "passive_desc": "Immune to CC; deals an extra hit on activation"},
-    {"id": 13, "name": "Frost-Giant Overlord",      "tier": 4, "hp": 600000,  "atk": 6500, "def": 3000,  "passive": "Permafrost",       "passive_desc": "Reduces your damage by 25% for the rest of the fight"},
-    {"id": 14, "name": "The Ancient Phoenix",       "tier": 4, "hp": 600000,  "atk": 8500, "def": 2200,  "passive": "Rebirth",          "passive_desc": "Revives once with 30% HP upon first death"},
-    {"id": 15, "name": "Serpent of the Depths",     "tier": 4, "hp": 700000,  "atk": 7800, "def": 3900,  "passive": "Tidal Shield",     "passive_desc": "Gains a shield worth 10% of max HP"},
-    {"id": 16, "name": "The Silent Assassin Prime", "tier": 4, "hp": 600000,  "atk": 12000, "def": 1700,  "passive": "Expose Flaw",      "passive_desc": "Boss ATK increases by 50% for the rest of the fight"},
-    {"id": 17, "name": "Void Emperor Zerath",       "tier": 5, "hp": 1500000, "atk": 12000, "def": 4500, "passive": "Nullification",    "passive_desc": "Clears your active buffs and deals a power strike"},
-    {"id": 18, "name": "Time-Eater Chronos",        "tier": 5, "hp": 2000000, "atk": 14000, "def": 3600, "passive": "Time Loop",        "passive_desc": "Attacks twice for the rest of the fight"},
-    {"id": 19, "name": "Nebula Dragon Bahamut",     "tier": 5, "hp": 3000000, "atk": 17000, "def": 6000, "passive": "Cosmic Collapse",  "passive_desc": "Deals catastrophic bonus damage on activation"},
-    {"id": 20, "name": "The Genesis Architect",     "tier": 5, "hp": 5000000, "atk": 20000, "def": 12000, "passive": "Divine Order",     "passive_desc": "Immune to reduction effects; unleashes divine wrath"},
+    {"id": 1,  "name": "The Broodmother",          "tier": 1, "hp": 500000,   "atk": 10000,  "def": 9000,   "passive": "Infestation",     "passive_desc": "Spawns a spider minion that deals extra damage"},
+    {"id": 2,  "name": "Goblin King Grik",          "tier": 1, "hp": 525000,   "atk": 10100,  "def": 9100,   "passive": "Coward's Command", "passive_desc": "Gains +30% DEF when HP falls below 50%"},
+    {"id": 3,  "name": "Corrupted Oak Ent",         "tier": 1, "hp": 550000,   "atk": 10200,  "def": 9200,  "passive": "Deep Roots",       "passive_desc": "Regenerates 15% Max HP upon reaching 50%"},
+    {"id": 4,  "name": "The Shadow Stalker",        "tier": 1, "hp": 600000,   "atk": 10300,  "def": 9300,   "passive": "Flicker",          "passive_desc": "Gains 30% evasion when HP falls below 50%"},
+    {"id": 5,  "name": "Arch-Necromancer Malakor",  "tier": 2, "hp": 700000,  "atk": 10400,  "def": 9300,  "passive": "Soul Feast",       "passive_desc": "Heals for 30% of damage dealt for the rest of the fight"},
+    {"id": 6,  "name": "The Bloodless Executioner", "tier": 2, "hp": 750000,  "atk": 10500,  "def": 9400,  "passive": "Heavy Cleave",     "passive_desc": "Deals an extra 50% damage hit on activation"},
+    {"id": 7,  "name": "Skeletal Titan",            "tier": 2, "hp": 800000,  "atk": 10600,  "def": 9400,  "passive": "Bone Armor",       "passive_desc": "Reduces your damage by 25% for the rest of the fight"},
+    {"id": 8,  "name": "The Banshee Queen",         "tier": 2, "hp": 900000,   "atk": 10700,  "def": 9500,  "passive": "Screech",          "passive_desc": "Reduces your damage by 20% for the rest of the fight"},
+    {"id": 9,  "name": "Infernal Wyrm",             "tier": 3, "hp": 1000000,  "atk": 10800,  "def": 9500,  "passive": "Blazing Aura",     "passive_desc": "Ignites, dealing bonus fire damage each turn"},
+    {"id": 10, "name": "Dreadlord of the Pit",      "tier": 3, "hp": 1050000,  "atk": 10900, "def": 9600,  "passive": "Terror",           "passive_desc": "Reduces your damage by 15% for the rest of the fight"},
+    {"id": 11, "name": "Empress of the Oasis",      "tier": 3, "hp": 1150000,  "atk": 11000, "def": 9600,  "passive": "Mirage",           "passive_desc": "50% of your attacks hit a mirage and deal no damage"},
+    {"id": 12, "name": "Colossus of Iron & Rust",   "tier": 3, "hp": 1300000,  "atk": 11100,  "def": 9700,  "passive": "Unstoppable",      "passive_desc": "Immune to CC; deals an extra hit on activation"},
+    {"id": 13, "name": "Frost-Giant Overlord",      "tier": 4, "hp": 1500000,  "atk": 11200, "def": 9700,  "passive": "Permafrost",       "passive_desc": "Reduces your damage by 25% for the rest of the fight"},
+    {"id": 14, "name": "The Ancient Phoenix",       "tier": 4, "hp": 1600000,  "atk": 11300, "def": 9800,  "passive": "Rebirth",          "passive_desc": "Revives once with 30% HP upon first death"},
+    {"id": 15, "name": "Serpent of the Depths",     "tier": 4, "hp": 1750000,  "atk": 11400, "def": 9800,  "passive": "Tidal Shield",     "passive_desc": "Gains a shield worth 10% of max HP"},
+    {"id": 16, "name": "The Silent Assassin Prime", "tier": 4, "hp": 1900000,  "atk": 11500, "def": 9900,  "passive": "Expose Flaw",      "passive_desc": "Boss ATK increases by 50% for the rest of the fight"},
+    {"id": 17, "name": "Void Emperor Zerath",       "tier": 5, "hp": 2200000, "atk": 11600, "def": 9900, "passive": "Nullification",    "passive_desc": "Clears your active buffs and deals a power strike"},
+    {"id": 18, "name": "Time-Eater Chronos",        "tier": 5, "hp": 2500000, "atk": 11800, "def": 9950, "passive": "Time Loop",        "passive_desc": "Attacks twice for the rest of the fight"},
+    {"id": 19, "name": "Nebula Dragon Bahamut",     "tier": 5, "hp": 2750000, "atk": 11900, "def": 10000, "passive": "Cosmic Collapse",  "passive_desc": "Deals catastrophic bonus damage on activation"},
+    {"id": 20, "name": "The Genesis Architect",     "tier": 5, "hp": 3000000, "atk": 12000, "def": 10000, "passive": "Divine Order",     "passive_desc": "Immune to reduction effects; unleashes divine wrath"},
 ]
 
 TIER_NAMES = {
@@ -183,14 +183,14 @@ class RaidJoinView(discord.ui.View):
 
             rewards_text = ""
             for player in fighters:
-                coin_reward = random.randint(7000, 10000)
-                exp_reward = random.randint(1000, 3000)
+                coin_reward = random.randint(75000, 120000)
+                exp_reward = random.randint(10000, 15000)
                 p = players.search(Player.id == player['id'])
                 if p:
                     p = p[0]
                     new_coins = p.get('nexcoins', 0) + coin_reward
                     new_exp = p.get('exp', 0) + exp_reward
-                    nexite_reward = random.randint(10, 15)
+                    nexite_reward = random.randint(25, 110)
                     players.update({'nexcoins': new_coins, 'exp': new_exp, 'nexite': p.get('nexite', 0) + nexite_reward}, Player.id == player['id'])
 
                 item_drop = None
@@ -211,14 +211,14 @@ class RaidJoinView(discord.ui.View):
                 rewards_text += "\n"
 
             for player in remaining_players:
-                consolation = random.randint(7000, 10000)
-                exp_reward = random.randint(500, 1000)
+                consolation = random.randint(35000, 60000)
+                exp_reward = random.randint(5000, 7500)
                 p = players.search(Player.id == player['id'])
                 if p:
                     p = p[0]
                     new_coins = p.get('nexcoins', 0) + consolation
                     new_exp = p.get('exp', 0) + exp_reward
-                    nexite_support = random.randint(4, 6)
+                    nexite_support = random.randint(10, 40)
                     players.update({'nexcoins': new_coins, 'exp': new_exp, 'nexite': p.get('nexite', 0) + nexite_support}, Player.id == player['id'])
                 rewards_text += f"**{player['name']}** — `{consolation:,}` Nexcoins (supported), `{exp_reward:,}` EXP, <:nexite:1567658459342831636> `{nexite_support}` Nexite\n"
 
