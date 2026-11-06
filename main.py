@@ -669,8 +669,9 @@ def format_number(n):
             return f"{sign}{formatted}{suffix}"
     return f"{sign}{n:.2e}"
 
+EXP_CURVE_SCALE = 10.02  # raise for a harder grind, lower for easier
 def exp_required(level):
-    return int(100 * (1.5 ** (level - 1)))
+    return max(100, int(EXP_CURVE_SCALE * (level ** 2)))
 
 def get_skill_effect(race, skill_index, level):
     skill = RACE_SKILLS[race]["skills"][skill_index]

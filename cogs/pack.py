@@ -37,7 +37,7 @@ ITEM_PACK_POOL = {
 ITEM_PACK_RARITIES_NORMAL = ['Rare', 'Rare', 'Rare', 'Rare', 'Epic', 'Epic', 'Epic', 'Legendary', 'Legendary']
 ITEM_PACK_RARITIES_LUCKY  = ['Rare', 'Rare', 'Epic', 'Epic', 'Epic', 'Legendary', 'Legendary', 'Legendary']
 
-PET_PACK_PRICE = 100
+PET_PACK_PRICE = 50
 PACK_COOLDOWN_SECONDS = 3600
 PET_PACK_RARITIES_NORMAL = ['Common', 'Common', 'Common', 'Common',
                              'Uncommon', 'Uncommon', 'Uncommon',
@@ -108,7 +108,9 @@ class PackView(discord.ui.View):
         inv = p.get('inventory', [])
         uid = generate_item_uid()
         stats = item_result.get('stats', {})
-        stat_desc = ", ".join([f"+{v} {k.upper()}" for k, v in stats.items()])
+        from stats import derive_item_pct
+        _pct = derive_item_pct({'rarity': rolled_rarity, 'type': item_result['type'], 'stats': stats})
+        stat_desc = ', '.join(f"+{v:g}% {'Magic Power' if k == 'mag' else k.upper()}" for k, v in _pct.items())
         inv.append({'uid': uid, 'name': item_result['name'], 'rarity': rolled_rarity,
                     'type': item_result['type'], 'description': stat_desc, 'stats': stats})
         new_coins = p.get('nexcoins', 0) - ITEM_PACK_PRICE

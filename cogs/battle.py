@@ -90,7 +90,7 @@ def apply_level_up(p, user_id):
 
     return leveled_up, old_level, current_level, points_gained
 
-BATTLE_EXP_MULTIPLIER = 2.0
+BATTLE_EXP_MULTIPLIER = 2.5
 
 NEXITE_ICON = "<:nexite:1567658459342831636>"
 NEXITE_DROPS = {
