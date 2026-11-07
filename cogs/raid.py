@@ -877,7 +877,7 @@ class Raid(commands.Cog):
             if not raid_pass:
                 await ctx.send(embed=discord.Embed(
                     title="❌ No Raid Pass!",
-                    description="You need a **Raid Pass** to spawn a raid!\nBuy one from `!shop 1` for `15,000` Nexcoins.",
+                    description="You need a **Raid Pass** to spawn a raid!\nEarn one by voting: every 2nd `!vote` gives you a Raid Pass.",
                     color=GOLD))
                 return
 

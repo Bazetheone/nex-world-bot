@@ -1546,7 +1546,6 @@ class Economy(commands.Cog, name="Economy"):
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.add_field(name="📦 Item Pack", value=fmt(p.get('last_item_pack', 0), 3600), inline=True)
         embed.add_field(name="🐾 Pet Pack", value=fmt(p.get('last_pet_pack', 0), 3600), inline=True)
-        embed.add_field(name="🎟️ Raid Pass", value=fmt(p.get('last_raid_pass', 0), 1800), inline=True)
         embed.add_field(name="━━━━━━━━━━━━━━━━━━━━━━", value="** **", inline=False)
         embed.set_footer(text="Nexworld RPG • Your fate has been decided")
         await ctx.send(embed=embed)
