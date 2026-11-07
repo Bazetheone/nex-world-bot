@@ -107,6 +107,19 @@ async def handle_vote(user_id):
         'starshards': new_ss,
         'vote_reminder_sent': False
     }, Player.id == user_id)
+    # Raid Pass vote reward: one every 2 votes
+    pass_given = False
+    if votes % 2 == 0:
+        try:
+            from db import generate_item_uid
+            fresh_p = players.search(Player.id == user_id)
+            if fresh_p:
+                pass_inv = fresh_p[0].get('inventory', [])
+                pass_inv.append({'uid': generate_item_uid(), 'name': 'Raid Pass', 'rarity': 'Rare', 'type': 'consumable', 'description': 'Used to summon a raid boss', 'stats': {}})
+                players.update({'inventory': pass_inv}, Player.id == user_id)
+                pass_given = True
+        except Exception as e:
+            print(f"Raid Pass vote reward error: {e}")
 
     try:
         user = bot.get_user(int(user_id))
@@ -116,6 +129,8 @@ async def handle_vote(user_id):
             embed.add_field(name="🔥 Streak", value=f"x{streak}", inline=True)
             if ss_gained:
                 embed.add_field(name="<:starshard:1533458421037138020> Starshards", value=f"+{ss_gained}", inline=True)
+            if pass_given:
+                embed.add_field(name="🎟️ Raid Pass", value="+1", inline=True)
             embed.set_footer(text="Nexworld RPG • Thanks for voting!")
             await user.send(embed=embed)
     except Exception:

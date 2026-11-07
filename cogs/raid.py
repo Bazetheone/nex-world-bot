@@ -881,38 +881,67 @@ class Raid(commands.Cog):
                     color=GOLD))
                 return
 
+            pass_count = sum(1 for i in inv if i.get('name') == 'Raid Pass')
+
             class ConfirmRaidView(discord.ui.View):
                 def __init__(self_inner):
                     super().__init__(timeout=30)
+                    self_inner.used = False
+                    self_inner.message = None
 
-                @discord.ui.button(label="✅ Yes", style=discord.ButtonStyle.green)
-                async def confirm(self_inner, interaction: discord.Interaction, button: discord.ui.Button):
+                async def interaction_check(self_inner, interaction: discord.Interaction):
                     if interaction.user.id != ctx.author.id:
                         await interaction.response.send_message("This isn't your raid!", ephemeral=True)
+                        return False
+                    return True
+
+                @discord.ui.button(label="✔️ Yes", style=discord.ButtonStyle.green)
+                async def confirm(self_inner, interaction: discord.Interaction, button: discord.ui.Button):
+                    if self_inner.used:
+                        await interaction.response.send_message("Already started!", ephemeral=True)
                         return
-
-                    new_inv = [i for i in inv if i['uid'] != raid_pass['uid']]
+                    self_inner.used = True
+                    fresh = players.search(Player.id == user_id)
+                    fresh_inv = fresh[0].get('inventory', []) if fresh else []
+                    fresh_pass = next((i for i in fresh_inv if i.get('name') == 'Raid Pass'), None)
+                    if not fresh_pass:
+                        await interaction.response.edit_message(
+                            embed=discord.Embed(description="❌ You no longer have a Raid Pass.", color=GOLD),
+                            view=None)
+                        self_inner.stop()
+                        return
+                    new_inv = [i for i in fresh_inv if i.get('uid') != fresh_pass.get('uid')]
                     players.update({'inventory': new_inv}, Player.id == user_id)
-
                     boss = random.choice(BOSSES)
                     await interaction.response.edit_message(
-                        embed=discord.Embed(
-                            description=f"🎲 Summoning **{boss['name']}**!",
-                            color=GOLD),
+                        embed=discord.Embed(description=f"🔮 Summoning **{boss['name']}**!", color=GOLD),
                         view=None)
+                    self_inner.stop()
                     await self.spawn_raid(ctx.channel, boss, user_id, ctx.author.name)
 
                 @discord.ui.button(label="❌ No", style=discord.ButtonStyle.red)
                 async def cancel(self_inner, interaction: discord.Interaction, button: discord.ui.Button):
+                    self_inner.used = True
                     await interaction.response.edit_message(
                         embed=discord.Embed(description="Raid cancelled.", color=GOLD),
                         view=None)
+                    self_inner.stop()
+
+                async def on_timeout(self_inner):
+                    if self_inner.message and not self_inner.used:
+                        try:
+                            await self_inner.message.edit(
+                                embed=discord.Embed(description="⏰ Raid prompt expired. No pass was used.", color=GOLD),
+                                view=None)
+                        except Exception:
+                            pass
 
             embed = discord.Embed(
                 title="⚔️ Summon a Raid?",
-                description="1x Raid Pass will be used.\nA random boss will spawn in this channel!\nOther players can join for 5 minutes.",
+                description=f"1x Raid Pass will be used (you have **{pass_count}**).\nA random boss will spawn in this channel!\nOther players can join for 5 minutes.",
                 color=GOLD)
-            await ctx.send(embed=embed, view=ConfirmRaidView())
+            confirm_view = ConfirmRaidView()
+            confirm_view.message = await ctx.send(embed=embed, view=confirm_view)
 
 async def setup(bot):
     await bot.add_cog(Raid(bot))
