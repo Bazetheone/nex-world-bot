@@ -15,15 +15,15 @@ SHIELD_CAP = 0.5         # one shield never exceeds this share of max HP
 GEAR_PCT = {
     'Common': (2.0, 1.0), 'Uncommon': (4.0, 2.0), 'Rare': (6.0, 3.0),
     'Epic': (10.0, 5.0), 'Legendary': (15.0, 7.5), 'Mythic': (22.0, 11.0),
-    'Mythical': (22.0, 11.0), 'Divine': (26.0, 13.0), 'Celestial': (28.0, 14.0),
-    'Godly': (30.0, 15.0),
+    'Mythical': (22.0, 11.0), 'Godly': (26.0, 13.0), 'Divine': (28.0, 14.0),
+    'Celestial': (30.0, 15.0),
 }
 
 # rarity: main stat % (other stats get half)
 PET_PCT = {
     'Common': 3.0, 'Uncommon': 4.0, 'Rare': 6.0, 'Epic': 9.0,
-    'Legendary': 12.0, 'Mythic': 16.0, 'Mythical': 16.0, 'Divine': 22.0,
-    'Celestial': 22.0, 'Godly': 22.0,
+    'Legendary': 12.0, 'Mythic': 16.0, 'Mythical': 16.0, 'Godly': 19.0,
+    'Divine': 22.0, 'Celestial': 25.0,
 }
 
 

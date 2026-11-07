@@ -9,7 +9,7 @@ FORGEABLE_TYPES = ('weapon', 'armor', 'head_armor', 'body_armor')
 
 NEXITE_BASE_COST = {
     'Common': 2, 'Uncommon': 3, 'Rare': 5, 'Epic': 8, 'Legendary': 12,
-    'Mythic': 15, 'Mythical': 15, 'Divine': 20, 'Celestial': 25, 'Godly': 30,
+    'Mythic': 15, 'Mythical': 15, 'Godly': 20, 'Divine': 25, 'Celestial': 30,
 }
 
 RARITY_ICONS = {

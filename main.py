@@ -1187,6 +1187,7 @@ async def load_cogs():
     await bot.load_extension('cogs.adminnew')
     await bot.load_extension('cogs.forge')
     await bot.load_extension('cogs.mail')
+    await bot.load_extension('cogs.shopui')
 
 async def main():
     async with bot:

@@ -1448,7 +1448,7 @@ class Economy(commands.Cog, name="Economy"):
                 description=f"❌ **{item['name']}** can't be sold!\nOnly materials, drops, and raid drops can be sold with `!sell`.",
                 color=GOLD))
             return
-        price_ranges = {
+        price_ranges = {'Godly': (4500, 9000),
             'Common':     (100,   300),
             'Uncommon':   (300,   500),
             'Rare':       (500,   900),
@@ -1481,7 +1481,7 @@ class Economy(commands.Cog, name="Economy"):
         p = found[0]
         inv = p.get('inventory', [])
         unsellable = ('weapon', 'armor', 'head_armor', 'body_armor', 'pet', 'buff', 'consumable', 'itempack', 'petpack')
-        price_ranges = {
+        price_ranges = {'Godly': (4500, 9000),
             'Common': (100, 300), 'Uncommon': (300, 500), 'Rare': (500, 900),
             'Epic': (900, 1500), 'Legendary': (1500, 3000), 'Mythic': (3000, 6000),
             'Divine': (6000, 12000), 'Celestial': (10000, 25000),

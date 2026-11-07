@@ -96,7 +96,7 @@ NEXITE_ICON = "<:nexite:1567658459342831636>"
 NEXITE_DROPS = {
     'Common': (0, 1), 'Uncommon': (1, 1), 'Rare': (1, 2), 'Epic': (2, 3),
     'Legendary': (3, 5), 'Mythic': (5, 8), 'Mythical': (5, 8),
-    'Divine': (8, 12), 'Celestial': (12, 16), 'Godly': (16, 20),
+    'Godly': (8, 12), 'Divine': (12, 16), 'Celestial': (16, 20),
 }
 
 def roll_nexite(rarity):
