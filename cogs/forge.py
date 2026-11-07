@@ -12,11 +12,8 @@ NEXITE_BASE_COST = {
     'Mythic': 15, 'Mythical': 15, 'Godly': 20, 'Divine': 25, 'Celestial': 30,
 }
 
-RARITY_ICONS = {
-    "Common": "⚪", "Uncommon": "🟢", "Rare": "🔵", "Epic": "🟣",
-    "Legendary": "🟠", "Mythic": "🔴", "Mythical": "🔴", "Divine": "🟡",
-    "Celestial": "💠", "Godly": "🔱",
-}
+from rarity import RARITY_ICONS as _SHARED_RARITY_ICONS
+RARITY_ICONS = _SHARED_RARITY_ICONS
 
 
 def forge_cost(item):

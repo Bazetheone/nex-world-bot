@@ -32,20 +32,23 @@ def lv_tag(item):
     return ''
 
 
+from rarity import rarity_icon
+
+
 class InvFilterSelect(discord.ui.Select):
     def __init__(self, view_ref):
         self.view_ref = view_ref
         options = [
             discord.SelectOption(label="All Items", value="all", emoji="📦"),
-            discord.SelectOption(label="Common", value="rarity:Common", emoji="⚪"),
-            discord.SelectOption(label="Uncommon", value="rarity:Uncommon", emoji="🟢"),
-            discord.SelectOption(label="Rare", value="rarity:Rare", emoji="🔵"),
-            discord.SelectOption(label="Epic", value="rarity:Epic", emoji="🟣"),
-            discord.SelectOption(label="Legendary", value="rarity:Legendary", emoji="🟠"),
-            discord.SelectOption(label="Mythic", value="rarity:Mythic", emoji="🔴"),
-            discord.SelectOption(label="Divine", value="rarity:Divine", emoji="🟡"),
-            discord.SelectOption(label="Celestial", value="rarity:Celestial", emoji="💠"),
-            discord.SelectOption(label="Godly", value="rarity:Godly", emoji="🔱"),
+            discord.SelectOption(label="Common", value="rarity:Common", emoji=rarity_icon("Common")),
+            discord.SelectOption(label="Uncommon", value="rarity:Uncommon", emoji=rarity_icon("Uncommon")),
+            discord.SelectOption(label="Rare", value="rarity:Rare", emoji=rarity_icon("Rare")),
+            discord.SelectOption(label="Epic", value="rarity:Epic", emoji=rarity_icon("Epic")),
+            discord.SelectOption(label="Legendary", value="rarity:Legendary", emoji=rarity_icon("Legendary")),
+            discord.SelectOption(label="Mythic", value="rarity:Mythic", emoji=rarity_icon("Mythic")),
+            discord.SelectOption(label="Godly", value="rarity:Godly", emoji=rarity_icon("Godly")),
+            discord.SelectOption(label="Divine", value="rarity:Divine", emoji=rarity_icon("Divine")),
+            discord.SelectOption(label="Celestial", value="rarity:Celestial", emoji=rarity_icon("Celestial")),
             discord.SelectOption(label="Locked (Equipped)", value="locked", emoji="🔒"),
             discord.SelectOption(label="Unlocked (Unequipped)", value="unlocked", emoji="🔓"),
             discord.SelectOption(label="Materials & Drops", value="materials_drops", emoji="🧪"),
@@ -66,8 +69,8 @@ class InvFilterSelect(discord.ui.Select):
         await interaction.response.edit_message(embed=self.view_ref.build_embed(), view=self.view_ref)
 
 class InvView(discord.ui.View):
-    RARITY_ICONS = {"Common": "⚪", "Uncommon": "🟢", "Rare": "🔵", "Epic": "🟣",
-                    "Legendary": "🟠", "Mythic": "🔴", "Divine": "🟡", "Celestial": "💠", "Godly": "🔱"}
+    from rarity import RARITY_ICONS as _SHARED_RARITY_ICONS
+    RARITY_ICONS = _SHARED_RARITY_ICONS
     LEGENDARY_PLUS = {"Legendary", "Mythic", "Divine", "Celestial", "Godly"}
     PER_PAGE = 10
 

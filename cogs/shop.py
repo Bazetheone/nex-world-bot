@@ -685,7 +685,8 @@ class Shop(commands.Cog):
         rarity_icons = {"Common": "⚪", "Uncommon": "🟢", "Rare": "🔵", "Epic": "🟣",
                         "Legendary": "🟠", "Mythic": "🔴", "Divine": "🟡", "Godly": "🔱",
                         "Celestial": "💠", "Special": "✨"}
-        icon = rarity_icons.get(found.get('rarity', ''), '❓')
+        from rarity import rarity_icon
+        icon = rarity_icon(found.get('rarity', ''))
         embed = discord.Embed(
             title=f"{icon} {found['name']}",
             description=found.get('description', '—'),

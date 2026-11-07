@@ -51,8 +51,8 @@ PET_PACK_RARITIES_LUCKY  = ['Common', 'Common',
                              'Legendary', 'Legendary',
                              'Mythic']
 
-RARITY_ICONS = {"Common": "⚪", "Uncommon": "🟢", "Rare": "🔵",
-                "Epic": "🟣", "Legendary": "🟠", "Mythic": "🔴", "Divine": "🟡"}
+from rarity import RARITY_ICONS as _SHARED_RARITY_ICONS
+RARITY_ICONS = _SHARED_RARITY_ICONS
 
 class PackView(discord.ui.View):
     def __init__(self, ctx):

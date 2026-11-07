@@ -8,11 +8,8 @@ from main import NC_ICON, SS_ICON
 
 GOLD = 0xFFD700
 
-RARITY_ICONS = {
-    "Common": "⚪", "Uncommon": "🟢", "Rare": "🔵",
-    "Epic": "🟣", "Legendary": "🟠", "Mythic": "🔴",
-    "Divine": "🟡", "Celestial": "💠"
-}
+from rarity import RARITY_ICONS as _SHARED_RARITY_ICONS
+RARITY_ICONS = _SHARED_RARITY_ICONS
 
 active_battles = set()
 
